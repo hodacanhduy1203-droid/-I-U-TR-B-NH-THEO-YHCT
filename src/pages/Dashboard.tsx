@@ -31,7 +31,7 @@ export default function Dashboard() {
           </span>
           <h2 className="text-base sm:text-lg font-bold text-white font-dongy-serif tracking-wide leading-tight">Thư Viện Phác Đồ Y Học Tích Hợp</h2>
           <p className="text-[11.5px] sm:text-[12.5px] text-parchment-100 leading-relaxed font-dongy-body">
-            Nơi giao thoa tinh hoa lý luận tạng phủ, kinh lạc Đông y cổ truyền truyền thống và chẩn đoán cận lâm sàng Y học hiện đại chuẩn xác.
+            Nơi giao thoa tinh hoa lý luận tạng phủ, kinh lạc Đông y cổ truyền và chẩn đoán cận lâm sàng Y học hiện đại chuẩn xác.
           </p>
         </div>
       </div>

@@ -216,7 +216,7 @@ export default function DiseaseDetail() {
               : "text-parchment-600 font-semibold hover:text-parchment-900"
           )}
         >
-          Biện Chứng trị liệu (Thể lâm sàng)
+          Biện Chứng Trị Liệu (Thể lâm sàng)
         </button>
       </div>
 
@@ -299,7 +299,7 @@ export default function DiseaseDetail() {
               >
                 <div className="p-4 sm:p-5 bg-gradient-to-r from-herbal-800 to-[#374239] text-[#FFFDF9] flex items-center justify-between border-b border-herbal-900 shadow-sm">
                    <h3 className="text-[15.5px] sm:text-[17.5px] font-extrabold tracking-wide font-dongy-serif text-white">{v.name}</h3>
-                   <span className="text-[10.5px] uppercase tracking-widest font-dongy-serif px-2.5 py-0.5 border border-parchment-400 bg-parchment-50/10 rounded text-parchment-200">BIỆN CHỨNG TRỊ CHI</span>
+                   <span className="text-[10.5px] uppercase tracking-widest font-dongy-serif px-2.5 py-0.5 border border-parchment-400 bg-parchment-50/10 rounded text-parchment-200">BIỆN CHỨNG LUẬN TRỊ</span>
                 </div>
                 
                 <div className="p-4 sm:p-5 flex flex-col gap-4 w-full bg-[#FFFDF9]">
@@ -393,7 +393,7 @@ export default function DiseaseDetail() {
                     <div className="rounded-2xl overflow-hidden bg-[#FFFDF9] border border-parchment-200 shadow-sm mt-2">
                       <div className="bg-[#FAF6ED] px-4 py-3.5 border-b border-parchment-200 flex items-center">
                         <div className="p-2 bg-ochre-100 rounded-lg text-ochre-700 mr-2.5"><Activity className="w-4 h-4"/></div>
-                        <h4 className="text-[12px] font-extrabold text-ochre-800 uppercase tracking-widest font-dongy-serif">Ngoại Trị Pháp (Châm cứu, Xoa bóp, Dưỡng dưỡng)</h4>
+                        <h4 className="text-[12px] font-extrabold text-ochre-800 uppercase tracking-widest font-dongy-serif">Ngoại Trị Pháp (Châm cứu, Xoa bóp, Dưỡng Sinh)</h4>
                       </div>
                       <div className="p-4 sm:p-5 grid grid-cols-1 md:grid-cols-2 gap-6 bg-parchment-50/10">
                         {v.nonPharmaTreatments.map((treatment, idx) => (

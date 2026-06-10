@@ -104,22 +104,22 @@ export default function Layout() {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-parchment-50">
         <header className="h-14 bg-herbal-800 border-b border-herbal-900 text-[#FFFDF9] flex items-center justify-between px-3 sm:px-5 shrink-0 shadow-sm relative z-10">
           <button 
-            className="p-2 -mr-2 text-herbal-100 hover:text-white lg:hidden rounded-md focus:outline-none"
+            className="p-2 text-herbal-100 hover:text-white lg:hidden rounded-md focus:outline-none flex-shrink-0"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Mở menu</span>
             <Menu className="h-6 w-6" />
           </button>
           
-          <div className="flex-1 sm:-ml-4 flex items-center gap-4 lg:ml-0 justify-between sm:justify-start">
-            <h1 className="text-[14px] sm:text-[17px] font-bold tracking-widest font-dongy-serif flex items-center gap-2">
-              <span className="text-[#FFFDF9] font-extrabold">MEDICONNECT</span> 
-              <span className="font-light text-ochre-200 border-l border-herbal-600 pl-2 hidden sm:inline text-[12.5px]">VIỆN Y HỌC CỔ TRUYỀN x HIỆN ĐẠI</span>
-              <span className="font-light text-ochre-200 border-l border-herbal-600 pl-2 sm:hidden text-[10px]">YHCT x YHHĐ</span>
+          <div className="flex-1 flex items-center gap-2 sm:gap-4 lg:ml-0 overflow-hidden">
+            <h1 className="text-[13px] xs:text-[14px] sm:text-[16px] font-bold tracking-widest font-dongy-serif flex items-center gap-1.5 sm:gap-2 truncate">
+              <span className="text-[#FFFDF9] font-extrabold whitespace-nowrap">MEDICONNECT</span> 
+              <span className="font-medium text-ochre-200 border-l border-herbal-500 pl-1.5 sm:pl-2 hidden md:inline text-[11px] sm:text-[12px] whitespace-nowrap">VIỆN Y HỌC CỔ TRUYỀN x HIỆN ĐẠI</span>
+              <span className="font-medium text-ochre-200 border-l border-herbal-500 pl-1.5 sm:pl-2 md:hidden text-[9px] sm:text-[10px] whitespace-nowrap">YHCT x YHHĐ</span>
             </h1>
             
             {/* Stamp seal accent */}
-            <div className="text-[10px] font-dongy-serif font-extrabold uppercase tracking-widest px-2.5 py-0.5 border border-cinnabar-200 bg-cinnabar-50/10 text-cinnabar-100 rounded opacity-90 select-none hidden md:block">
+            <div className="text-[9px] sm:text-[10px] font-dongy-serif font-extrabold uppercase tracking-widest px-2 sm:px-2.5 py-0.5 border border-cinnabar-200 bg-cinnabar-50/10 text-cinnabar-100 rounded opacity-90 select-none hidden lg:block shrink-0">
               ĐÔNG Y THƯ PHÁP
             </div>
           </div>
