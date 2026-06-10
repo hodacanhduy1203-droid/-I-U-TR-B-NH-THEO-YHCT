@@ -1,0 +1,6 @@
+{
+  "name": "Y Học Tích Hợp (YHCT & YHHĐ)",
+  "description": "Ứng dụng cẩm nang y khoa kết hợp chẩn đoán và điều trị giữa Y Học Cổ Truyền và Y Học Hiện Đại.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
