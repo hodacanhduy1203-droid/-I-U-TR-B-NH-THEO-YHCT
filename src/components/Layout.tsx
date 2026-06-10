@@ -1,12 +1,43 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { cn } from '../utils';
-import { Home, Stethoscope, Leaf, Menu } from 'lucide-react';
+import { Home, Stethoscope, Leaf, Menu, Smartphone, Download, X } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [showInstallBanner, setShowInstallBanner] = useState(false);
   const location = useLocation();
   const mainRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setShowInstallBanner(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    
+    // Check if already in standalone mode
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setShowInstallBanner(false);
+    }
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      setDeferredPrompt(null);
+      setShowInstallBanner(false);
+    }
+  };
 
   useEffect(() => {
     const saved = localStorage.getItem('app_scroll_' + location.pathname);
@@ -103,6 +134,43 @@ export default function Layout() {
             <Outlet />
           </div>
         </main>
+      </div>
+
+      {/* Modern Installation Banner for Android */}
+      {showInstallBanner && (
+        <div className="fixed top-4 left-4 right-4 z-[100] md:max-w-md md:mx-auto">
+          <div className="bg-white/95 backdrop-blur-md shadow-2xl border border-herbal-100 rounded-3xl p-4 flex items-center justify-between gap-4 animate-in fade-in slide-in-from-top-10 duration-500">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-herbal-50 rounded-2xl flex items-center justify-center flex-shrink-0">
+                <Smartphone className="w-6 h-6 text-herbal-700" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-herbal-900">Đông Y Duy Hồ</h3>
+                <p className="text-[11px] text-herbal-600 font-medium">Tải ứng dụng về máy Android của bạn</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={handleInstallClick}
+                className="bg-herbal-800 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 active:scale-95 transition-transform shadow-lg shadow-herbal-900/20"
+              >
+                <Download className="w-3.5 h-3.5" />
+                Tải App
+              </button>
+              <button 
+                onClick={() => setShowInstallBanner(false)}
+                className="p-2 hover:bg-herbal-50 rounded-full text-herbal-400"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Global Copyright Overlay */}
+      <div className="fixed bottom-4 right-6 text-[10px] font-bold text-[#1C1204]/40 uppercase tracking-[0.2em] font-sans pointer-events-none z-50 select-none drop-shadow-sm">
+        By Duy Hồ
       </div>
     </div>
   );

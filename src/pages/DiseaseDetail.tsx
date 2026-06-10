@@ -362,9 +362,6 @@ export default function DiseaseDetail() {
                                 <div className="text-[#1C1204] text-[14px] sm:text-[14.5px] font-semibold leading-relaxed font-dongy-body">
                                   {formatListText(treatment.ingredients, 'text-cinnabar-600 font-extrabold', true)}
                                 </div>
-                                <div className="absolute bottom-1 right-2 text-[8px] font-bold text-herbal-850/40 uppercase tracking-widest pointer-events-none select-none">
-                                  By Duy Hồ
-                                </div>
                               </div>
                             )}
                             
@@ -420,9 +417,6 @@ export default function DiseaseDetail() {
           </div>
         </div>
       )}
-      <div className="fixed bottom-4 right-6 text-[10px] font-bold text-slate-500/60 uppercase tracking-widest font-sans pointer-events-none z-50 select-none">
-        By Duy Hồ
-      </div>
     </div>
   );
 }

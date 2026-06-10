@@ -48,6 +48,40 @@ html, body, #root {
   background-color: #FAF6ED !important;
   color: #211A10;
   font-family: "Inter", system-ui, sans-serif;
+  overflow-x: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  position: fixed;
+  overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  width: 100vw;
+  height: 100vh;
+  /* Prevent accidental text selection for a locked app feel, 
+     but allow selection in specific content areas if needed */
+  user-select: none;
+  -webkit-user-select: none;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+#root {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  height: 100%;
+}
+
+/* Re-enable selection for actual content lines */
+.font-dongy-body, .font-dongy-serif, .treatment-content {
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 /* Beautiful custom serif headings */
