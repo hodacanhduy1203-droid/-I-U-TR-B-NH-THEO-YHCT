@@ -64,7 +64,7 @@ export default function Layout() {
   ];
 
   return (
-    <div className="flex h-screen bg-[#FAF6ED] overflow-hidden font-sans text-parchment-900">
+    <div className="flex h-screen bg-parchment-50 overflow-hidden font-sans text-parchment-900">
       {/* Mobile overlay */}
       <div 
         className={cn("fixed inset-0 z-20 bg-parchment-950/40 transition-opacity lg:hidden", sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none")} 
@@ -72,12 +72,12 @@ export default function Layout() {
       />
 
       {/* Sidebar */}
-      <div className={cn("fixed inset-y-0 left-0 z-30 w-64 bg-[#FCFAF5] border-r border-parchment-200 transform transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-auto flex flex-col shadow-sm", sidebarOpen ? "translate-x-0" : "-translate-x-full")}>
-        <div className="p-4 border-b border-parchment-100 h-14 flex items-center shrink-0 bg-[#F5EFE0]/40">
-          <Leaf className="w-5 h-5 text-herbal-700 mr-2" />
-          <h3 className="text-[16px] font-bold text-herbal-850 font-dongy-serif uppercase tracking-widest leading-none mt-0.5">Y Học Tích Hợp</h3>
+      <div className={cn("fixed inset-y-0 left-0 z-30 w-64 bg-ochre-50 border-r border-parchment-200 transform transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-auto flex flex-col shadow-sm", sidebarOpen ? "translate-x-0" : "-translate-x-full")}>
+        <div className="p-4 border-b border-parchment-100 h-14 flex items-center shrink-0 bg-ochre-100/30">
+          <Leaf className="w-5 h-5 text-herbal-500 mr-2" />
+          <h3 className="text-[16px] font-bold text-herbal-800 font-dongy-serif uppercase tracking-widest leading-none mt-0.5">Y Học Tích Hợp</h3>
         </div>
-        <nav className="flex-1 overflow-y-auto px-2 py-3 bg-[#FCFAF5]">
+        <nav className="flex-1 overflow-y-auto px-2 py-3 bg-ochre-50">
           {navigation.map((item) => {
             const isActive = location.pathname === item.href || (item.href !== '/' && location.pathname.startsWith(item.href));
             return (
@@ -88,11 +88,11 @@ export default function Layout() {
                 className={cn(
                   "px-3 py-2.5 mb-1.5 rounded-lg cursor-pointer flex items-center transition-all",
                   isActive 
-                    ? "bg-herbal-100/60 text-herbal-900 font-extrabold border-l-4 border-herbal-600 pl-2" 
-                    : "text-parchment-800 font-bold hover:bg-parchment-100/80 hover:text-parchment-950"
+                    ? "bg-herbal-100 text-herbal-900 font-extrabold border-l-4 border-herbal-500 pl-2" 
+                    : "text-parchment-800 font-bold hover:bg-herbal-50 hover:text-herbal-950"
                 )}
               >
-                <item.icon className={cn("mr-3 h-5 w-5", isActive ? "text-herbal-700 font-extrabold" : "text-parchment-600")} />
+                <item.icon className={cn("mr-3 h-5 w-5", isActive ? "text-herbal-600 font-extrabold" : "text-parchment-500")} />
                 <span className="font-dongy-body text-[14px]">{item.name}</span>
               </Link>
             )
@@ -102,7 +102,7 @@ export default function Layout() {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-parchment-50">
-        <header className="h-14 bg-herbal-800 border-b border-herbal-900 text-[#FFFDF9] flex items-center justify-between px-3 sm:px-5 shrink-0 shadow-sm relative z-10">
+        <header className="h-14 bg-herbal-700 border-b border-herbal-800 text-[#FFFDF9] flex items-center justify-between px-3 sm:px-5 shrink-0 shadow-sm relative z-10">
           <button 
             className="p-2 text-herbal-100 hover:text-white lg:hidden rounded-md focus:outline-none flex-shrink-0"
             onClick={() => setSidebarOpen(true)}

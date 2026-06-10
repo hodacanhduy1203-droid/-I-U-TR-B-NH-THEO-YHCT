@@ -38,32 +38,20 @@ export default function DiseaseList() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 auto-rows-max">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 auto-rows-max">
         {filteredDiseases.map((disease) => (
           <Link
             key={disease.id}
             to={`/diseases/${disease.id}`}
-            className="flex flex-col kraft-paper-card rounded-2xl hover:border-herbal-500 transition-all p-5 group hover:-translate-y-0.5"
+            className="flex items-center kraft-paper-card rounded-xl hover:border-herbal-500 transition-all px-5 py-3.5 group border-l-4 border-l-herbal-800 hover:shadow-md"
           >
-            <div className="flex flex-col gap-2.5 mb-3">
-              <h3 className="text-[13px] sm:text-[14.5px] font-black uppercase tracking-wide text-blue-900 leading-snug group-hover:text-blue-700 transition-colors font-sans">
-                {disease.displayIndex}. {disease.name}
-              </h3>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-[10px] text-parchment-700 font-bold uppercase tracking-wider">
-                  Danh pháp YHCT:
-                </span>
-                <span className="text-[11.5px] bg-cinnabar-50 text-cinnabar-800 font-bold px-2 py-0.5 rounded border border-cinnabar-100/85 font-sans shadow-xs">
-                  {disease.traditionalName}
-                </span>
-              </div>
-            </div>
-            <p className="text-[14.5px] text-parchment-900 font-medium line-clamp-2 mb-4 flex-1 leading-relaxed font-dongy-body">
-              {disease.description}
-            </p>
-            <div className="flex items-center text-[11px] uppercase font-extrabold tracking-widest text-[#85221A] group-hover:text-cinnabar-700 mt-auto transition-colors font-dongy-serif">
-              Chi tiết phác luận <ChevronRight className="ml-1 h-3.5 w-3.5" />
-            </div>
+            <span className="text-[12px] font-black font-sans text-herbal-900/40 mr-4 shrink-0 w-6">
+              {disease.displayIndex < 10 ? `0${disease.displayIndex}` : disease.displayIndex}
+            </span>
+            <h3 className="text-[13.5px] sm:text-[14px] font-extrabold uppercase tracking-wide text-[#1C1204] group-hover:text-herbal-900 transition-colors font-sans flex-1 truncate">
+              {disease.name}
+            </h3>
+            <ChevronRight className="ml-2 h-4 w-4 text-herbal-300 group-hover:text-herbal-800 shrink-0 transition-colors" />
           </Link>
         ))}
       </div>

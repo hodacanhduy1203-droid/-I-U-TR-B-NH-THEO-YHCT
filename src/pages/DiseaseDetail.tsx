@@ -222,58 +222,58 @@ export default function DiseaseDetail() {
 
       {activeTab === 'overview' && (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 flex-1">
-          <div className="kraft-paper-card p-5 rounded-2xl shadow-sm flex flex-col hover:border-herbal-400 transition-colors">
-            <div className="flex items-center pb-2.5 mb-3.5 border-b border-herbal-100/70">
-              <div className="p-1.5 bg-herbal-50 text-herbal-850 rounded-lg mr-2.5">
+          <div className="bg-white border border-parchment-100 p-5 rounded-2xl shadow-sm flex flex-col hover:border-herbal-400 transition-colors">
+            <div className="flex items-center pb-2.5 mb-3.5 border-b border-herbal-50">
+              <div className="p-1.5 bg-herbal-50 text-herbal-600 rounded-lg mr-2.5">
                 <BookOpen className="w-4 h-4" />
               </div>
-              <h3 className="text-[12px] font-extrabold uppercase tracking-widest text-[#242D25] font-dongy-serif">Khái Luận Đại Cương (YHHĐ x YHCT)</h3>
+              <h3 className="text-[12px] font-extrabold uppercase tracking-widest text-herbal-800 font-dongy-serif">Khái Luận Đại Cương (YHHĐ x YHCT)</h3>
             </div>
-            <p className="text-[#1C1204] font-dongy-body text-[15px] leading-relaxed font-semibold px-1">{disease.description}</p>
+            <p className="text-parchment-900 font-dongy-body text-[15px] leading-relaxed font-semibold px-1">{disease.description}</p>
           </div>
 
-          <div className="kraft-paper-card p-5 rounded-2xl shadow-sm flex flex-col hover:border-parchment-400 transition-colors">
-            <div className="flex items-center pb-2.5 mb-3.5 border-b border-parchment-200/60">
-              <div className="p-1.5 bg-parchment-50 text-parchment-800 rounded-lg mr-2.5">
+          <div className="bg-white border border-parchment-100 p-5 rounded-2xl shadow-sm flex flex-col hover:border-parchment-400 transition-colors">
+            <div className="flex items-center pb-2.5 mb-3.5 border-b border-parchment-50">
+              <div className="p-1.5 bg-parchment-50 text-parchment-600 rounded-lg mr-2.5">
                 <Stethoscope className="w-4 h-4" />
               </div>
               <h3 className="text-[12px] font-extrabold uppercase tracking-widest text-parchment-800 font-dongy-serif">Chẩn đoán lâm sàng & Cận lâm sàng YHHĐ</h3>
             </div>
-            <p className="text-[#1C1204] font-dongy-body text-[15px] leading-relaxed font-semibold px-1">{disease.modernDiagnosis}</p>
+            <p className="text-parchment-900 font-dongy-body text-[15px] leading-relaxed font-semibold px-1">{disease.modernDiagnosis}</p>
           </div>
 
-          <div className="kraft-paper-card p-5 rounded-2xl shadow-sm flex flex-col hover:border-ochre-400 transition-colors">
-            <div className="flex items-center pb-2.5 mb-3.5 border-b border-ochre-200/40">
-              <div className="p-1.5 bg-ochre-50 text-ochre-700 rounded-lg mr-2.5">
+          <div className="bg-white border border-parchment-100 p-5 rounded-2xl shadow-sm flex flex-col hover:border-ochre-400 transition-colors">
+            <div className="flex items-center pb-2.5 mb-3.5 border-b border-ochre-50">
+              <div className="p-1.5 bg-ochre-50 text-ochre-600 rounded-lg mr-2.5">
                 <Activity className="w-4 h-4" />
               </div>
-              <h3 className="text-[12px] font-extrabold uppercase tracking-widest text-[#715212] font-dongy-serif">Khảo luận bệnh sinh & Tạng phủ YHCT</h3>
+              <h3 className="text-[12px] font-extrabold uppercase tracking-widest text-ochre-800 font-dongy-serif">Khảo luận bệnh sinh & Tạng phủ YHCT</h3>
             </div>
-            <p className="text-[#1C1204] font-dongy-body text-[15px] leading-relaxed font-semibold px-1">{disease.traditionalDiagnosis}</p>
+            <p className="text-parchment-900 font-dongy-body text-[15px] leading-relaxed font-semibold px-1">{disease.traditionalDiagnosis}</p>
           </div>
           
-          <div className="kraft-paper-card p-5 rounded-2xl shadow-sm flex flex-col hover:border-cinnabar-400 transition-colors">
-            <div className="flex items-center pb-2.5 mb-3.5 border-b border-cinnabar-100/40">
-              <div className="p-1.5 bg-cinnabar-50 text-cinnabar-700 rounded-lg mr-2.5">
+          <div className="bg-white border border-parchment-100 p-5 rounded-2xl shadow-sm flex flex-col hover:border-cinnabar-400 transition-colors">
+            <div className="flex items-center pb-2.5 mb-3.5 border-b border-cinnabar-50">
+              <div className="p-1.5 bg-cinnabar-50 text-cinnabar-600 rounded-lg mr-2.5">
                 <Leaf className="w-4 h-4" />
               </div>
-              <h3 className="text-[12px] font-extrabold uppercase tracking-widest text-cinnabar-700 font-dongy-serif">Phòng trị & Hướng dẫn dưỡng sinh</h3>
+              <h3 className="text-[12px] font-extrabold uppercase tracking-widest text-cinnabar-800 font-dongy-serif">Phòng trị & Hướng dẫn dưỡng sinh</h3>
             </div>
-            <p className="text-[#1C1204] font-dongy-body text-[15px] leading-relaxed font-semibold px-1">{disease.prevention}</p>
+            <p className="text-parchment-900 font-dongy-body text-[15px] leading-relaxed font-semibold px-1">{disease.prevention}</p>
           </div>
         </div>
       )}
 
       {activeTab === 'variants' && (
         <div className="flex flex-col xl:flex-row gap-4 items-start">
-          <div className="w-full xl:w-1/4 flex flex-col bg-[#FFFDF9] rounded-2xl border border-parchment-200 shrink-0 shadow-sm overflow-hidden">
-            <div className="p-4 border-b border-parchment-100/70 bg-[#FAF6ED]/50">
-              <h3 className="text-[12px] text-herbal-850 font-extrabold uppercase tracking-widest flex items-center gap-2 font-dongy-serif">
-                <Activity className="w-3.5 h-3.5 text-herbal-600" />
+          <div className="w-full xl:w-1/4 flex flex-col bg-white rounded-2xl border border-parchment-100 shrink-0 shadow-sm overflow-hidden">
+            <div className="p-4 border-b border-parchment-50 bg-parchment-50/30">
+              <h3 className="text-[12px] text-herbal-800 font-extrabold uppercase tracking-widest flex items-center gap-2 font-dongy-serif">
+                <Activity className="w-3.5 h-3.5 text-herbal-500" />
                 Các thể hội chứng lâm sàng
               </h3>
             </div>
-            <div className="flex-1 p-2.5 space-y-1.5 bg-[#FFFDF9]">
+            <div className="flex-1 p-2.5 space-y-1.5 bg-white">
               {disease.variants.map((v) => (
                 <button type="button"
                   key={v.id}
@@ -281,8 +281,8 @@ export default function DiseaseDetail() {
                   className={cn(
                     "text-left block w-full px-3.5 py-3 text-[13px] font-extrabold rounded-xl transition-all font-dongy-serif whitespace-normal cursor-pointer",
                     activeVariant === v.id
-                      ? "bg-herbal-800 text-white shadow-sm font-bold border border-herbal-900"
-                      : "bg-transparent text-[#1C1204] font-extrabold hover:bg-parchment-100 hover:text-parchment-950"
+                      ? "bg-herbal-700 text-white shadow-sm font-bold border border-herbal-800"
+                      : "bg-transparent text-parchment-800 font-extrabold hover:bg-parchment-50 hover:text-herbal-900"
                   )}
                 >
                   {v.name}
@@ -295,86 +295,86 @@ export default function DiseaseDetail() {
             {disease.variants.map((v) => (
               <div 
                 key={v.id} 
-                className={cn("bg-[#FFFDF9] rounded-2xl shadow-sm border border-parchment-200 flex flex-col overflow-hidden", activeVariant === v.id ? "flex" : "hidden")}
+                className={cn("bg-white rounded-2xl shadow-sm border border-parchment-100 flex flex-col overflow-hidden", activeVariant === v.id ? "flex" : "hidden")}
               >
-                <div className="p-4 sm:p-5 bg-gradient-to-r from-herbal-800 to-[#374239] text-[#FFFDF9] flex items-center justify-between border-b border-herbal-900 shadow-sm">
+                <div className="p-4 sm:p-5 bg-gradient-to-r from-herbal-700 to-herbal-600 text-[#FFFDF9] flex items-center justify-between border-b border-herbal-800 shadow-sm">
                    <h3 className="text-[15.5px] sm:text-[17.5px] font-extrabold tracking-wide font-dongy-serif text-white">{v.name}</h3>
-                   <span className="text-[10.5px] uppercase tracking-widest font-dongy-serif px-2.5 py-0.5 border border-parchment-400 bg-parchment-50/10 rounded text-parchment-200">BIỆN CHỨNG LUẬN TRỊ</span>
+                   <span className="text-[10.5px] uppercase tracking-widest font-dongy-serif px-2.5 py-0.5 border border-white/20 bg-white/10 rounded text-white/90 shadow-xs">BIỆN CHỨNG LUẬN TRỊ</span>
                 </div>
                 
-                <div className="p-4 sm:p-5 flex flex-col gap-4 w-full bg-[#FFFDF9]">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <div className="p-5 bg-cinnabar-50/40 rounded-2xl flex flex-col h-full border border-cinnabar-100">
-                      <div className="flex items-center gap-2 mb-3 pb-2 border-b border-cinnabar-100/30">
-                        <div className="w-1.5 h-3.5 bg-cinnabar-600 rounded-full"></div>
-                        <h4 className="text-[11.5px] font-extrabold text-cinnabar-700 uppercase tracking-widest font-dongy-serif">Chứng trạng lâm sàng</h4>
+                <div className="p-4 sm:p-5 flex flex-col gap-5 w-full bg-white">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                    <div className="p-5 bg-cinnabar-50/30 rounded-2xl flex flex-col h-full border border-cinnabar-100/50">
+                      <div className="flex items-center gap-2 mb-3 pb-2 border-b border-cinnabar-100/20">
+                        <div className="w-1.5 h-3.5 bg-cinnabar-500 rounded-full"></div>
+                        <h4 className="text-[11.5px] font-extrabold text-cinnabar-600 uppercase tracking-widest font-dongy-serif">Chứng trạng lâm sàng</h4>
                       </div>
-                      <p className="text-[#1C1204] font-dongy-body text-[14.5px] sm:text-[15px] leading-relaxed font-semibold mb-4">{v.symptoms}</p>
+                      <p className="text-parchment-900 font-dongy-body text-[14.5px] sm:text-[15px] leading-relaxed font-semibold mb-4">{v.symptoms}</p>
                       
-                      <div className="mt-auto space-y-2 pt-4 border-t border-cinnabar-100/60">
-                        <div className="flex flex-col sm:flex-row bg-white/80 px-3.5 py-2.5 rounded-xl border border-cinnabar-100 shadow-sm sm:items-baseline gap-1 sm:gap-2.5">
-                          <span className="font-extrabold text-cinnabar-700 uppercase text-[10px] font-dongy-serif shrink-0 tracking-wider">Bát cương biện chứng:</span> 
-                          <span className="text-[13px] text-slate-900 font-dongy-body font-bold leading-normal">{v.batCuong}</span>
+                      <div className="mt-auto space-y-2 pt-4 border-t border-cinnabar-100/30">
+                        <div className="flex flex-col sm:flex-row bg-white/90 px-3.5 py-2.5 rounded-xl border border-cinnabar-50 shadow-xs sm:items-baseline gap-1 sm:gap-2.5">
+                          <span className="font-extrabold text-cinnabar-600 uppercase text-[10px] font-dongy-serif shrink-0 tracking-wider">Bát cương biện chứng:</span> 
+                          <span className="text-[13px] text-parchment-900 font-dongy-body font-bold leading-normal">{v.batCuong}</span>
                         </div>
-                        <div className="flex flex-col sm:flex-row bg-white/80 px-3.5 py-2.5 rounded-xl border border-cinnabar-100 shadow-sm sm:items-baseline gap-1 sm:gap-2.5">
-                          <span className="font-extrabold text-cinnabar-700 uppercase text-[10px] font-dongy-serif shrink-0 tracking-wider">Kinh lạc tạng phủ:</span> 
-                          <span className="text-[13px] text-slate-900 font-dongy-body font-bold leading-normal">{v.kinhLac}</span>
+                        <div className="flex flex-col sm:flex-row bg-white/90 px-3.5 py-2.5 rounded-xl border border-cinnabar-50 shadow-xs sm:items-baseline gap-1 sm:gap-2.5">
+                          <span className="font-extrabold text-cinnabar-600 uppercase text-[10px] font-dongy-serif shrink-0 tracking-wider">Kinh lạc tạng phủ:</span> 
+                          <span className="text-[13px] text-parchment-900 font-dongy-body font-bold leading-normal">{v.kinhLac}</span>
                         </div>
-                        <div className="flex flex-col sm:flex-row bg-white/80 px-3.5 py-2.5 rounded-xl border border-cinnabar-100 shadow-sm sm:items-baseline gap-1 sm:gap-2.5">
-                          <span className="font-extrabold text-cinnabar-700 uppercase text-[10px] font-dongy-serif shrink-0 tracking-wider">Nguyên nhân bệnh lý:</span> 
-                          <span className="text-[13px] text-slate-900 font-dongy-body font-bold leading-normal">{v.nguyenNhan}</span>
+                        <div className="flex flex-col sm:flex-row bg-white/90 px-3.5 py-2.5 rounded-xl border border-cinnabar-50 shadow-xs sm:items-baseline gap-1 sm:gap-2.5">
+                          <span className="font-extrabold text-cinnabar-600 uppercase text-[10px] font-dongy-serif shrink-0 tracking-wider">Nguyên nhân bệnh lý:</span> 
+                          <span className="text-[13px] text-parchment-900 font-dongy-body font-bold leading-normal">{v.nguyenNhan}</span>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="p-6 bg-[#FCFAF5] rounded-2xl flex flex-col justify-center text-center h-full relative overflow-hidden border border-ochre-200">
-                      <div className="absolute -top-12 -left-12 w-28 h-28 bg-[#FFFDF9] rounded-full opacity-30 border border-ochre-200"></div>
-                      <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-[#EADCC1]/10 rounded-full"></div>
+                    <div className="p-6 bg-ochre-50/30 rounded-2xl flex flex-col justify-center text-center h-full relative overflow-hidden border border-ochre-100/60">
+                      <div className="absolute -top-12 -left-12 w-28 h-28 bg-white rounded-full opacity-40 border border-ochre-100"></div>
+                      <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-ochre-100/10 rounded-full"></div>
                       <div className="flex items-center justify-center gap-2 mb-3 relative z-10">
-                        <Sparkles className="w-4 h-4 text-ochre-600" />
-                        <h4 className="text-[11px] font-extrabold text-ochre-750 uppercase tracking-widest font-dongy-serif">Biện Chứng Trị Pháp (Kế hoạch trị liệu)</h4>
+                        <Sparkles className="w-4 h-4 text-ochre-500" />
+                        <h4 className="text-[11px] font-extrabold text-ochre-600 uppercase tracking-widest font-dongy-serif">Biện Chứng Trị Pháp (Kế hoạch trị liệu)</h4>
                       </div>
-                      <p className="text-[#1C1204] text-[16px] sm:text-[18px] font-extrabold leading-relaxed px-4 py-1.5 relative z-10 font-dongy-serif tracking-wide border-t border-b border-ochre-200/60 my-1">{v.treatmentPrincipe}</p>
+                      <p className="text-parchment-900 text-[16px] sm:text-[18px] font-extrabold leading-relaxed px-4 py-1.5 relative z-10 font-dongy-serif tracking-wide border-t border-b border-ochre-200/40 my-1">{v.treatmentPrincipe}</p>
                     </div>
                   </div>
 
                   {v.pharmaTreatments.length > 0 && (
-                    <div className="rounded-2xl overflow-hidden bg-[#FFFDF9] border border-parchment-200 shadow-sm mt-2">
-                      <div className="bg-[#FAF6ED] px-4 sm:px-5 py-3.5 border-b border-parchment-200 flex items-center justify-between">
+                    <div className="rounded-2xl overflow-hidden bg-white border border-parchment-100 shadow-sm">
+                      <div className="bg-parchment-50/50 px-4 sm:px-5 py-3.5 border-b border-parchment-100 flex items-center justify-between">
                         <div className="flex items-center">
-                          <div className="p-2 bg-herbal-100 rounded-lg text-herbal-850 mr-2.5"><Pill className="w-4 h-4"/></div>
-                          <h4 className="text-[12px] font-extrabold text-herbal-850 uppercase tracking-widest font-dongy-serif">Biện Chứng Phương Dược (Dùng thuốc)</h4>
+                          <div className="p-2 bg-herbal-50 text-herbal-600 rounded-lg mr-2.5"><Pill className="w-4 h-4"/></div>
+                          <h4 className="text-[12px] font-extrabold text-herbal-700 uppercase tracking-widest font-dongy-serif">Biện Chứng Phương Dược (Dùng thuốc)</h4>
                         </div>
                       </div>
-                      <div className="p-4 sm:p-5 divide-y divide-parchment-200/60 pb-6 bg-parchment-50/20">
+                      <div className="p-4 sm:p-5 divide-y divide-parchment-50 pb-6">
                         {v.pharmaTreatments.map((treatment, idx) => (
                           <div key={idx} className="transition-all pt-5 first:pt-0 first:mt-0 mt-5">
-                            <div className="flex flex-wrap items-center justify-between gap-3 mb-3 pb-2 border-b border-parchment-100/50">
-                              <h5 className="text-[17px] font-extrabold text-herbal-900 font-dongy-serif">{treatment.name}</h5>
-                              <span className="text-[10px] font-bold px-2.5 py-1 rounded bg-herbal-50 text-herbal-700 border border-herbal-100 uppercase tracking-widest font-dongy-serif">
+                            <div className="flex flex-wrap items-center justify-between gap-3 mb-3 pb-2 border-b border-parchment-50">
+                              <h5 className="text-[17px] font-extrabold text-herbal-800 font-dongy-serif">{treatment.name}</h5>
+                              <span className="text-[10px] font-bold px-2.5 py-1 rounded bg-herbal-50 text-herbal-600 border border-herbal-100/50 uppercase tracking-widest font-dongy-serif">
                                 {treatment.type}
                               </span>
                             </div>
                             
                             {treatment.ingredients && (
-                              <div className="mt-4 bg-[#FCFAF5] p-4 rounded-xl relative">
-                                <span className="text-[#85221A] font-extrabold uppercase text-[10px] block mb-2 tracking-widest font-sans">Thành phần dược liệu & Liều lượng (Lượng vị)</span>
-                                <div className="text-[#1C1204] text-[14px] sm:text-[14.5px] font-semibold leading-relaxed font-dongy-body">
-                                  {formatListText(treatment.ingredients, 'text-cinnabar-600 font-extrabold', true)}
+                              <div className="mt-4 bg-parchment-50/30 p-4 rounded-xl border border-parchment-50/60 relative">
+                                <span className="text-cinnabar-600 font-extrabold uppercase text-[10px] block mb-2 tracking-widest font-sans">Thành phần dược liệu & Liều lượng (Lượng vị)</span>
+                                <div className="text-parchment-900 text-[14px] sm:text-[14.5px] font-semibold leading-relaxed font-dongy-body">
+                                  {formatListText(treatment.ingredients, 'text-cinnabar-500 font-extrabold', true)}
                                 </div>
                               </div>
                             )}
                             
                             {treatment.description && (
-                              <div className="mt-3 text-[14px] sm:text-[14.5px] font-semibold text-[#1C1204] font-dongy-body leading-relaxed pl-1">
-                                {formatListText(treatment.description, 'text-herbal-600 font-semibold')}
+                              <div className="mt-3 text-[14px] sm:text-[14.5px] font-semibold text-parchment-800 font-dongy-body leading-relaxed pl-1">
+                                {formatListText(treatment.description, 'text-herbal-500 font-semibold')}
                               </div>
                             )}
 
                             {treatment.instructions && (
-                              <div className="mt-4 flex flex-col sm:flex-row gap-2.5 sm:items-start text-[13.5px] sm:text-[14.5px] text-[#1C1204] bg-[#F5ECD6]/55 p-3.5 rounded-xl">
+                              <div className="mt-4 flex flex-col sm:flex-row gap-3 sm:items-start text-[13.5px] sm:text-[14.5px] text-parchment-900 bg-ochre-50/40 p-4 rounded-xl border border-ochre-100/30">
                                 <div className="shrink-0 self-start">
-                                  <span className="inline-block font-extrabold text-[#745615] uppercase text-[9.5px] sm:text-[10px] bg-white px-2.5 py-1 rounded-md shadow-xs border border-[#DECFAA]/60 font-sans">
+                                  <span className="inline-block font-extrabold text-ochre-700 uppercase text-[9.5px] sm:text-[10px] bg-white px-2.5 py-1 rounded-md shadow-xs border border-ochre-100/50 font-sans">
                                     Bào Chế & Phục Dược
                                   </span>
                                 </div>
@@ -390,21 +390,21 @@ export default function DiseaseDetail() {
                   )}
 
                   {v.nonPharmaTreatments.length > 0 && (
-                    <div className="rounded-2xl overflow-hidden bg-[#FFFDF9] border border-parchment-200 shadow-sm mt-2">
-                      <div className="bg-[#FAF6ED] px-4 py-3.5 border-b border-parchment-200 flex items-center">
-                        <div className="p-2 bg-ochre-100 rounded-lg text-ochre-700 mr-2.5"><Activity className="w-4 h-4"/></div>
-                        <h4 className="text-[12px] font-extrabold text-ochre-800 uppercase tracking-widest font-dongy-serif">Ngoại Trị Pháp (Châm cứu, Xoa bóp, Dưỡng Sinh)</h4>
+                    <div className="rounded-2xl overflow-hidden bg-white border border-parchment-100 shadow-sm">
+                      <div className="bg-parchment-50/50 px-4 py-3.5 border-b border-parchment-100 flex items-center">
+                        <div className="p-2 bg-ochre-50 text-ochre-600 rounded-lg mr-2.5"><Activity className="w-4 h-4"/></div>
+                        <h4 className="text-[12px] font-extrabold text-ochre-700 uppercase tracking-widest font-dongy-serif">Ngoại Trị Pháp (Châm cứu, Xoa bóp, Dưỡng Sinh)</h4>
                       </div>
-                      <div className="p-4 sm:p-5 grid grid-cols-1 md:grid-cols-2 gap-6 bg-parchment-50/10">
+                      <div className="p-4 sm:p-5 grid grid-cols-1 md:grid-cols-2 gap-6">
                         {v.nonPharmaTreatments.map((treatment, idx) => (
                           <div key={idx} className="flex flex-col transition-all py-1">
                             <div className="mb-4">
-                              <span className="inline-block border border-ochre-200 bg-[#FAF6ED]/80 rounded-lg px-4 py-1.5 text-[11.5px] font-black uppercase text-[#8A671B] font-sans tracking-wide shadow-xs">
+                              <span className="inline-block border border-ochre-100/50 bg-ochre-50/80 rounded-lg px-4 py-1.5 text-[11.5px] font-black uppercase text-ochre-600 font-sans tracking-wide shadow-xs">
                                 {treatment.type}
                               </span>
                             </div>
-                            <div className="text-[14px] sm:text-[14.5px] font-medium text-[#1C1204] leading-relaxed font-dongy-body pl-1">
-                              {formatListText(treatment.description, 'text-ochre-600')}
+                            <div className="text-[14px] sm:text-[14.5px] font-medium text-parchment-900 leading-relaxed font-dongy-body pl-1">
+                              {formatListText(treatment.description, 'text-ochre-500')}
                             </div>
                           </div>
                         ))}

@@ -2,41 +2,41 @@
 @import "tailwindcss";
 
 @theme {
-  --color-parchment-50: #FAF6ED;
-  --color-parchment-100: #EFE8D3;
-  --color-parchment-200: #DFD3BA;
-  --color-parchment-300: #C9B99A;
-  --color-parchment-400: #B39E7C;
-  --color-parchment-500: #937F5D;
-  --color-parchment-600: #756346;
-  --color-parchment-700: #5A4B34;
-  --color-parchment-800: #3D3221;
-  --color-parchment-900: #211A10;
+  --color-parchment-50: #FDFCFA;
+  --color-parchment-100: #F7F2E6;
+  --color-parchment-200: #EDE4D0;
+  --color-parchment-300: #D8CBB6;
+  --color-parchment-400: #C1B198;
+  --color-parchment-500: #A39174;
+  --color-parchment-600: #86765D;
+  --color-parchment-700: #685A46;
+  --color-parchment-800: #4B4132;
+  --color-parchment-900: #2D271E;
 
-  --color-herbal-50: #F3F5F2;
-  --color-herbal-100: #E2E6E0;
-  --color-herbal-200: #C2CBC0;
-  --color-herbal-300: #9FADA0;
-  --color-herbal-400: #7C8F7E;
-  --color-herbal-500: #5C6E5E;
-  --color-herbal-600: #49584B;
-  --color-herbal-700: #3E4D40;
-  --color-herbal-800: #313D33;
-  --color-herbal-900: #242D25;
+  --color-herbal-50: #F6F9F4;
+  --color-herbal-100: #E8EDE4;
+  --color-herbal-200: #CBD7C6;
+  --color-herbal-300: #A9BCA5;
+  --color-herbal-400: #839D7E;
+  --color-herbal-500: #5D7E58;
+  --color-herbal-600: #4A6546;
+  --color-herbal-700: #394E36;
+  --color-herbal-800: #293827;
+  --color-herbal-900: #1A2419;
 
-  --color-cinnabar-50: #FCF4F3;
-  --color-cinnabar-100: #F8E3E1;
-  --color-cinnabar-200: #F0C4BF;
-  --color-cinnabar-500: #9C2E25;
-  --color-cinnabar-600: #85221A;
-  --color-cinnabar-700: #6E1A13;
+  --color-cinnabar-50: #FEF6F5;
+  --color-cinnabar-100: #FCE6E4;
+  --color-cinnabar-200: #F8CBCA;
+  --color-cinnabar-500: #CB3324;
+  --color-cinnabar-600: #A8251B;
+  --color-cinnabar-700: #8C1E16;
 
-  --color-ochre-50: #FCFAF5;
-  --color-ochre-100: #F5ECD6;
-  --color-ochre-200: #ECD29E;
-  --color-ochre-500: #A27D26;
-  --color-ochre-600: #8A671B;
-  --color-ochre-700: #715212;
+  --color-ochre-50: #FFFDF7;
+  --color-ochre-100: #F9EFE0;
+  --color-ochre-200: #F3DBA9;
+  --color-ochre-500: #CC9A1E;
+  --color-ochre-600: #AA8114;
+  --color-ochre-700: #88670F;
 
   --font-serif: "Lora", Georgia, serif;
   --font-lora: "Lora", serif;
@@ -45,8 +45,8 @@
 
 /* Global Overrides */
 html, body, #root {
-  background-color: #FAF6ED !important;
-  color: #211A10;
+  background-color: #FDFCFA !important;
+  color: #2D271E;
   font-family: "Inter", system-ui, sans-serif;
   overflow-x: hidden;
   height: 100%;
@@ -95,14 +95,14 @@ body {
 
 /* Vintage card/paper aesthetics */
 .kraft-paper-card {
-  background-color: #FFFDF9;
-  border: 1px solid #DFD3BA;
-  box-shadow: 0 2px 8px -2px rgba(121, 106, 78, 0.08);
+  background-color: #FFFDFB;
+  border: 1px solid #EDE4D0;
+  box-shadow: 0 4px 12px -2px rgba(93, 78, 50, 0.06);
 }
 
 .kraft-paper-item:hover {
-  background-color: #FAF6ED;
-  border-color: #C9B99A;
+  background-color: #FDFCFA;
+  border-color: #D8CBB6;
 }
 
 /* Eastern medicine red wax seal / stamp mark style */
@@ -110,11 +110,11 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1.5px solid #85221A;
-  color: #85221A;
+  border: 1.5px solid #A8251B;
+  color: #A8251B;
   font-family: "Lora", Georgia, serif;
   font-weight: bold;
-  background-color: rgba(133, 34, 26, 0.04);
+  background-color: rgba(168, 37, 27, 0.05);
   padding: 0.125rem 0.375rem;
   border-radius: 4px;
 }
@@ -125,12 +125,12 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #FAF6ED;
+  background: #FDFCFA;
 }
 ::-webkit-scrollbar-thumb {
-  background: #DFD3BA;
+  background: #EDE4D0;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #C9B99A;
+  background: #D8CBB6;
 }
