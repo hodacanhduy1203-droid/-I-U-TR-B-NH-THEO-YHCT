@@ -98,13 +98,12 @@ body {
 .kraft-paper-card {
   background-color: #FAF5DF; /* Perfect rich premium golden yellow */
   border: 2px solid #4E431E; /* Solid wood border */
-  box-shadow: 4px 4px 0px 0px #4E431E; /* Tactile 3D block shadow projection */
   transition: all 0.15s ease-in-out;
 }
 
 .kraft-paper-card:hover {
-  transform: translate(1px, 1px);
-  box-shadow: 2px 2px 0px 0px #4E431E; /* Depressing slightly as if a real physics-based card */
+  transform: translateY(-1px);
+  background-color: #F3EAC5;
 }
 
 .kraft-paper-item:hover {

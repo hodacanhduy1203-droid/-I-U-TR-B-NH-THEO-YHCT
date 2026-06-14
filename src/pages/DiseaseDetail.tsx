@@ -238,16 +238,16 @@ const renderIngredientsList = (ingredientsText: string) => {
   return (
     <div className="space-y-4">
       {structuredItems.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-1.5 sm:gap-2.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-1.5">
           {structuredItems.map((item, idx) => (
             <div 
               key={idx} 
-              className="bg-[#FAF5DF] border-2 border-parchment-550 rounded-xl px-2.5 py-2.5 flex items-center justify-between shadow-[2px_2px_0px_0px_#4E431E] transition-all hover:translate-x-[0.5px] hover:translate-y-[0.5px] hover:shadow-[1px_1px_0px_0px_#4E431E] select-all"
+              className="border-b border-parchment-200/60 pb-1 flex items-center justify-between select-all"
             >
-              <span className="font-dongy-serif font-bold text-parchment-950 text-[11.5px] xs:text-[12.5px] sm:text-[13.5px] truncate mr-1 sm:mr-2" title={item.name}>
+              <span className="font-dongy-serif font-bold text-parchment-950 text-[12.5px] sm:text-[13.5px] truncate mr-1 sm:mr-2" title={item.name}>
                 {item.name}
               </span>
-              <span className="text-cinnabar-700 font-bold text-[12px] sm:text-[13px] shrink-0 font-sans">
+              <span className="text-cinnabar-700 font-bold text-[12.5px] sm:text-[13.5px] shrink-0 font-sans">
                 {item.dosage}
               </span>
             </div>
@@ -315,18 +315,18 @@ export default function DiseaseDetail() {
 
   return (
     <div className="space-y-3.5 sm:space-y-4 flex flex-col h-full animate-fade-in">
-      <div className="bg-[#F2DB9A] border-2 border-parchment-400 rounded-2xl py-3 px-4 sm:py-3.5 sm:px-5 shrink-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E] relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-herbal-500/5 rounded-full blur-2xl pointer-events-none"></div>
+      <div className="bg-gradient-to-br from-herbal-700 to-herbal-600 border-2 border-herbal-500/30 rounded-2xl py-3 px-4 sm:py-3.5 sm:px-5 shrink-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 relative overflow-hidden shadow-sm">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-ochre-500/10 rounded-full blur-2xl pointer-events-none"></div>
         <div className="relative z-10">
-          <h2 className="text-[17px] sm:text-[21.5px] font-black uppercase tracking-wide text-herbal-900 font-sans">{displayIndex}. {disease.name}</h2>
-          <p className="text-[12px] text-parchment-700 font-bold mt-1 sm:mt-1.5 uppercase tracking-widest flex items-center flex-wrap gap-2">
+          <h2 className="text-[17px] sm:text-[21.5px] font-black uppercase tracking-wide text-white font-sans">{displayIndex}. {disease.name}</h2>
+          <p className="text-[12px] text-parchment-100 font-bold mt-1 sm:mt-1.5 uppercase tracking-widest flex items-center flex-wrap gap-2">
             Danh pháp YHCT: 
-            <span className="text-[12px] text-herbal-700 border border-herbal-300 bg-herbal-50 px-2.5 py-0.5 rounded font-sans font-extrabold shadow-3xs">
+            <span className="text-[12px] text-white border border-herbal-500/30 bg-herbal-800/40 px-2.5 py-0.5 rounded font-sans font-extrabold shadow-3xs">
               {disease.traditionalName}
             </span>
           </p>
         </div>
-        <Link to="/diseases" className="inline-flex items-center text-[11px] uppercase text-parchment-900 font-extrabold hover:text-herbal-900 border-2 border-parchment-300 transition-all bg-[#FCFAF2] hover:bg-parchment-100 px-3.5 py-2 rounded-xl shadow-xs font-dongy-serif">
+        <Link to="/diseases" className="inline-flex items-center text-[11px] uppercase text-herbal-900 font-extrabold hover:text-herbal-800 border-2 border-herbal-300 transition-all bg-[#FCFAF2] hover:bg-herbal-50 px-3.5 py-2 rounded-xl shadow-xs font-dongy-serif">
           <ArrowLeft className="mr-1.5 h-3.5 w-3.5 text-herbal-700 font-bold" />
           Quay lại mục lục
         </Link>
@@ -358,10 +358,10 @@ export default function DiseaseDetail() {
       </div>
 
       {activeTab === 'overview' && (
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 flex-1 pb-4">
+        <div className="grid grid-cols-1 gap-3 sm:gap-3.5 lg:grid-cols-2 lg:gap-4.5 flex-1 pb-4">
           {/* Card 1: Khái luận đại vương (Bilingual unification with elegant 3D projection) */}
-          <div className="bg-[#FAF5DF] border-2 border-herbal-700 p-5 rounded-2xl flex flex-col shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E]">
-            <div className="flex items-center pb-2.5 mb-3.5 border-b border-parchment-200">
+          <div className="bg-[#FAF5DF] border-2 border-herbal-700 p-4 sm:p-4.5 rounded-2xl flex flex-col shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E]">
+            <div className="flex items-center pb-2 mb-2.5 border-b border-parchment-200">
               <div className="p-1.5 bg-herbal-100/50 text-herbal-800 rounded-lg mr-2.5 border border-herbal-200">
                 <BookOpen className="w-4 h-4" />
               </div>
@@ -371,8 +371,8 @@ export default function DiseaseDetail() {
           </div>
 
           {/* Card 2: Western Medicine (Diagnostic evidence with elegant 3D projection) */}
-          <div className="bg-[#FAF5DF] border-2 border-parchment-400 p-5 rounded-2xl flex flex-col shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E]">
-            <div className="flex items-center pb-2.5 mb-3.5 border-b border-parchment-200">
+          <div className="bg-[#FAF5DF] border-2 border-parchment-400 p-4 sm:p-4.5 rounded-2xl flex flex-col shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E]">
+            <div className="flex items-center pb-2 mb-2.5 border-b border-parchment-200">
               <div className="p-1.5 bg-parchment-200/50 text-parchment-950 rounded-lg mr-2.5 border border-parchment-300">
                 <Stethoscope className="w-4 h-4" />
               </div>
@@ -382,8 +382,8 @@ export default function DiseaseDetail() {
           </div>
 
           {/* Card 3: Traditional Medicine (Meridians & Viscera with elegant 3D projection) */}
-          <div className="bg-[#FAF5DF] border-2 border-ochre-600 p-5 rounded-2xl flex flex-col shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E]">
-            <div className="flex items-center pb-2.5 mb-3.5 border-b border-parchment-200">
+          <div className="bg-[#FAF5DF] border-2 border-ochre-600 p-4 sm:p-4.5 rounded-2xl flex flex-col shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E]">
+            <div className="flex items-center pb-2 mb-2.5 border-b border-parchment-200">
               <div className="p-1.5 bg-ochre-100/50 text-ochre-800 rounded-lg mr-2.5 border border-ochre-200">
                 <Activity className="w-4 h-4" />
               </div>
@@ -393,8 +393,8 @@ export default function DiseaseDetail() {
           </div>
           
           {/* Card 4: Health maintenance / Preventing recurrence with elegant 3D projection) */}
-          <div className="bg-[#FAF5DF] border-2 border-emerald-600 p-5 rounded-2xl flex flex-col shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E]">
-            <div className="flex items-center pb-2.5 mb-3.5 border-b border-parchment-200">
+          <div className="bg-[#FAF5DF] border-2 border-emerald-600 p-4 sm:p-4.5 rounded-2xl flex flex-col shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E]">
+            <div className="flex items-center pb-2 mb-2.5 border-b border-parchment-200">
               <div className="p-1.5 bg-emerald-100/40 text-emerald-800 rounded-lg mr-2.5 border border-emerald-250">
                 <Leaf className="w-4 h-4" />
               </div>
@@ -451,40 +451,38 @@ export default function DiseaseDetail() {
                 <div className="px-1.5 xs:px-3 sm:px-5 py-3 sm:py-4 flex flex-col gap-4 sm:gap-5 w-full bg-transparent">
                   {/* Grid 1: Symptoms and Principles (Bright & Distinct partitions) */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
-                    {/* Part A: Clinical symptoms (Elegant Unified 3D block) */}
-                    <div className="p-4 sm:p-5 bg-[#FCFAF2] border-2 border-parchment-400 rounded-2xl flex flex-col h-full shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E]">
-                      <div className="flex items-center gap-2 mb-2.5 pb-2 border-b border-cinnabar-100/30">
+                    {/* Part A: Clinical symptoms */}
+                    <div className="p-1 xs:p-2 sm:p-3 flex flex-col h-full bg-transparent">
+                      <div className="flex items-center gap-2 mb-2.5 pb-2 border-b border-cinnabar-200/50">
                         <div className="w-1.5 h-3.5 bg-cinnabar-500 rounded-full"></div>
-                        <h4 className="text-[11px] font-extrabold text-cinnabar-600 uppercase tracking-widest font-dongy-serif">Chứng trạng lâm sàng</h4>
+                        <h4 className="text-[11px] font-extrabold text-cinnabar-700 uppercase tracking-widest font-dongy-serif">Chứng trạng lâm sàng</h4>
                       </div>
-                      <p className="text-parchment-900 font-dongy-body text-[14.5px] sm:text-[15px] leading-relaxed font-semibold mb-3">{v.symptoms}</p>
+                      <p className="text-parchment-950 font-dongy-body text-[14.5px] sm:text-[15px] leading-relaxed font-semibold mb-3">{v.symptoms}</p>
                       
-                      {/* Diagnostic badges stacked clearly in highly tactile 3D woodblocks */}
-                      <div className="mt-auto space-y-2.5 pt-3.5 border-t border-parchment-200/45">
-                        <div className="flex flex-col sm:flex-row bg-[#FAF5DF] px-3.5 py-2.5 rounded-xl border-2 border-parchment-350 shadow-[4px_4px_0px_0px_#4E431E] sm:items-baseline gap-1 sm:gap-2.5 transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_0px_#4E431E] select-all">
-                          <span className="font-extrabold text-parchment-800 uppercase text-[9.5px] font-dongy-serif shrink-0 tracking-wider">Bát cương biện chứng:</span> 
-                          <span className="text-[13px] text-parchment-900 font-dongy-body font-bold leading-normal">{v.batCuong}</span>
+                      {/* Diagnostic badges stacked clearly without background boxes */}
+                      <div className="mt-auto space-y-2.5 pt-3.5 border-t border-parchment-200/40">
+                        <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2.5 select-all py-1">
+                          <span className="font-extrabold text-parchment-700 uppercase text-[10px] tracking-wider shrink-0">Bát cương biện chứng:</span> 
+                          <span className="text-[14px] text-parchment-900 font-dongy-body font-bold leading-normal">{v.batCuong}</span>
                         </div>
-                        <div className="flex flex-col sm:flex-row bg-[#FAF5DF] px-3.5 py-2.5 rounded-xl border-2 border-parchment-350 shadow-[4px_4px_0px_0px_#4E431E] sm:items-baseline gap-1 sm:gap-2.5 transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_0px_#4E431E] select-all">
-                          <span className="font-extrabold text-parchment-800 uppercase text-[9.5px] font-dongy-serif shrink-0 tracking-wider">Kinh lạc tạng phủ:</span> 
-                          <span className="text-[13px] text-parchment-900 font-dongy-body font-bold leading-normal">{v.kinhLac}</span>
+                        <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2.5 select-all py-1">
+                          <span className="font-extrabold text-parchment-700 uppercase text-[10px] tracking-wider shrink-0">Kinh lạc tạng phủ:</span> 
+                          <span className="text-[14px] text-parchment-900 font-dongy-body font-bold leading-normal">{v.kinhLac}</span>
                         </div>
-                        <div className="flex flex-col sm:flex-row bg-[#FAF5DF] px-3.5 py-2.5 rounded-xl border-2 border-parchment-350 shadow-[4px_4px_0px_0px_#4E431E] sm:items-baseline gap-1 sm:gap-2.5 transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_0px_#4E431E] select-all">
-                          <span className="font-extrabold text-parchment-800 uppercase text-[9.5px] font-dongy-serif shrink-0 tracking-wider">Nguyên nhân bệnh lý:</span> 
-                          <span className="text-[13px] text-parchment-900 font-dongy-body font-bold leading-normal">{v.nguyenNhan}</span>
+                        <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2.5 select-all py-1">
+                          <span className="font-extrabold text-parchment-700 uppercase text-[10px] tracking-wider shrink-0">Nguyên nhân bệnh lý:</span> 
+                          <span className="text-[14px] text-parchment-900 font-dongy-body font-bold leading-normal">{v.nguyenNhan}</span>
                         </div>
                       </div>
                     </div>
                     
-                    {/* Part B: Therapeutic planning (Unified Ochre scroll with 3D block projection) */}
-                    <div className="p-4 sm:p-5 bg-[#FCFAF5] border-2 border-ochre-600 rounded-2xl flex flex-col justify-center text-center h-full relative overflow-hidden shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E]">
-                      <div className="absolute -top-12 -left-12 w-28 h-28 bg-white rounded-full opacity-55 border border-ochre-100"></div>
-                      <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-ochre-100/5 rounded-full"></div>
+                    {/* Part B: Therapeutic planning */}
+                    <div className="p-4 sm:p-5 flex flex-col justify-center text-center h-full relative bg-transparent">
                       <div className="flex items-center justify-center gap-2 mb-2 relative z-10">
-                        <Sparkles className="w-4 h-4 text-ochre-500" />
-                        <h4 className="text-[11px] font-extrabold text-ochre-700 uppercase tracking-widest font-dongy-serif">Biện Chứng Trị Pháp (Kế hoạch trị liệu)</h4>
+                        <Sparkles className="w-4 h-4 text-ochre-600" />
+                        <h4 className="text-[11px] font-extrabold text-ochre-800 uppercase tracking-widest font-dongy-serif">Biện Chứng Trị Pháp (Kế hoạch trị liệu)</h4>
                       </div>
-                      <p className="text-[#554005] text-[15px] sm:text-[17px] font-black leading-relaxed px-4 py-1.5 relative z-10 font-dongy-serif tracking-wide border-t border-b border-ochre-200/45 my-1.5">
+                      <p className="text-[#554005] text-[15.5px] sm:text-[17.5px] font-black leading-relaxed px-4 py-2 relative z-10 font-dongy-serif tracking-wide border-t border-b border-ochre-300/40 my-1.5">
                         {v.treatmentPrincipe}
                       </p>
                     </div>
@@ -496,7 +494,7 @@ export default function DiseaseDetail() {
                       <div className="bg-parchment-50/50 px-4 sm:px-5 py-3.5 border-b border-parchment-200 flex items-center justify-between">
                         <div className="flex items-center">
                           <div className="p-1.5 bg-herbal-50 text-herbal-700 rounded-lg mr-2.5 border border-herbal-100"><Pill className="w-4 h-4"/></div>
-                          <h4 className="text-[12.5px] font-extrabold text-herbal-800 uppercase tracking-widest font-dongy-serif">Biện Chứng Phương Dược (Dùng thuốc)</h4>
+                          <h4 className="text-[12.5px] font-extrabold text-herbal-800 uppercase tracking-widest font-dongy-serif">Phương Dược</h4>
                         </div>
                       </div>
                       <div className="px-2 py-4 sm:p-5 divide-y divide-parchment-100 pb-6">
