@@ -4,6 +4,41 @@ import { diseases } from '../data';
 import { ArrowLeft, Stethoscope, Pill, BookOpen, Leaf, Activity, Sparkles } from 'lucide-react';
 import { cn } from '../utils';
 
+const isAcupointList = (prefix: string, content: string): boolean => {
+  const normalizedPrefix = prefix.toLowerCase();
+  
+  if (
+    normalizedPrefix.includes('rối loạn tâm thần') ||
+    normalizedPrefix.includes('cổ gáy mềm') ||
+    normalizedPrefix.includes('liệt chi trên') ||
+    normalizedPrefix.includes('liệt chi dưới') ||
+    normalizedPrefix.includes('nói khó') ||
+    normalizedPrefix.includes('dưỡng toàn thân') ||
+    normalizedPrefix.includes('đơn huyệt') ||
+    normalizedPrefix.includes('công thức huyệt')
+  ) {
+    return true;
+  }
+
+  if (!content.includes(',')) {
+    return false;
+  }
+
+  const items = content.split(',').map(item => item.trim()).filter(Boolean);
+  const hasAcupointCode = items.some(item => /\([A-Za-z]{1,4}\.\d+\)/.test(item) || /\([A-Z]+\d+\)/.test(item));
+  const avgLength = items.reduce((sum, item) => sum + item.length, 0) / items.length;
+  const allShort = items.every(item => item.length < 50);
+
+  return hasAcupointCode || (items.length >= 2 && allShort && avgLength < 35);
+};
+
+const capitalizeFirstLetter = (str: string): string => {
+  if (!str) return '';
+  const trimmed = str.trim();
+  if (trimmed.length === 0) return '';
+  return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+};
+
 const formatListText = (text: string, dotColorClass: string, isIngredient: boolean = false) => {
   if (!text) return null;
 
@@ -42,12 +77,11 @@ const formatListText = (text: string, dotColorClass: string, isIngredient: boole
     // If it's a list like "Sài hồ 12g, Xuyên khung 08g, Chỉ xác 08g"
     if (line.includes(',') && !line.includes(' - ') && (!line.includes(':') || line.split(':')[1]?.includes(','))) {
       // If the line contains decimal commas (e.g., 2,5kg or 2, 5kg), don't split it into a list automatically
-      // as it's ambiguous and the user might want a continuous block of text.
       if (/\d,\s*\d/.test(line)) {
         return line;
       }
 
-      // Split the line by colons if there is a prefix like "Tại chỗ: A thị, Thượng liêu"
+      // Split the line by colons if there is a prefix
       if (line.includes(':') && !line.includes('phút') && !line.includes('ngày')) {
         const parts = line.split(':');
         const prefix = parts[0] + ':';
@@ -70,6 +104,50 @@ const formatListText = (text: string, dotColorClass: string, isIngredient: boole
   lines.forEach((line, idx) => {
     const t = line.trim();
     if (!t) return;
+
+    // Check if we need to format this line as a 2-column acupoint block
+    const unprefixed = t.startsWith('+ ') ? t.substring(2) : (t.startsWith('- ') ? t.substring(2) : t);
+    const colonIdx = unprefixed.indexOf(':');
+    if (colonIdx !== -1) {
+      const prefix = unprefixed.slice(0, colonIdx).trim();
+      const content = unprefixed.slice(colonIdx + 1).trim();
+      
+      if (isAcupointList(prefix, content)) {
+        const items = content
+          .split(',')
+          .map(item => {
+            let s = item.trim();
+            if (s.endsWith('.') || s.endsWith(';')) {
+              s = s.substring(0, s.length - 1).trim();
+            }
+            return s;
+          })
+          .filter(Boolean);
+          
+        resultElements.push(
+          <div key={`acupoint-block-${idx}`} className="mt-3.5 mb-2 pl-1 w-full">
+            <div className="text-[13.5px] sm:text-[14.5px] font-extrabold text-herbal-900 font-dongy-serif flex items-center gap-1.5 border-b border-parchment-200 pb-1.5 mt-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-ochre-600 shrink-0"></span>
+              {prefix}:
+            </div>
+            <div className={items.length > 8 ? "grid grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-1.5 mt-2.5 pl-1.5" : "grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 mt-2.5 pl-1.5"}>
+              {items.map((item, itemIdx) => (
+                <div 
+                  key={`acupoint-item-${idx}-${itemIdx}`}
+                  className="flex items-baseline gap-2 py-0.5"
+                >
+                  <span className="text-ochre-600 shrink-0 text-[14.5px] font-extrabold leading-none">•</span>
+                  <span className="font-dongy-body text-[14px] sm:text-[14.5px] font-medium text-parchment-900 leading-relaxed">
+                    {capitalizeFirstLetter(item)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+        return;
+      }
+    }
 
     if (t.includes(' - ') && !t.startsWith('+') && !t.startsWith('-')) {
       const subLines = t.split(' - ');
@@ -94,7 +172,7 @@ const formatListText = (text: string, dotColorClass: string, isIngredient: boole
           resultElements.push(
             <div key={`split-${idx}-${pIdx}`} className="flex gap-2 mt-1 -ml-1">
               <span className={`${dotColorClass} shrink-0 text-lg leading-none mt-0.5`}>•</span>
-              <span className="mt-[2px] font-dongy-body text-[14.5px] sm:text-[15px] font-medium leading-relaxed text-[#1C1204]">{p.trim()}</span>
+              <span className="mt-[2px] font-dongy-body text-[14.5px] sm:text-[15px] font-medium leading-relaxed text-parchment-900">{capitalizeFirstLetter(p.trim())}</span>
             </div>
           );
         });
@@ -106,33 +184,91 @@ const formatListText = (text: string, dotColorClass: string, isIngredient: boole
       resultElements.push(
          <div key={`dash-${idx}`} className="flex gap-2 mt-1 -ml-1">
            <span className={`${dotColorClass} shrink-0 text-lg leading-none mt-0.5`}>•</span>
-           <span className="mt-[2px] font-dongy-body text-[14.5px] sm:text-[15px] font-medium leading-relaxed text-[#1C1204]">{t.substring(2)}</span>
+           <span className="mt-[2px] font-dongy-body text-[14.5px] sm:text-[15px] font-medium leading-relaxed text-parchment-900">{capitalizeFirstLetter(t.substring(2))}</span>
          </div>
       );
     } else if (t.startsWith('* ')) {
       resultElements.push(
-         <div key={`star-${idx}`} className="pl-4 mt-1">
-           <span className="text-[#1C1204] font-dongy-body text-[14px] sm:text-[14.5px] font-semibold leading-relaxed">{t.substring(2)}</span>
+         <div key={`star-${idx}`} className="pl-4 mt-1 border-l-2 border-parchment-200 my-1">
+           <span className="text-parchment-800 font-dongy-body text-[14px] sm:text-[14.5px] font-semibold leading-relaxed">{capitalizeFirstLetter(t.substring(2))}</span>
          </div>
       );
     } else if (t.startsWith('+ ')) {
       resultElements.push(
          <div key={`plus-${idx}`} className="flex gap-2 pl-4 mt-1">
-           <span className="text-herbal-500 shrink-0 opacity-60">-</span>
-           <span className="text-[#1C1204] font-dongy-body text-[14.5px] sm:text-[15px] font-medium leading-relaxed">{t.substring(2)}</span>
+           <span className="text-herbal-500 shrink-0 opacity-60 font-bold">-</span>
+           <span className="text-parchment-900 font-dongy-body text-[14.5px] sm:text-[15px] font-medium leading-relaxed">{capitalizeFirstLetter(t.substring(2))}</span>
          </div>
       );
     } else {
       const isHeader = t.includes(':') && !t.includes('phút') && !t.includes('ngày') && t.length < 100;
       resultElements.push(
-        <div key={`text-${idx}`} className={cn(isHeader ? "font-bold text-herbal-850 font-dongy-serif mt-2 mb-1 text-[15px] sm:text-[16px]" : "text-[#1C1204] font-dongy-body mt-1 text-[14.5px] sm:text-[15px] font-medium leading-relaxed")}>
+        <div key={`text-${idx}`} className={cn(isHeader ? "font-bold text-herbal-800 font-dongy-serif mt-3 mb-1.5 text-[15px] sm:text-[16px] border-b border-parchment-100 pb-1" : "text-parchment-900 font-dongy-body mt-1 text-[14.5px] sm:text-[15px] font-medium leading-relaxed")}>
           {t}
         </div>
       );
     }
   });
 
-  return <div className="space-y-0.5">{resultElements}</div>;
+  return <div className="space-y-1">{resultElements}</div>;
+};
+
+const renderIngredientsList = (ingredientsText: string) => {
+  if (!ingredientsText) return null;
+  
+  const lines = ingredientsText.split('\n');
+  const structuredItems: { name: string; dosage: string }[] = [];
+  const narrativeLines: string[] = [];
+  
+  lines.forEach(line => {
+    let t = line.trim();
+    if (!t) return;
+    if (t.startsWith('- ')) t = t.substring(2);
+    
+    if (t.includes(':')) {
+      const parts = t.split(':');
+      const name = parts[0].trim();
+      const dosage = parts.slice(1).join(':').trim();
+      structuredItems.push({ name, dosage });
+    } else {
+      narrativeLines.push(t);
+    }
+  });
+
+  return (
+    <div className="space-y-4">
+      {structuredItems.length > 0 && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-1.5 sm:gap-2.5">
+          {structuredItems.map((item, idx) => (
+            <div 
+              key={idx} 
+              className="bg-[#FAF5DF] border-2 border-parchment-550 rounded-xl px-2.5 py-2.5 flex items-center justify-between shadow-[2px_2px_0px_0px_#4E431E] transition-all hover:translate-x-[0.5px] hover:translate-y-[0.5px] hover:shadow-[1px_1px_0px_0px_#4E431E] select-all"
+            >
+              <span className="font-dongy-serif font-bold text-parchment-950 text-[11.5px] xs:text-[12.5px] sm:text-[13.5px] truncate mr-1 sm:mr-2" title={item.name}>
+                {item.name}
+              </span>
+              <span className="text-cinnabar-700 font-bold text-[12px] sm:text-[13px] shrink-0 font-sans">
+                {item.dosage}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+      
+      {narrativeLines.length > 0 && (
+        <div className="space-y-2 pt-1">
+          {narrativeLines.map((line, idx) => (
+            <div key={idx} className="bg-parchment-50/40 border border-parchment-100 rounded-xl p-3 flex items-start gap-2.5 shadow-2xs">
+              <span className="text-cinnabar-500 font-extrabold mt-0.5">•</span>
+              <span className="font-dongy-body text-[13.5px] sm:text-[14px] text-parchment-800 font-medium leading-relaxed">
+                {line}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default function DiseaseDetail() {
@@ -178,31 +314,32 @@ export default function DiseaseDetail() {
   }
 
   return (
-    <div className="space-y-5 flex flex-col h-full animate-fade-in">
-      <div className="kraft-paper-card rounded-2xl p-5 shrink-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[#FFFDF9]">
-        <div>
-          <h2 className="text-[17px] sm:text-[21px] font-black uppercase tracking-wide text-blue-900 font-sans">{displayIndex}. {disease.name}</h2>
-          <p className="text-[12px] text-parchment-700 font-bold mt-1.5 uppercase tracking-widest flex items-center flex-wrap gap-1.5">
+    <div className="space-y-3.5 sm:space-y-4 flex flex-col h-full animate-fade-in">
+      <div className="bg-[#FAF5DF] border-2 border-parchment-400 rounded-2xl py-3 px-4 sm:py-3.5 sm:px-5 shrink-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E] relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-herbal-500/5 rounded-full blur-2xl pointer-events-none"></div>
+        <div className="relative z-10">
+          <h2 className="text-[17px] sm:text-[21.5px] font-black uppercase tracking-wide text-herbal-900 font-sans">{displayIndex}. {disease.name}</h2>
+          <p className="text-[12px] text-parchment-700 font-bold mt-1 sm:mt-1.5 uppercase tracking-widest flex items-center flex-wrap gap-2">
             Danh pháp YHCT: 
-            <span className="text-[12.5px] text-cinnabar-800 border border-cinnabar-100/85 bg-cinnabar-50/75 px-2.5 py-0.5 rounded font-sans font-bold shadow-xs">
+            <span className="text-[12px] text-herbal-700 border border-herbal-300 bg-herbal-50 px-2.5 py-0.5 rounded font-sans font-extrabold shadow-3xs">
               {disease.traditionalName}
             </span>
           </p>
         </div>
-        <Link to="/diseases" className="inline-flex items-center text-[11.5px] uppercase text-parchment-850 font-bold hover:text-parchment-950 transition-colors bg-[#F5ECD6] hover:bg-parchment-100 px-3.5 py-2.5 rounded-xl shadow-sm border border-parchment-200 font-dongy-serif">
-          <ArrowLeft className="mr-1.5 h-3.5 w-3.5 text-herbal-800" />
+        <Link to="/diseases" className="inline-flex items-center text-[11px] uppercase text-parchment-900 font-extrabold hover:text-herbal-900 border-2 border-parchment-300 transition-all bg-[#FCFAF2] hover:bg-parchment-100 px-3.5 py-2 rounded-xl shadow-xs font-dongy-serif">
+          <ArrowLeft className="mr-1.5 h-3.5 w-3.5 text-herbal-700 font-bold" />
           Quay lại mục lục
         </Link>
       </div>
 
-      <div className="flex bg-parchment-100 p-1 rounded-xl w-full sm:w-fit shrink-0 border border-parchment-200 shadow-sm">
+      <div className="flex bg-parchment-200 p-1 rounded-xl w-full sm:w-fit shrink-0 border border-parchment-300 shadow-3xs">
         <button type="button"
           onClick={() => handleTabChange('overview')}
           className={cn(
-            "w-full sm:w-auto rounded-lg px-4 py-2 text-[11px] sm:text-[12px] font-extrabold uppercase tracking-widest transition-all font-dongy-serif cursor-pointer",
+            "w-full sm:w-auto rounded-lg px-4 py-1.5 sm:py-2 text-[11px] sm:text-[11.5px] font-extrabold uppercase tracking-widest transition-all font-dongy-serif cursor-pointer",
             activeTab === 'overview'
-              ? "bg-[#FFFDF9] text-herbal-850 shadow-sm border border-parchment-200"
-              : "text-parchment-600 font-semibold hover:text-parchment-900"
+              ? "bg-[#FAF5DF] text-herbal-900 shadow-sm border border-parchment-400"
+              : "text-parchment-800 font-bold hover:text-herbal-900"
           )}
         >
           Biện Danh (Tổng quan)
@@ -210,10 +347,10 @@ export default function DiseaseDetail() {
         <button type="button"
           onClick={() => handleTabChange('variants')}
           className={cn(
-            "w-full sm:w-auto rounded-lg px-4 py-2 text-[11px] sm:text-[12px] font-extrabold uppercase tracking-widest transition-all font-dongy-serif cursor-pointer",
+            "w-full sm:w-auto rounded-lg px-4 py-1.5 sm:py-2 text-[11px] sm:text-[11.5px] font-extrabold uppercase tracking-widest transition-all font-dongy-serif cursor-pointer",
             activeTab === 'variants'
-              ? "bg-[#FFFDF9] text-herbal-850 shadow-sm border border-parchment-200"
-              : "text-parchment-600 font-semibold hover:text-parchment-900"
+              ? "bg-[#FAF5DF] text-herbal-900 shadow-sm border border-parchment-400"
+              : "text-parchment-800 font-bold hover:text-herbal-900"
           )}
         >
           Biện Chứng Trị Liệu (Thể lâm sàng)
@@ -221,68 +358,73 @@ export default function DiseaseDetail() {
       </div>
 
       {activeTab === 'overview' && (
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 flex-1">
-          <div className="bg-white border border-parchment-100 p-5 rounded-2xl shadow-sm flex flex-col hover:border-herbal-400 transition-colors">
-            <div className="flex items-center pb-2.5 mb-3.5 border-b border-herbal-50">
-              <div className="p-1.5 bg-herbal-50 text-herbal-600 rounded-lg mr-2.5">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 flex-1 pb-4">
+          {/* Card 1: Khái luận đại vương (Bilingual unification with elegant 3D projection) */}
+          <div className="bg-[#FAF5DF] border-2 border-herbal-700 p-5 rounded-2xl flex flex-col shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E]">
+            <div className="flex items-center pb-2.5 mb-3.5 border-b border-parchment-200">
+              <div className="p-1.5 bg-herbal-100/50 text-herbal-800 rounded-lg mr-2.5 border border-herbal-200">
                 <BookOpen className="w-4 h-4" />
               </div>
-              <h3 className="text-[12px] font-extrabold uppercase tracking-widest text-herbal-800 font-dongy-serif">Khái Luận Đại Cương (YHHĐ x YHCT)</h3>
+              <h3 className="text-[12px] font-extrabold uppercase tracking-widest text-herbal-900 font-dongy-serif">Khái Luận Đại Cương (YHHĐ x YHCT)</h3>
             </div>
-            <p className="text-parchment-900 font-dongy-body text-[15px] leading-relaxed font-semibold px-1">{disease.description}</p>
+            <p className="text-parchment-950 font-dongy-body text-[15px] leading-relaxed font-semibold px-1">{disease.description}</p>
           </div>
 
-          <div className="bg-white border border-parchment-100 p-5 rounded-2xl shadow-sm flex flex-col hover:border-parchment-400 transition-colors">
-            <div className="flex items-center pb-2.5 mb-3.5 border-b border-parchment-50">
-              <div className="p-1.5 bg-parchment-50 text-parchment-600 rounded-lg mr-2.5">
+          {/* Card 2: Western Medicine (Diagnostic evidence with elegant 3D projection) */}
+          <div className="bg-[#FAF5DF] border-2 border-parchment-400 p-5 rounded-2xl flex flex-col shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E]">
+            <div className="flex items-center pb-2.5 mb-3.5 border-b border-parchment-200">
+              <div className="p-1.5 bg-parchment-200/50 text-parchment-950 rounded-lg mr-2.5 border border-parchment-300">
                 <Stethoscope className="w-4 h-4" />
               </div>
-              <h3 className="text-[12px] font-extrabold uppercase tracking-widest text-parchment-800 font-dongy-serif">Chẩn đoán lâm sàng & Cận lâm sàng YHHĐ</h3>
+              <h3 className="text-[12px] font-extrabold uppercase tracking-widest text-parchment-900 font-dongy-serif">Khảo sát & Cận lâm sàng Y học hiện đại</h3>
             </div>
-            <p className="text-parchment-900 font-dongy-body text-[15px] leading-relaxed font-semibold px-1">{disease.modernDiagnosis}</p>
+            <p className="text-parchment-950 font-dongy-body text-[15px] leading-relaxed font-semibold px-1">{disease.modernDiagnosis}</p>
           </div>
 
-          <div className="bg-white border border-parchment-100 p-5 rounded-2xl shadow-sm flex flex-col hover:border-ochre-400 transition-colors">
-            <div className="flex items-center pb-2.5 mb-3.5 border-b border-ochre-50">
-              <div className="p-1.5 bg-ochre-50 text-ochre-600 rounded-lg mr-2.5">
+          {/* Card 3: Traditional Medicine (Meridians & Viscera with elegant 3D projection) */}
+          <div className="bg-[#FAF5DF] border-2 border-ochre-600 p-5 rounded-2xl flex flex-col shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E]">
+            <div className="flex items-center pb-2.5 mb-3.5 border-b border-parchment-200">
+              <div className="p-1.5 bg-ochre-100/50 text-ochre-800 rounded-lg mr-2.5 border border-ochre-200">
                 <Activity className="w-4 h-4" />
               </div>
-              <h3 className="text-[12px] font-extrabold uppercase tracking-widest text-ochre-800 font-dongy-serif">Khảo luận bệnh sinh & Tạng phủ YHCT</h3>
+              <h3 className="text-[12px] font-extrabold uppercase tracking-widest text-ochre-800 font-dongy-serif">Phân tích Bệnh cơ & Tạng phủ Y học cổ truyền</h3>
             </div>
-            <p className="text-parchment-900 font-dongy-body text-[15px] leading-relaxed font-semibold px-1">{disease.traditionalDiagnosis}</p>
+            <p className="text-parchment-950 font-dongy-body text-[15px] leading-relaxed font-semibold px-1">{disease.traditionalDiagnosis}</p>
           </div>
           
-          <div className="bg-white border border-parchment-100 p-5 rounded-2xl shadow-sm flex flex-col hover:border-cinnabar-400 transition-colors">
-            <div className="flex items-center pb-2.5 mb-3.5 border-b border-cinnabar-50">
-              <div className="p-1.5 bg-cinnabar-50 text-cinnabar-600 rounded-lg mr-2.5">
+          {/* Card 4: Health maintenance / Preventing recurrence with elegant 3D projection) */}
+          <div className="bg-[#FAF5DF] border-2 border-emerald-600 p-5 rounded-2xl flex flex-col shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E]">
+            <div className="flex items-center pb-2.5 mb-3.5 border-b border-parchment-200">
+              <div className="p-1.5 bg-emerald-100/40 text-emerald-800 rounded-lg mr-2.5 border border-emerald-250">
                 <Leaf className="w-4 h-4" />
               </div>
-              <h3 className="text-[12px] font-extrabold uppercase tracking-widest text-cinnabar-800 font-dongy-serif">Phòng trị & Hướng dẫn dưỡng sinh</h3>
+              <h3 className="text-[12px] font-extrabold uppercase tracking-widest text-emerald-900 font-dongy-serif">Dự phòng & Hướng dẫn phục hồi dưỡng sinh</h3>
             </div>
-            <p className="text-parchment-900 font-dongy-body text-[15px] leading-relaxed font-semibold px-1">{disease.prevention}</p>
+            <p className="text-parchment-950 font-dongy-body text-[15px] leading-relaxed font-semibold px-1">{disease.prevention}</p>
           </div>
         </div>
       )}
 
       {activeTab === 'variants' && (
         <div className="flex flex-col xl:flex-row gap-4 items-start">
-          <div className="w-full xl:w-1/4 flex flex-col bg-white rounded-2xl border border-parchment-100 shrink-0 shadow-sm overflow-hidden">
-            <div className="p-4 border-b border-parchment-50 bg-parchment-50/30">
-              <h3 className="text-[12px] text-herbal-800 font-extrabold uppercase tracking-widest flex items-center gap-2 font-dongy-serif">
-                <Activity className="w-3.5 h-3.5 text-herbal-500" />
-                Các thể hội chứng lâm sàng
+          {/* Left Navigation: List of variants styled as a clinical index */}
+          <div className="w-full xl:w-1/4 flex flex-col bg-[#FAF5DF] rounded-2xl border-2 border-parchment-400 shrink-0 shadow-[4px_4px_0px_0px_#4E431E] overflow-hidden">
+            <div className="px-3.5 py-2.5 border-b-2 border-parchment-300 bg-parchment-100/40">
+              <h3 className="text-[11.5px] text-herbal-850 font-extrabold uppercase tracking-widest flex items-center gap-2 font-dongy-serif">
+                <Activity className="w-3.5 h-3.5 text-herbal-600" />
+                Thể hội chứng lâm sàng
               </h3>
             </div>
-            <div className="flex-1 p-2.5 space-y-1.5 bg-white">
+            <div className="flex-1 p-2 space-y-0.5 bg-transparent">
               {disease.variants.map((v) => (
                 <button type="button"
                   key={v.id}
                   onClick={() => handleVariantChange(v.id)}
                   className={cn(
-                    "text-left block w-full px-3.5 py-3 text-[13px] font-extrabold rounded-xl transition-all font-dongy-serif whitespace-normal cursor-pointer",
+                    "text-left block w-full px-3 py-1.5 sm:py-2 text-[13px] font-extrabold rounded-xl transition-all font-dongy-serif whitespace-normal cursor-pointer",
                     activeVariant === v.id
-                      ? "bg-herbal-700 text-white shadow-sm font-bold border border-herbal-800"
-                      : "bg-transparent text-parchment-800 font-extrabold hover:bg-parchment-50 hover:text-herbal-900"
+                      ? "bg-ochre-700 text-white shadow-xs font-black border-l-4 border-l-parchment-200 pl-2.5"
+                      : "bg-transparent text-parchment-900 font-bold hover:bg-parchment-200/50 hover:text-ochre-800 border-l-4 border-l-transparent"
                   )}
                 >
                   {v.name}
@@ -291,94 +433,105 @@ export default function DiseaseDetail() {
             </div>
           </div>
           
+          {/* Right Content: Active variant therapeutic details */}
           <div className="w-full xl:w-3/4 flex flex-col">
             {disease.variants.map((v) => (
               <div 
                 key={v.id} 
-                className={cn("bg-white rounded-2xl shadow-sm border border-parchment-100 flex flex-col overflow-hidden", activeVariant === v.id ? "flex" : "hidden")}
+                className={cn("bg-[#FAF5DF] rounded-2xl shadow-[5px_5px_0px_0px_#4E431E] border-2 border-parchment-400 flex flex-col overflow-hidden transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E]", activeVariant === v.id ? "flex" : "hidden")}
               >
-                <div className="p-4 sm:p-5 bg-gradient-to-r from-herbal-700 to-herbal-600 text-[#FFFDF9] flex items-center justify-between border-b border-herbal-800 shadow-sm">
-                   <h3 className="text-[15.5px] sm:text-[17.5px] font-extrabold tracking-wide font-dongy-serif text-white">{v.name}</h3>
-                   <span className="text-[10.5px] uppercase tracking-widest font-dongy-serif px-2.5 py-0.5 border border-white/20 bg-white/10 rounded text-white/90 shadow-xs">BIỆN CHỨNG LUẬN TRỊ</span>
+                {/* Header Banner */}
+                <div className="p-4 sm:p-5 bg-gradient-to-r from-ochre-700 to-ochre-600 text-white flex items-center justify-between shadow-sm">
+                   <h3 className="text-[15px] sm:text-[17px] font-extrabold tracking-wide font-dongy-serif text-white">{v.name}</h3>
+                   <span className="text-[9.5px] uppercase tracking-widest font-dongy-serif px-2.5 py-1 border border-white/20 bg-white/15 rounded text-white/95 shadow-3xs font-extrabold">
+                     BIỆN CHỨNG LUẬN TRỊ
+                   </span>
                 </div>
                 
-                <div className="p-4 sm:p-5 flex flex-col gap-5 w-full bg-white">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-                    <div className="p-5 bg-cinnabar-50/30 rounded-2xl flex flex-col h-full border border-cinnabar-100/50">
-                      <div className="flex items-center gap-2 mb-3 pb-2 border-b border-cinnabar-100/20">
+                <div className="px-1.5 xs:px-3 sm:px-5 py-3 sm:py-4 flex flex-col gap-4 sm:gap-5 w-full bg-transparent">
+                  {/* Grid 1: Symptoms and Principles (Bright & Distinct partitions) */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
+                    {/* Part A: Clinical symptoms (Elegant Unified 3D block) */}
+                    <div className="p-4 sm:p-5 bg-[#FCFAF2] border-2 border-parchment-400 rounded-2xl flex flex-col h-full shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E]">
+                      <div className="flex items-center gap-2 mb-2.5 pb-2 border-b border-cinnabar-100/30">
                         <div className="w-1.5 h-3.5 bg-cinnabar-500 rounded-full"></div>
-                        <h4 className="text-[11.5px] font-extrabold text-cinnabar-600 uppercase tracking-widest font-dongy-serif">Chứng trạng lâm sàng</h4>
+                        <h4 className="text-[11px] font-extrabold text-cinnabar-600 uppercase tracking-widest font-dongy-serif">Chứng trạng lâm sàng</h4>
                       </div>
-                      <p className="text-parchment-900 font-dongy-body text-[14.5px] sm:text-[15px] leading-relaxed font-semibold mb-4">{v.symptoms}</p>
+                      <p className="text-parchment-900 font-dongy-body text-[14.5px] sm:text-[15px] leading-relaxed font-semibold mb-3">{v.symptoms}</p>
                       
-                      <div className="mt-auto space-y-2 pt-4 border-t border-cinnabar-100/30">
-                        <div className="flex flex-col sm:flex-row bg-white/90 px-3.5 py-2.5 rounded-xl border border-cinnabar-50 shadow-xs sm:items-baseline gap-1 sm:gap-2.5">
-                          <span className="font-extrabold text-cinnabar-600 uppercase text-[10px] font-dongy-serif shrink-0 tracking-wider">Bát cương biện chứng:</span> 
+                      {/* Diagnostic badges stacked clearly in highly tactile 3D woodblocks */}
+                      <div className="mt-auto space-y-2.5 pt-3.5 border-t border-parchment-200/45">
+                        <div className="flex flex-col sm:flex-row bg-[#FAF5DF] px-3.5 py-2.5 rounded-xl border-2 border-parchment-350 shadow-[4px_4px_0px_0px_#4E431E] sm:items-baseline gap-1 sm:gap-2.5 transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_0px_#4E431E] select-all">
+                          <span className="font-extrabold text-parchment-800 uppercase text-[9.5px] font-dongy-serif shrink-0 tracking-wider">Bát cương biện chứng:</span> 
                           <span className="text-[13px] text-parchment-900 font-dongy-body font-bold leading-normal">{v.batCuong}</span>
                         </div>
-                        <div className="flex flex-col sm:flex-row bg-white/90 px-3.5 py-2.5 rounded-xl border border-cinnabar-50 shadow-xs sm:items-baseline gap-1 sm:gap-2.5">
-                          <span className="font-extrabold text-cinnabar-600 uppercase text-[10px] font-dongy-serif shrink-0 tracking-wider">Kinh lạc tạng phủ:</span> 
+                        <div className="flex flex-col sm:flex-row bg-[#FAF5DF] px-3.5 py-2.5 rounded-xl border-2 border-parchment-350 shadow-[4px_4px_0px_0px_#4E431E] sm:items-baseline gap-1 sm:gap-2.5 transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_0px_#4E431E] select-all">
+                          <span className="font-extrabold text-parchment-800 uppercase text-[9.5px] font-dongy-serif shrink-0 tracking-wider">Kinh lạc tạng phủ:</span> 
                           <span className="text-[13px] text-parchment-900 font-dongy-body font-bold leading-normal">{v.kinhLac}</span>
                         </div>
-                        <div className="flex flex-col sm:flex-row bg-white/90 px-3.5 py-2.5 rounded-xl border border-cinnabar-50 shadow-xs sm:items-baseline gap-1 sm:gap-2.5">
-                          <span className="font-extrabold text-cinnabar-600 uppercase text-[10px] font-dongy-serif shrink-0 tracking-wider">Nguyên nhân bệnh lý:</span> 
+                        <div className="flex flex-col sm:flex-row bg-[#FAF5DF] px-3.5 py-2.5 rounded-xl border-2 border-parchment-350 shadow-[4px_4px_0px_0px_#4E431E] sm:items-baseline gap-1 sm:gap-2.5 transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_0px_#4E431E] select-all">
+                          <span className="font-extrabold text-parchment-800 uppercase text-[9.5px] font-dongy-serif shrink-0 tracking-wider">Nguyên nhân bệnh lý:</span> 
                           <span className="text-[13px] text-parchment-900 font-dongy-body font-bold leading-normal">{v.nguyenNhan}</span>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="p-6 bg-ochre-50/30 rounded-2xl flex flex-col justify-center text-center h-full relative overflow-hidden border border-ochre-100/60">
-                      <div className="absolute -top-12 -left-12 w-28 h-28 bg-white rounded-full opacity-40 border border-ochre-100"></div>
-                      <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-ochre-100/10 rounded-full"></div>
-                      <div className="flex items-center justify-center gap-2 mb-3 relative z-10">
+                    {/* Part B: Therapeutic planning (Unified Ochre scroll with 3D block projection) */}
+                    <div className="p-4 sm:p-5 bg-[#FCFAF5] border-2 border-ochre-600 rounded-2xl flex flex-col justify-center text-center h-full relative overflow-hidden shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E]">
+                      <div className="absolute -top-12 -left-12 w-28 h-28 bg-white rounded-full opacity-55 border border-ochre-100"></div>
+                      <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-ochre-100/5 rounded-full"></div>
+                      <div className="flex items-center justify-center gap-2 mb-2 relative z-10">
                         <Sparkles className="w-4 h-4 text-ochre-500" />
-                        <h4 className="text-[11px] font-extrabold text-ochre-600 uppercase tracking-widest font-dongy-serif">Biện Chứng Trị Pháp (Kế hoạch trị liệu)</h4>
+                        <h4 className="text-[11px] font-extrabold text-ochre-700 uppercase tracking-widest font-dongy-serif">Biện Chứng Trị Pháp (Kế hoạch trị liệu)</h4>
                       </div>
-                      <p className="text-parchment-900 text-[16px] sm:text-[18px] font-extrabold leading-relaxed px-4 py-1.5 relative z-10 font-dongy-serif tracking-wide border-t border-b border-ochre-200/40 my-1">{v.treatmentPrincipe}</p>
+                      <p className="text-[#554005] text-[15px] sm:text-[17px] font-black leading-relaxed px-4 py-1.5 relative z-10 font-dongy-serif tracking-wide border-t border-b border-ochre-200/45 my-1.5">
+                        {v.treatmentPrincipe}
+                      </p>
                     </div>
                   </div>
 
+                  {/* Part C: Pharma remedies / Herbal prescriptions (Unified 3D container projection) */}
                   {v.pharmaTreatments.length > 0 && (
-                    <div className="rounded-2xl overflow-hidden bg-white border border-parchment-100 shadow-sm">
-                      <div className="bg-parchment-50/50 px-4 sm:px-5 py-3.5 border-b border-parchment-100 flex items-center justify-between">
+                    <div className="rounded-2xl overflow-hidden bg-[#FCFAF2] border-2 border-parchment-400 shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E] mb-6">
+                      <div className="bg-parchment-50/50 px-4 sm:px-5 py-3.5 border-b border-parchment-200 flex items-center justify-between">
                         <div className="flex items-center">
-                          <div className="p-2 bg-herbal-50 text-herbal-600 rounded-lg mr-2.5"><Pill className="w-4 h-4"/></div>
-                          <h4 className="text-[12px] font-extrabold text-herbal-700 uppercase tracking-widest font-dongy-serif">Biện Chứng Phương Dược (Dùng thuốc)</h4>
+                          <div className="p-1.5 bg-herbal-50 text-herbal-700 rounded-lg mr-2.5 border border-herbal-100"><Pill className="w-4 h-4"/></div>
+                          <h4 className="text-[12.5px] font-extrabold text-herbal-800 uppercase tracking-widest font-dongy-serif">Biện Chứng Phương Dược (Dùng thuốc)</h4>
                         </div>
                       </div>
-                      <div className="p-4 sm:p-5 divide-y divide-parchment-50 pb-6">
+                      <div className="px-2 py-4 sm:p-5 divide-y divide-parchment-100 pb-6">
                         {v.pharmaTreatments.map((treatment, idx) => (
-                          <div key={idx} className="transition-all pt-5 first:pt-0 first:mt-0 mt-5">
-                            <div className="flex flex-wrap items-center justify-between gap-3 mb-3 pb-2 border-b border-parchment-50">
-                              <h5 className="text-[17px] font-extrabold text-herbal-800 font-dongy-serif">{treatment.name}</h5>
-                              <span className="text-[10px] font-bold px-2.5 py-1 rounded bg-herbal-50 text-herbal-600 border border-herbal-100/50 uppercase tracking-widest font-dongy-serif">
+                           <div key={idx} className="transition-all pt-5 first:pt-0 first:mt-0 mt-5">
+                            <div className="flex flex-wrap items-center justify-between gap-3 mb-3 pb-2 border-b border-parchment-100">
+                              <h5 className="text-[16px] sm:text-[17px] font-black text-cinnabar-700 font-dongy-serif">{treatment.name.toUpperCase()}</h5>
+                              <span className="text-[10px] font-bold px-2.5 py-1 rounded bg-herbal-50 text-herbal-700 border border-herbal-100 uppercase tracking-widest font-dongy-serif">
                                 {treatment.type}
                               </span>
                             </div>
                             
                             {treatment.ingredients && (
-                              <div className="mt-4 bg-parchment-50/30 p-4 rounded-xl border border-parchment-50/60 relative">
-                                <span className="text-cinnabar-600 font-extrabold uppercase text-[10px] block mb-2 tracking-widest font-sans">Thành phần dược liệu & Liều lượng (Lượng vị)</span>
-                                <div className="text-parchment-900 text-[14px] sm:text-[14.5px] font-semibold leading-relaxed font-dongy-body">
-                                  {formatListText(treatment.ingredients, 'text-cinnabar-500 font-extrabold', true)}
+                              <div className="mt-4 bg-[#FDFCEE] px-2 py-3.5 sm:p-4 rounded-xl border-2 border-parchment-300 relative shadow-3xs mb-3.5">
+                                <span className="text-cinnabar-600 font-extrabold uppercase text-[10px] block mb-3.5 tracking-widest font-sans">Thành phần dược liệu & Liều lượng (Lượng vị)</span>
+                                <div>
+                                  {renderIngredientsList(treatment.ingredients)}
                                 </div>
                               </div>
                             )}
                             
                             {treatment.description && (
                               <div className="mt-3 text-[14px] sm:text-[14.5px] font-semibold text-parchment-800 font-dongy-body leading-relaxed pl-1">
-                                {formatListText(treatment.description, 'text-herbal-500 font-semibold')}
+                                {formatListText(treatment.description, 'text-herbal-600 font-semibold')}
                               </div>
                             )}
 
                             {treatment.instructions && (
-                              <div className="mt-4 flex flex-col sm:flex-row gap-3 sm:items-start text-[13.5px] sm:text-[14.5px] text-parchment-900 bg-ochre-50/40 p-4 rounded-xl border border-ochre-100/30">
+                              <div className="mt-4 flex flex-col sm:flex-row gap-3 sm:items-start text-[13.5px] sm:text-[14px] text-parchment-900 bg-ochre-50/30 p-3 sm:p-4 rounded-xl border border-ochre-100 mb-1">
                                 <div className="shrink-0 self-start">
-                                  <span className="inline-block font-extrabold text-ochre-700 uppercase text-[9.5px] sm:text-[10px] bg-white px-2.5 py-1 rounded-md shadow-xs border border-ochre-100/50 font-sans">
+                                  <span className="inline-block font-extrabold text-ochre-700 uppercase text-[9px] sm:text-[9.5px] bg-white px-2.5 py-1 rounded-md shadow-3xs border border-ochre-200/60 font-sans">
                                     Bào Chế & Phục Dược
                                   </span>
                                 </div>
-                                <div className="leading-relaxed font-dongy-body text-[13.5px] sm:text-[14.5px] font-medium flex-1">
+                                <div className="leading-relaxed font-dongy-body text-[13.5px] sm:text-[14px] font-semibold flex-1">
                                   {treatment.instructions}
                                 </div>
                               </div>
@@ -389,22 +542,23 @@ export default function DiseaseDetail() {
                     </div>
                   )}
 
+                  {/* Part D: Non-pharma therapies / Acupoints (Unified 3D container projection) */}
                   {v.nonPharmaTreatments.length > 0 && (
-                    <div className="rounded-2xl overflow-hidden bg-white border border-parchment-100 shadow-sm">
-                      <div className="bg-parchment-50/50 px-4 py-3.5 border-b border-parchment-100 flex items-center">
-                        <div className="p-2 bg-ochre-50 text-ochre-600 rounded-lg mr-2.5"><Activity className="w-4 h-4"/></div>
-                        <h4 className="text-[12px] font-extrabold text-ochre-700 uppercase tracking-widest font-dongy-serif">Ngoại Trị Pháp (Châm cứu, Xoa bóp, Dưỡng Sinh)</h4>
+                    <div className="rounded-2xl overflow-hidden bg-[#FCFAF2] border-2 border-parchment-400 shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E]">
+                      <div className="bg-parchment-50/50 px-3.5 py-2 sm:py-2.5 border-b border-parchment-200 flex items-center">
+                        <div className="p-1 bg-ochre-50 text-ochre-600 rounded-lg mr-2 border border-ochre-100"><Activity className="w-3.5 h-3.5"/></div>
+                        <h4 className="text-[11.5px] sm:text-[12px] font-extrabold text-ochre-800 uppercase tracking-widest font-dongy-serif">Ngoại Trị Pháp (Châm cứu, Xoa bóp, Dưỡng Sinh)</h4>
                       </div>
-                      <div className="p-4 sm:p-5 grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="p-3.5 sm:p-4 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
                         {v.nonPharmaTreatments.map((treatment, idx) => (
-                          <div key={idx} className="flex flex-col transition-all py-1">
-                            <div className="mb-4">
-                              <span className="inline-block border border-ochre-100/50 bg-ochre-50/80 rounded-lg px-4 py-1.5 text-[11.5px] font-black uppercase text-ochre-600 font-sans tracking-wide shadow-xs">
+                          <div key={idx} className="flex flex-col transition-all py-0.5">
+                            <div className="mb-2 sm:mb-2.5">
+                              <span className="inline-block border border-ochre-200 bg-[#FCFAF5] rounded-lg px-3 py-1 text-[10.5px] sm:text-[11px] font-extrabold uppercase text-ochre-700 font-sans tracking-wide shadow-3xs">
                                 {treatment.type}
                               </span>
                             </div>
-                            <div className="text-[14px] sm:text-[14.5px] font-medium text-parchment-900 leading-relaxed font-dongy-body pl-1">
-                              {formatListText(treatment.description, 'text-ochre-500')}
+                            <div className="text-[13.5px] sm:text-[14px] font-medium text-parchment-900 leading-relaxed font-dongy-body pl-1">
+                              {formatListText(treatment.description, 'text-ochre-600 font-bold')}
                             </div>
                           </div>
                         ))}

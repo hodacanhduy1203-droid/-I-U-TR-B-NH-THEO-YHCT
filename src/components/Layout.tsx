@@ -102,9 +102,9 @@ export default function Layout() {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-parchment-50">
-        <header className="h-14 bg-herbal-700 border-b border-herbal-800 text-[#FFFDF9] flex items-center justify-between px-3 sm:px-5 shrink-0 shadow-sm relative z-10">
+        <header className="h-14 bg-parchment-800 border-b-2 border-parchment-900 text-[#FFFDF9] flex items-center justify-between px-3 sm:px-5 shrink-0 shadow-sm relative z-10">
           <button 
-            className="p-2 text-herbal-100 hover:text-white lg:hidden rounded-md focus:outline-none flex-shrink-0"
+            className="p-2 text-parchment-200 hover:text-white lg:hidden rounded-md focus:outline-none flex-shrink-0"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Mở menu</span>
@@ -114,8 +114,8 @@ export default function Layout() {
           <div className="flex-1 flex items-center gap-2 sm:gap-4 lg:ml-0 overflow-hidden">
             <h1 className="text-[13px] xs:text-[14px] sm:text-[16px] font-bold tracking-widest font-dongy-serif flex items-center gap-1.5 sm:gap-2 truncate">
               <span className="text-[#FFFDF9] font-extrabold whitespace-nowrap">MEDICONNECT</span> 
-              <span className="font-medium text-ochre-200 border-l border-herbal-500 pl-1.5 sm:pl-2 hidden md:inline text-[11px] sm:text-[12px] whitespace-nowrap">VIỆN Y HỌC CỔ TRUYỀN x HIỆN ĐẠI</span>
-              <span className="font-medium text-ochre-200 border-l border-herbal-500 pl-1.5 sm:pl-2 md:hidden text-[9px] sm:text-[10px] whitespace-nowrap">YHCT x YHHĐ</span>
+              <span className="font-medium text-ochre-200 border-l border-parchment-600 pl-1.5 sm:pl-2 hidden md:inline text-[11px] sm:text-[12px] whitespace-nowrap">VIỆN Y HỌC CỔ TRUYỀN x HIỆN ĐẠI</span>
+              <span className="font-medium text-ochre-200 border-l border-parchment-600 pl-1.5 sm:pl-2 md:hidden text-[9px] sm:text-[10px] whitespace-nowrap">YHCT x YHHĐ</span>
             </h1>
             
             {/* Stamp seal accent */}

@@ -59,11 +59,11 @@ export default function Dashboard() {
             
             <div className="relative w-full sm:max-w-xs shrink-0">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <Search className="h-4 w-4 text-herbal-500" aria-hidden="true" />
+                <Search className="h-4 w-4 text-herbal-550" aria-hidden="true" />
               </div>
               <input
                 type="text"
-                className="block w-full rounded-xl bg-white border border-parchment-100 py-2 pl-9 pr-3 text-[13px] text-parchment-800 placeholder:text-parchment-300 focus:ring-1 focus:ring-herbal-400 focus:border-herbal-400 focus:outline-none shadow-xs transition-shadow hover:shadow-sm"
+                className="block w-full rounded-xl bg-[#FCFAF2] border-2 border-parchment-300 py-2 pl-9 pr-3 text-[13px] text-parchment-800 placeholder:text-parchment-400 focus:bg-white focus:ring-1 focus:ring-herbal-400 focus:border-herbal-400 focus:outline-none shadow-xs transition-all hover:border-parchment-400"
                 placeholder="Tìm danh pháp hoặc tên bệnh..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -72,14 +72,14 @@ export default function Dashboard() {
           </div>
           
           {filteredDiseases.length > 0 ? (
-            <ul className="divide-y divide-parchment-50 bg-white flex-1">
+            <ul className="divide-y divide-parchment-200/60 bg-transparent flex-1">
               {filteredDiseases.map((disease, idx) => (
-                <li key={disease.id} className="transition-colors hover:bg-parchment-50/30">
+                <li key={disease.id} className="transition-all hover:bg-parchment-100/40 first:rounded-t-none last:rounded-b-2xl">
                   <Link to={`/diseases/${disease.id}`} className="flex items-center px-5 py-3.5 group">
-                    <span className="text-[12px] font-black font-sans text-herbal-900/40 mr-4 shrink-0 w-6">
+                    <span className="text-[12px] font-black font-sans text-herbal-850/60 mr-4 shrink-0 w-6">
                       {idx + 1 < 10 ? `0${idx + 1}` : idx + 1}
                     </span>
-                    <p className="text-[14px] font-extrabold uppercase tracking-wide text-parchment-800 group-hover:text-herbal-700 transition-colors font-sans truncate">
+                    <p className="text-[14px] font-black uppercase tracking-wide text-parchment-900 group-hover:text-herbal-800 transition-colors font-sans truncate">
                       {disease.name}
                     </p>
                   </Link>
@@ -87,7 +87,7 @@ export default function Dashboard() {
               ))}
             </ul>
           ) : (
-            <div className="text-center py-10 bg-white border-t border-parchment-50">
+            <div className="text-center py-10 bg-[#FAF5DF] border-t border-parchment-200">
               <p className="text-[14px] text-parchment-600 font-dongy-body">Không tìm thấy bệnh lý nào phù hợp với từ khóa tra cứu.</p>
             </div>
           )}

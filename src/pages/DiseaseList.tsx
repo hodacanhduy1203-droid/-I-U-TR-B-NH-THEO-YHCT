@@ -29,7 +29,7 @@ export default function DiseaseList() {
             </div>
             <input
               type="text"
-              className="block w-full rounded-xl bg-white border border-parchment-200 py-2.5 pl-9 pr-3 text-[13.5px] text-parchment-900 placeholder:text-parchment-400 focus:ring-1 focus:ring-herbal-500 focus:border-herbal-500 focus:outline-none shadow-sm transition-shadow hover:shadow-md"
+              className="block w-full rounded-xl bg-[#FCFAF2] border-2 border-parchment-300/80 py-2.5 pl-9 pr-3 text-[13.5px] text-parchment-900 placeholder:text-parchment-400 focus:bg-white focus:ring-1 focus:ring-herbal-500 focus:border-herbal-500 focus:outline-none shadow-xs transition-all hover:border-parchment-400"
               placeholder="Tìm kiếm danh pháp hoặc tên bệnh..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -38,20 +38,20 @@ export default function DiseaseList() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 auto-rows-max">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4.5 auto-rows-max pb-6">
         {filteredDiseases.map((disease) => (
           <Link
             key={disease.id}
             to={`/diseases/${disease.id}`}
-            className="flex items-center kraft-paper-card rounded-xl hover:border-herbal-500 transition-all px-5 py-3.5 group border-l-4 border-l-herbal-800 hover:shadow-md"
+            className="flex items-center kraft-paper-card rounded-xl px-5 py-2.5 group transition-all"
           >
-            <span className="text-[12px] font-black font-sans text-herbal-900/40 mr-4 shrink-0 w-6">
+            <span className="text-[12.5px] font-black font-sans text-herbal-850/60 mr-4 shrink-0 w-6">
               {disease.displayIndex < 10 ? `0${disease.displayIndex}` : disease.displayIndex}
             </span>
-            <h3 className="text-[13.5px] sm:text-[14px] font-extrabold uppercase tracking-wide text-[#1C1204] group-hover:text-herbal-900 transition-colors font-sans flex-1 truncate">
+            <h3 className="text-[13.5px] sm:text-[14px] font-black uppercase tracking-wide text-parchment-950 group-hover:text-herbal-800 transition-colors font-sans flex-1 truncate">
               {disease.name}
             </h3>
-            <ChevronRight className="ml-2 h-4 w-4 text-herbal-300 group-hover:text-herbal-800 shrink-0 transition-colors" />
+            <ChevronRight className="ml-2 h-4 w-4 text-parchment-800 group-hover:text-herbal-800 shrink-0 transition-all duration-150 group-hover:translate-x-[2px]" />
           </Link>
         ))}
       </div>

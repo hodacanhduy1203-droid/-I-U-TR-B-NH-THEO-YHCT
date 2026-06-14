@@ -2,22 +2,22 @@
 @import "tailwindcss";
 
 @theme {
-  --color-parchment-50: #FDFCFA;
-  --color-parchment-100: #F7F2E6;
-  --color-parchment-200: #EDE4D0;
-  --color-parchment-300: #D8CBB6;
-  --color-parchment-400: #C1B198;
-  --color-parchment-500: #A39174;
-  --color-parchment-600: #86765D;
-  --color-parchment-700: #685A46;
-  --color-parchment-800: #4B4132;
-  --color-parchment-900: #2D271E;
+  --color-parchment-50: #FAF8EE;
+  --color-parchment-100: #F3EAC5;
+  --color-parchment-200: #E6DAA6;
+  --color-parchment-300: #D5C68A;
+  --color-parchment-400: #C2AF6F;
+  --color-parchment-500: #AC9853;
+  --color-parchment-600: #8D7B3F;
+  --color-parchment-700: #6D5E2F;
+  --color-parchment-800: #4E431E;
+  --color-parchment-900: #2F2810;
 
-  --color-herbal-50: #F6F9F4;
-  --color-herbal-100: #E8EDE4;
-  --color-herbal-200: #CBD7C6;
-  --color-herbal-300: #A9BCA5;
-  --color-herbal-400: #839D7E;
+  --color-herbal-50: #F5F9F1;
+  --color-herbal-100: #E6ECCF;
+  --color-herbal-200: #CAD8AF;
+  --color-herbal-300: #ABBCA0;
+  --color-herbal-400: #889D7E;
   --color-herbal-500: #5D7E58;
   --color-herbal-600: #4A6546;
   --color-herbal-700: #394E36;
@@ -31,9 +31,9 @@
   --color-cinnabar-600: #A8251B;
   --color-cinnabar-700: #8C1E16;
 
-  --color-ochre-50: #FFFDF7;
-  --color-ochre-100: #F9EFE0;
-  --color-ochre-200: #F3DBA9;
+  --color-ochre-50: #FFFDE6;
+  --color-ochre-100: #FAF5DF;
+  --color-ochre-200: #F4DBA0;
   --color-ochre-500: #CC9A1E;
   --color-ochre-600: #AA8114;
   --color-ochre-700: #88670F;
@@ -45,8 +45,9 @@
 
 /* Global Overrides */
 html, body, #root {
-  background-color: #FDFCFA !important;
-  color: #2D271E;
+  background-color: #FAF8EE !important;
+  background-image: none !important;
+  color: #2F2810;
   font-family: "Inter", system-ui, sans-serif;
   overflow-x: hidden;
   height: 100%;
@@ -95,14 +96,20 @@ body {
 
 /* Vintage card/paper aesthetics */
 .kraft-paper-card {
-  background-color: #FFFDFB;
-  border: 1px solid #EDE4D0;
-  box-shadow: 0 4px 12px -2px rgba(93, 78, 50, 0.06);
+  background-color: #FAF5DF; /* Perfect rich premium golden yellow */
+  border: 2px solid #4E431E; /* Solid wood border */
+  box-shadow: 4px 4px 0px 0px #4E431E; /* Tactile 3D block shadow projection */
+  transition: all 0.15s ease-in-out;
+}
+
+.kraft-paper-card:hover {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px 0px #4E431E; /* Depressing slightly as if a real physics-based card */
 }
 
 .kraft-paper-item:hover {
-  background-color: #FDFCFA;
-  border-color: #D8CBB6;
+  background-color: #F3EAC5;
+  border-color: #8D7B3F;
 }
 
 /* Eastern medicine red wax seal / stamp mark style */
@@ -125,12 +132,12 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #FDFCFA;
+  background: #FAF8EE;
 }
 ::-webkit-scrollbar-thumb {
-  background: #EDE4D0;
+  background: #E6DAA6;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #D8CBB6;
+  background: #D5C68A;
 }
