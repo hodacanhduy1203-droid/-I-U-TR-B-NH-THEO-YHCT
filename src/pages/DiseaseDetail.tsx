@@ -315,7 +315,7 @@ export default function DiseaseDetail() {
 
   return (
     <div className="space-y-3.5 sm:space-y-4 flex flex-col h-full animate-fade-in">
-      <div className="bg-[#FAF5DF] border-2 border-parchment-400 rounded-2xl py-3 px-4 sm:py-3.5 sm:px-5 shrink-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E] relative overflow-hidden">
+      <div className="bg-[#F2DB9A] border-2 border-parchment-400 rounded-2xl py-3 px-4 sm:py-3.5 sm:px-5 shrink-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 shadow-[5px_5px_0px_0px_#4E431E] transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[4px_4px_0px_0px_#4E431E] relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-herbal-500/5 rounded-full blur-2xl pointer-events-none"></div>
         <div className="relative z-10">
           <h2 className="text-[17px] sm:text-[21.5px] font-black uppercase tracking-wide text-herbal-900 font-sans">{displayIndex}. {disease.name}</h2>
@@ -408,10 +408,10 @@ export default function DiseaseDetail() {
       {activeTab === 'variants' && (
         <div className="flex flex-col xl:flex-row gap-4 items-start">
           {/* Left Navigation: List of variants styled as a clinical index */}
-          <div className="w-full xl:w-1/4 flex flex-col bg-[#FAF5DF] rounded-2xl border-2 border-parchment-400 shrink-0 shadow-[4px_4px_0px_0px_#4E431E] overflow-hidden">
-            <div className="px-3.5 py-2.5 border-b-2 border-parchment-300 bg-parchment-100/40">
-              <h3 className="text-[11.5px] text-herbal-850 font-extrabold uppercase tracking-widest flex items-center gap-2 font-dongy-serif">
-                <Activity className="w-3.5 h-3.5 text-herbal-600" />
+          <div className="w-full xl:w-1/4 flex flex-col bg-[#FAF5DF] rounded-2xl border-2 border-ochre-700 shrink-0 shadow-[4px_4px_0px_0px_#4E431E] overflow-hidden">
+            <div className="px-3.5 py-2.5 border-b-2 border-ochre-800 bg-ochre-700">
+              <h3 className="text-[11.5px] text-white font-extrabold uppercase tracking-widest flex items-center gap-2 font-dongy-serif">
+                <Activity className="w-3.5 h-3.5 text-white/90" />
                 Thể hội chứng lâm sàng
               </h3>
             </div>
@@ -423,7 +423,7 @@ export default function DiseaseDetail() {
                   className={cn(
                     "text-left block w-full px-3 py-1.5 sm:py-2 text-[13px] font-extrabold rounded-xl transition-all font-dongy-serif whitespace-normal cursor-pointer",
                     activeVariant === v.id
-                      ? "bg-ochre-700 text-white shadow-xs font-black border-l-4 border-l-parchment-200 pl-2.5"
+                      ? "bg-ochre-50 text-ochre-800 shadow-3xs font-black border-l-4 border-l-ochre-600 pl-2.5"
                       : "bg-transparent text-parchment-900 font-bold hover:bg-parchment-200/50 hover:text-ochre-800 border-l-4 border-l-transparent"
                   )}
                 >
