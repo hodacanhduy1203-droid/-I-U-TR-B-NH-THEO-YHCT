@@ -10,6 +10,7 @@ export interface DichChamHuyetItem {
   upperTrigram: { name: string; symbol: string; element: string };
   lowerTrigram: { name: string; symbol: string; element: string };
   location: string;
+  imageUrl?: string;
 }
 
 export interface DichChamMeridianGroup {

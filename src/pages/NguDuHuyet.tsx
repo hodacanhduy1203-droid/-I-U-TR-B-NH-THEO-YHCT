@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef, type MouseEvent, type TouchEvent } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { 
   Search, 
@@ -20,7 +20,22 @@ import {
   Activity,
   CheckCircle2,
   Zap,
-  Hand
+  Hand,
+  Maximize2,
+  X,
+  ZoomIn,
+  ZoomOut,
+  RotateCcw,
+  Move,
+  Upload,
+  Camera,
+  Trash2,
+  ImageIcon,
+  Loader2,
+  Download,
+  UploadCloud,
+  CheckCircle,
+  Database
 } from 'lucide-react';
 import { NGU_DU_HUYET_DATA, NGU_DU_THEORY } from '../data/nguDuHuyetData';
 import { 
@@ -32,24 +47,317 @@ import {
   DichChamHuyetItem,
   QueDichMeridian 
 } from '../data/nguDuQueDichData';
+import {
+  compressImage,
+  savePointImageToStorage,
+  loadAllPointImagesFromStorage,
+  deletePointImageFromStorage,
+  exportAllImagesAsJson,
+  importImagesFromJsonFile
+} from '../utils/imageStorage';
 
 function HexagramVisual({ lines }: { lines: number[] }) {
   return (
-    <div className="flex flex-col gap-1.5 items-center justify-center py-1.5 select-none shrink-0" title="Quẻ 6 Hào">
+    <div className="flex flex-col gap-1 sm:gap-1.5 items-center justify-center py-0.5 select-none shrink-0" title="Quẻ 6 Hào">
       {lines.map((line, idx) => (
-        <div key={idx} className="w-12 sm:w-14 flex justify-center items-center">
+        <div key={idx} className="w-10 sm:w-12 flex justify-center items-center">
           {line === 1 ? (
             // Hào Dương: Vạch liền đậm
-            <div className="w-full h-2 bg-[#4A0E0E] rounded-[2px] shadow-xs" />
+            <div className="w-full h-1.5 sm:h-2 bg-[#4A0E0E] rounded-[2px] shadow-xs" />
           ) : (
             // Hào Âm: Vạch đứt với khoảng trống rõ ràng ở giữa
-            <div className="w-full flex justify-between items-center gap-2">
-              <div className="flex-1 h-2 bg-[#4A0E0E] rounded-[2px] shadow-xs" />
-              <div className="flex-1 h-2 bg-[#4A0E0E] rounded-[2px] shadow-xs" />
+            <div className="w-full flex justify-between items-center gap-1.5 sm:gap-2">
+              <div className="flex-1 h-1.5 sm:h-2 bg-[#4A0E0E] rounded-[2px] shadow-xs" />
+              <div className="flex-1 h-1.5 sm:h-2 bg-[#4A0E0E] rounded-[2px] shadow-xs" />
             </div>
           )}
         </div>
       ))}
+    </div>
+  );
+}
+
+function PointLocationVisual({ pointCode, pointName, imageUrl }: { pointCode: string; pointName: string; imageUrl?: string }) {
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setHasError(false);
+  }, [imageUrl]);
+
+  if (imageUrl && !hasError) {
+    return (
+      <img
+        src={imageUrl}
+        alt={`Vị trí huyệt ${pointName} (${pointCode})`}
+        className="w-full h-full object-cover select-none pointer-events-none"
+        referrerPolicy="no-referrer"
+        onError={() => setHasError(true)}
+      />
+    );
+  }
+
+  if (pointCode === 'HT.9') {
+    return (
+      <svg viewBox="0 0 200 200" className="w-full h-full select-none bg-[#FDFBF7]" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="skinGradReal" x1="20%" y1="0%" x2="80%" y2="100%">
+            <stop offset="0%" stopColor="#E9B792" />
+            <stop offset="50%" stopColor="#DC9E75" />
+            <stop offset="100%" stopColor="#BE7B50" />
+          </linearGradient>
+          <linearGradient id="nailGloss" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#F5ECE9" />
+            <stop offset="50%" stopColor="#EAD8D4" />
+            <stop offset="100%" stopColor="#D9BFBB" />
+          </linearGradient>
+          <filter id="glowHT9" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="1" stdDeviation="2" floodColor="#E11D48" floodOpacity="0.7"/>
+          </filter>
+        </defs>
+
+        {/* White silk fabric background */}
+        <rect width="200" height="200" fill="#F8F6F0" />
+        <path d="M0,40 Q60,80 120,30 Q170,10 200,50 L200,200 L0,200 Z" fill="#EFECE3" opacity="0.6" />
+
+        {/* Dorsum of hand / skin folds */}
+        <path d="M10,0 Q60,25 115,20 Q160,5 190,0 L200,60 Q170,95 130,110 L105,75 Z" fill="#D2966B" opacity="0.45" />
+
+        {/* Ring Finger (Ngón nhẫn mở rộng góc) */}
+        <path d="M95,45 Q125,75 155,108 Q175,130 182,148 Q180,165 168,170 Q152,172 135,152 Q112,122 82,78 Z" fill="url(#skinGradReal)" stroke="#9F6236" strokeWidth="1.2" />
+        <path d="M152,145 Q164,156 160,165 Q150,168 140,158 Q144,148 152,145 Z" fill="url(#nailGloss)" stroke="#B38A82" strokeWidth="1" />
+
+        {/* Little Finger (Ngón út - tâm điểm HT.9 Thiếu xung) */}
+        <path d="M38,15 Q50,55 58,95 Q62,125 62,148 Q62,178 76,183 Q92,180 94,156 Q96,122 90,85 Q82,50 68,15 Z" fill="url(#skinGradReal)" stroke="#9F6236" strokeWidth="1.5" />
+
+        {/* Skin wrinkles on joints */}
+        <path d="M62,100 Q76,104 90,98" stroke="#8A4E25" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
+        <path d="M63,105 Q76,109 89,103" stroke="#8A4E25" strokeWidth="1.2" strokeLinecap="round" opacity="0.5" />
+
+        {/* Little finger nail with natural curve */}
+        <path d="M67,152 Q67,175 78,177 Q89,175 90,154 Q89,148 78,148 Q68,148 67,152 Z" fill="url(#nailGloss)" stroke="#B38A82" strokeWidth="1.2" />
+        <path d="M70,150 Q78,149 86,151" stroke="#FFF" strokeWidth="1.5" strokeLinecap="round" opacity="0.8" />
+
+        {/* 0.1 Cun Dotted Guidelines (Đường gióng xác định huyệt) */}
+        <line x1="52" y1="150" x2="105" y2="150" stroke="#333" strokeWidth="1.2" strokeDasharray="3,2" />
+        <line x1="90" y1="142" x2="90" y2="172" stroke="#333" strokeWidth="1.2" strokeDasharray="3,2" />
+
+        {/* HT.9 Red Acupoint Dot */}
+        <circle cx="90" cy="150" r="4.5" fill="#E11D48" stroke="#FFF" strokeWidth="1.8" filter="url(#glowHT9)" />
+        <circle cx="90" cy="150" r="7.5" fill="none" stroke="#E11D48" strokeWidth="1" opacity="0.7" />
+
+        {/* Text Labels matching user image style */}
+        <text x="98" y="148" fontSize="10.5" fontWeight="900" fill="#1E293B" fontFamily="sans-serif">Hệ 9</text>
+        <text x="98" y="165" fontSize="11" fontWeight="900" fill="#D946EF" fontFamily="sans-serif">Thiếu xung</text>
+      </svg>
+    );
+  }
+
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center p-3 text-center bg-[#FAF5DF] border border-dashed border-parchment-300 rounded-lg select-none">
+      <Hand className="w-8 h-8 text-parchment-500 mb-1" />
+      <span className="text-xs font-bold text-parchment-800 font-dongy-serif">Huyệt {pointName} ({pointCode})</span>
+      <span className="text-[10px] text-parchment-600 mt-0.5">Nhấn "Tải ảnh" để tải ảnh giải phẫu huyệt</span>
+    </div>
+  );
+}
+
+// Interactive Zoomable & Pannable Viewer for Acupoint Images
+function ZoomablePointViewer({
+  pointCode,
+  pointName,
+  imageUrl
+}: {
+  pointCode: string;
+  pointName: string;
+  imageUrl?: string;
+}) {
+  const [scale, setScale] = useState(1);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartRef = useRef({ x: 0, y: 0 });
+  const initialTouchDistanceRef = useRef<number | null>(null);
+  const initialTouchScaleRef = useRef<number>(1);
+
+  // Reset zoom & pan when image or acupoint changes
+  useEffect(() => {
+    setScale(1);
+    setPosition({ x: 0, y: 0 });
+  }, [pointCode, imageUrl]);
+
+  const handleZoomIn = () => {
+    setScale((prev) => Math.min(4, Number((prev + 0.4).toFixed(2))));
+  };
+
+  const handleZoomOut = () => {
+    setScale((prev) => {
+      const next = Math.max(1, Number((prev - 0.4).toFixed(2)));
+      if (next === 1) setPosition({ x: 0, y: 0 });
+      return next;
+    });
+  };
+
+  const handleReset = () => {
+    setScale(1);
+    setPosition({ x: 0, y: 0 });
+  };
+
+  const handleDoubleClick = () => {
+    if (scale > 1.2) {
+      handleReset();
+    } else {
+      setScale(2.2);
+    }
+  };
+
+  // Mouse pan handlers
+  const handleMouseDown = (e: MouseEvent) => {
+    if (scale <= 1) return;
+    setIsDragging(true);
+    dragStartRef.current = { x: e.clientX - position.x, y: e.clientY - position.y };
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDragging || scale <= 1) return;
+    setPosition({
+      x: e.clientX - dragStartRef.current.x,
+      y: e.clientY - dragStartRef.current.y
+    });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  // Touch handlers for mobile (pinch-to-zoom and pan)
+  const handleTouchStart = (e: TouchEvent) => {
+    if (e.touches.length === 2) {
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      initialTouchDistanceRef.current = dist;
+      initialTouchScaleRef.current = scale;
+    } else if (e.touches.length === 1 && scale > 1) {
+      setIsDragging(true);
+      dragStartRef.current = {
+        x: e.touches[0].clientX - position.x,
+        y: e.touches[0].clientY - position.y
+      };
+    }
+  };
+
+  const handleTouchMove = (e: TouchEvent) => {
+    if (e.touches.length === 2 && initialTouchDistanceRef.current !== null) {
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      const factor = dist / initialTouchDistanceRef.current;
+      const newScale = Math.min(4, Math.max(1, Number((initialTouchScaleRef.current * factor).toFixed(2))));
+      setScale(newScale);
+      if (newScale === 1) {
+        setPosition({ x: 0, y: 0 });
+      }
+    } else if (e.touches.length === 1 && isDragging && scale > 1) {
+      setPosition({
+        x: e.touches[0].clientX - dragStartRef.current.x,
+        y: e.touches[0].clientY - dragStartRef.current.y
+      });
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+    initialTouchDistanceRef.current = null;
+  };
+
+  return (
+    <div className="relative w-full aspect-square rounded-2xl overflow-hidden border-2 border-parchment-300 bg-[#FAF6EE] shadow-inner select-none">
+      {/* Zoom / Pan Interactive Canvas */}
+      <div
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onDoubleClick={handleDoubleClick}
+        className={`w-full h-full flex items-center justify-center overflow-hidden ${
+          scale > 1 ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-zoom-in'
+        }`}
+        style={{ touchAction: scale > 1 ? 'none' : 'auto' }}
+      >
+        <div
+          className="w-full h-full max-w-[340px] max-h-[340px] flex items-center justify-center origin-center transition-transform duration-75"
+          style={{
+            transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
+            willChange: 'transform'
+          }}
+        >
+          <PointLocationVisual 
+            pointCode={pointCode} 
+            pointName={pointName} 
+            imageUrl={imageUrl} 
+          />
+        </div>
+      </div>
+
+      {/* Floating Zoom Controls Bar */}
+      <div className="absolute top-2.5 right-2.5 flex items-center gap-1 bg-parchment-900/85 backdrop-blur-xs p-1 rounded-xl shadow-lg border border-parchment-700/50 z-20">
+        <button
+          type="button"
+          onClick={handleZoomOut}
+          disabled={scale <= 1}
+          className="p-1.5 rounded-lg text-white hover:bg-white/20 active:bg-white/30 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
+          title="Thu nhỏ (-)"
+        >
+          <ZoomOut className="w-4 h-4" />
+        </button>
+
+        <button
+          type="button"
+          onClick={handleReset}
+          className="px-2 py-0.5 text-[11px] font-bold text-amber-200 hover:text-white transition-colors"
+          title="Đặt lại cỡ 100%"
+        >
+          {Math.round(scale * 100)}%
+        </button>
+
+        <button
+          type="button"
+          onClick={handleZoomIn}
+          disabled={scale >= 4}
+          className="p-1.5 rounded-lg text-white hover:bg-white/20 active:bg-white/30 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
+          title="Phóng to (+)"
+        >
+          <ZoomIn className="w-4 h-4" />
+        </button>
+
+        {scale > 1 && (
+          <button
+            type="button"
+            onClick={handleReset}
+            className="p-1.5 rounded-lg text-amber-300 hover:bg-white/20 active:bg-white/30 transition-colors ml-0.5 border-l border-white/20"
+            title="Khôi phục vị trí & cỡ 100%"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+          </button>
+        )}
+      </div>
+
+      {/* Quick Helper Badge at Bottom */}
+      {scale > 1 ? (
+        <div className="absolute bottom-2 left-2 bg-black/70 text-amber-200 text-[10px] px-2.5 py-1 rounded-lg backdrop-blur-xs flex items-center gap-1.5 pointer-events-none z-10 border border-white/15 shadow-md">
+          <Move className="w-3 h-3 text-amber-300 shrink-0" />
+          <span>Kéo để di chuyển • Nhấp đúp về 100%</span>
+        </div>
+      ) : (
+        <div className="absolute bottom-2 left-2 bg-black/50 text-white/95 text-[10px] px-2 py-0.5 rounded-lg backdrop-blur-xs flex items-center gap-1 pointer-events-none z-10">
+          <ZoomIn className="w-3 h-3 text-amber-300 shrink-0" />
+          <span>Nhấp đúp hoặc chụm 2 ngón tay để phóng to</span>
+        </div>
+      )}
     </div>
   );
 }
@@ -102,6 +410,95 @@ export default function NguDuHuyet() {
   const [selectedBagua, setSelectedBagua] = useState<string | null>(() => {
     return sessionStorage.getItem('mediconnect_selected_bagua');
   });
+
+  const [selectedPointModal, setSelectedPointModal] = useState<DichChamHuyetItem | null>(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+
+  // Lưu trữ ảnh huyệt thực tế do người dùng tải lên từ thiết bị (IndexedDB + nén ảnh thông minh)
+  const [pointCustomImages, setPointCustomImages] = useState<Record<string, string>>({});
+
+  // Tải toàn bộ ảnh huyệt đã lưu khi mở trang
+  useEffect(() => {
+    let isMounted = true;
+    loadAllPointImagesFromStorage().then((images) => {
+      if (isMounted) {
+        setPointCustomImages(images);
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleUploadImageForPoint = async (pointCode: string, file: File) => {
+    if (!file) return;
+    setIsUploadingImage(true);
+    try {
+      // Nén ảnh bằng HTML5 Canvas để giảm dung lượng mà vẫn giữ nguyên độ nét
+      const compressedDataUrl = await compressImage(file, 800, 800, 0.85);
+      
+      // Lưu vào IndexedDB (dung lượng bền vững không giới hạn)
+      await savePointImageToStorage(pointCode, compressedDataUrl);
+
+      // Cập nhật giao diện
+      setPointCustomImages(prev => ({
+        ...prev,
+        [pointCode]: compressedDataUrl
+      }));
+      showToast(`Đã lưu ảnh thực tế cho huyệt ${pointCode} thành công!`);
+    } catch (err) {
+      console.error('Lỗi khi nén và lưu ảnh:', err);
+      const message = err instanceof Error ? err.message : 'Không thể lưu ảnh';
+      showToast(`Lỗi: ${message}`);
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
+
+  const handleRemoveCustomImage = async (pointCode: string) => {
+    try {
+      await deletePointImageFromStorage(pointCode);
+      setPointCustomImages(prev => {
+        const updated = { ...prev };
+        delete updated[pointCode];
+        return updated;
+      });
+      showToast(`Đã xóa ảnh tùy chỉnh của huyệt ${pointCode}`);
+    } catch (err) {
+      console.error('Lỗi khi xóa ảnh tùy chỉnh:', err);
+    }
+  };
+
+  const [notification, setNotification] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setNotification(msg);
+    setTimeout(() => {
+      setNotification(null);
+    }, 4000);
+  };
+
+  const handleExportBackup = async () => {
+    try {
+      await exportAllImagesAsJson();
+      showToast('Đã xuất tệp sao lưu ảnh huyệt (.JSON) thành công!');
+    } catch (err) {
+      console.error('Lỗi xuất tệp sao lưu:', err);
+    }
+  };
+
+  const handleImportBackup = async (file: File) => {
+    if (!file) return;
+    try {
+      const { count, images } = await importImagesFromJsonFile(file);
+      setPointCustomImages(images);
+      showToast(`Đã phục hồi thành công ${count} ảnh huyệt từ tệp sao lưu!`);
+    } catch (err) {
+      alert('Không thể nhập tệp sao lưu. Vui lòng kiểm tra lại định dạng tệp JSON.');
+    }
+  };
+
+  const savedImageCount = Object.keys(pointCustomImages).length;
 
   useEffect(() => {
     sessionStorage.setItem('mediconnect_ngu_du_tab', mainTab);
@@ -325,6 +722,55 @@ export default function NguDuHuyet() {
         </button>
       </div>
 
+      {/* Persistent Storage & Backup/Restore Status Bar */}
+      <div className="bg-[#FAF5DF] border-2 border-parchment-300 px-3.5 py-2.5 rounded-xl shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs font-dongy-body">
+        <div className="flex items-center gap-2 text-parchment-900">
+          <Database className="w-4 h-4 text-herbal-700 shrink-0" />
+          <span>
+            Lưu trữ ảnh huyệt: <strong className="text-herbal-800 font-bold">{savedImageCount} ảnh</strong> đã lưu trong bộ nhớ vĩnh viễn (IndexedDB)
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            type="button"
+            onClick={handleExportBackup}
+            className="flex items-center gap-1 px-2.5 py-1 bg-[#FCFAF2] hover:bg-parchment-200 text-parchment-900 rounded-lg border border-parchment-300 text-xs font-bold font-dongy-serif transition-colors shadow-2xs"
+            title="Tải về tệp JSON chứa toàn bộ ảnh huyệt đã lưu để lưu trữ an toàn"
+          >
+            <Download className="w-3.5 h-3.5 text-herbal-700" />
+            <span>Xuất sao lưu ảnh</span>
+          </button>
+
+          <label
+            className="flex items-center gap-1 px-2.5 py-1 bg-[#FCFAF2] hover:bg-parchment-200 text-parchment-900 rounded-lg border border-parchment-300 text-xs font-bold font-dongy-serif cursor-pointer transition-colors shadow-2xs"
+            title="Nhập tệp sao lưu JSON để phục hồi ảnh trên thiết bị khác"
+          >
+            <UploadCloud className="w-3.5 h-3.5 text-cinnabar-800" />
+            <span>Nhập sao lưu</span>
+            <input
+              type="file"
+              accept=".json"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  handleImportBackup(file);
+                }
+              }}
+            />
+          </label>
+        </div>
+      </div>
+
+      {/* Toast Notification */}
+      {notification && (
+        <div className="bg-emerald-800 text-white px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 text-xs font-dongy-serif animate-fadeIn">
+          <CheckCircle className="w-4 h-4 text-emerald-300 shrink-0" />
+          <span>{notification}</span>
+        </div>
+      )}
+
       {/* ========================================================================= */}
       {/* TAB 1: 60 NGŨ DU HUYỆT (12 KINH LẠC) */}
       {/* ========================================================================= */}
@@ -440,41 +886,81 @@ export default function NguDuHuyet() {
                       </h4>
 
                       <div className="grid grid-cols-1 gap-2.5">
-                        {m.points.map((pt, idx) => (
-                          <div
-                            key={idx}
-                            className="bg-[#FCFAF5] border border-parchment-300 hover:border-ochre-500 p-3.5 rounded-xl shadow-xs transition-all flex flex-col sm:flex-row gap-3 items-start justify-between"
-                          >
-                            <div className="space-y-1 flex-1">
-                              <div className="flex items-center gap-2 flex-wrap">
-                                <span className="font-black text-[15px] text-parchment-950 font-dongy-serif">
-                                  {pt.name}
-                                </span>
-                                <span className="text-xs font-bold text-herbal-800 bg-herbal-100/60 px-2 py-0.5 rounded border border-herbal-300">
-                                  {pt.code}
-                                </span>
-                                <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${getElementBg(pt.element)}`}>
-                                  {pt.type} ({pt.element})
-                                </span>
+                        {m.points.map((pt, idx) => {
+                          const hasCustomImg = !!pointCustomImages[pt.code];
+                          return (
+                            <div
+                              key={idx}
+                              className="bg-[#FCFAF5] border border-parchment-300 hover:border-ochre-500 p-3.5 rounded-xl shadow-xs transition-all flex flex-col sm:flex-row gap-3 items-start justify-between"
+                            >
+                              {/* Small Photo Thumbnail */}
+                              <div
+                                onClick={() => {
+                                  setSelectedPointModal({
+                                    pointName: pt.name,
+                                    pointCode: pt.code,
+                                    role: pt.type,
+                                    element: pt.element,
+                                    hexagramName: '',
+                                    hexagramLines: [],
+                                    organOrMeridian: m.name,
+                                    location: pt.location,
+                                    imageUrl: pt.imageUrl
+                                  });
+                                }}
+                                className="shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border border-parchment-300 bg-[#FAF5DF] hover:border-cinnabar-700 cursor-pointer relative group flex items-center justify-center shadow-2xs self-center sm:self-start"
+                                title="Nhấn để xem & tải ảnh vị trí huyệt"
+                              >
+                                <PointLocationVisual
+                                  pointCode={pt.code}
+                                  pointName={pt.name}
+                                  imageUrl={pointCustomImages[pt.code] || pt.imageUrl}
+                                />
+                                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white text-[9px] font-bold text-center p-1">
+                                  <ZoomIn className="w-4 h-4 mb-0.5" />
+                                  <span>{hasCustomImg ? 'Ảnh riêng' : 'Xem ảnh'}</span>
+                                </div>
+                                {hasCustomImg && (
+                                  <div className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-emerald-500 border border-white" title="Đã có ảnh thực tế" />
+                                )}
                               </div>
 
-                              <div className="text-[12.5px] text-parchment-900 font-dongy-body leading-relaxed">
-                                <strong className="text-parchment-950 font-bold">📍 Vị trí: </strong>
-                                {pt.location}
+                              <div className="space-y-1 flex-1 min-w-0">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span className="font-black text-[15px] text-parchment-950 font-dongy-serif">
+                                    {pt.name}
+                                  </span>
+                                  <span className="text-xs font-bold text-herbal-800 bg-herbal-100/60 px-2 py-0.5 rounded border border-herbal-300">
+                                    {pt.code}
+                                  </span>
+                                  <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${getElementBg(pt.element)}`}>
+                                    {pt.type} ({pt.element})
+                                  </span>
+                                  {hasCustomImg && (
+                                    <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 flex items-center gap-1">
+                                      <Camera className="w-3 h-3" /> Đã có ảnh
+                                    </span>
+                                  )}
+                                </div>
+
+                                <div className="text-[12.5px] text-parchment-900 font-dongy-body leading-relaxed">
+                                  <strong className="text-parchment-950 font-bold">📍 Vị trí: </strong>
+                                  {pt.location}
+                                </div>
+
+                                <div className="text-[12.5px] text-parchment-900 font-dongy-body leading-relaxed">
+                                  <strong className="text-parchment-950 font-bold">🎯 Chủ trị: </strong>
+                                  {pt.indications}
+                                </div>
                               </div>
 
-                              <div className="text-[12.5px] text-parchment-900 font-dongy-body leading-relaxed">
-                                <strong className="text-parchment-950 font-bold">🎯 Chủ trị: </strong>
-                                {pt.indications}
+                              <div className="sm:max-w-xs w-full sm:w-auto bg-[#FAF5DF] p-2.5 rounded-lg border border-parchment-300 text-[11.5px] text-ochre-950 font-dongy-body shrink-0 self-stretch sm:self-auto flex flex-col justify-center">
+                                <span className="text-[10px] uppercase font-bold text-ochre-700 mb-0.5">Ý nghĩa & Công năng</span>
+                                <p className="leading-snug">{pt.nature}</p>
                               </div>
                             </div>
-
-                            <div className="sm:max-w-xs w-full sm:w-auto bg-[#FAF5DF] p-2.5 rounded-lg border border-parchment-300 text-[11.5px] text-ochre-950 font-dongy-body shrink-0 self-stretch sm:self-auto flex flex-col justify-center">
-                              <span className="text-[10px] uppercase font-bold text-ochre-700 mb-0.5">Ý nghĩa & Công năng</span>
-                              <p className="leading-snug">{pt.nature}</p>
-                            </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
@@ -845,24 +1331,47 @@ export default function NguDuHuyet() {
                           {group.points.map((pt, idx) => (
                             <div
                               key={idx}
-                              className="bg-[#FCFAF2] border-2 border-parchment-300 hover:border-cinnabar-700 rounded-xl p-3.5 sm:p-4 transition-all shadow-2xs flex flex-col md:flex-row items-stretch md:items-center gap-4"
+                              className="bg-[#FCFAF2] border-2 border-parchment-300 hover:border-cinnabar-700 rounded-xl p-3 sm:p-4 transition-all shadow-2xs flex flex-row items-start sm:items-center gap-3 sm:gap-4.5"
                             >
-                              {/* Left Column: 6-Line Hexagram Visual (Thẳng hàng dọc từ trên xuống) */}
-                              <div className="shrink-0 w-full md:w-40 flex flex-col items-center justify-center gap-2 bg-[#FAF5DF] p-3 rounded-xl border border-parchment-300">
-                                <HexagramVisual lines={pt.hexagramLines} />
-                                <div className="text-center w-full">
-                                  <div className="text-xs sm:text-[13px] font-black font-dongy-serif text-cinnabar-950 flex items-center justify-center gap-1.5">
-                                    <span className="text-base font-serif leading-none">{pt.hexagramSymbol}</span>
-                                    <span>{pt.hexagramName}</span>
+                              {/* Left Column: 6-Line Hexagram Visual (Top) + Acupoint Location Image (Bottom, matching exact width of hexagram box) */}
+                              <div className="shrink-0 w-24 sm:w-32 flex flex-col items-center gap-2">
+                                {/* Ô chứa quẻ */}
+                                <div className="w-full flex flex-col items-center justify-center gap-1 bg-[#FAF5DF] p-2 sm:p-2.5 rounded-xl border border-parchment-300 shadow-2xs">
+                                  <HexagramVisual lines={pt.hexagramLines} />
+                                  <div className="text-center w-full mt-0.5">
+                                    <span className="text-[11px] sm:text-xs font-black font-dongy-serif text-cinnabar-950 block leading-tight text-center">
+                                      {pt.hexagramName}
+                                    </span>
+                                  </div>
+                                </div>
+
+                                {/* Ô hình ảnh vị trí huyệt: Kích thước bằng ô chứa quẻ, nằm ngay dưới ô chứa quẻ */}
+                                <div 
+                                  onClick={() => setSelectedPointModal(pt)}
+                                  className="w-full bg-[#FAF5DF] p-1 sm:p-1.5 rounded-xl border border-parchment-300 hover:border-cinnabar-700 shadow-2xs cursor-pointer transition-all group relative"
+                                  title="Nhấn để phóng to ảnh vị trí huyệt"
+                                >
+                                  <div className="w-full aspect-square rounded-lg overflow-hidden bg-white flex items-center justify-center relative border border-parchment-200">
+                                    <PointLocationVisual 
+                                      pointCode={pt.pointCode} 
+                                      pointName={pt.pointName} 
+                                      imageUrl={pointCustomImages[pt.pointCode] || pt.imageUrl} 
+                                    />
+                                    <div className="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                                      <ZoomIn className="w-4 h-4 drop-shadow" />
+                                    </div>
+                                  </div>
+                                  <div className="text-[9.5px] sm:text-[10px] font-bold text-center text-parchment-800 font-dongy-serif mt-1 truncate">
+                                    Vị trí {pt.pointName}
                                   </div>
                                 </div>
                               </div>
 
                               {/* Right Column: Title Formula, Badges & Anatomy Location */}
-                              <div className="flex-1 space-y-2">
+                              <div className="flex-1 min-w-0 space-y-1.5 sm:space-y-2">
                                 {/* Formula Header: [Tạng/Phủ] – [Vai trò] – [Hành/Khí (nếu có)] – [Tên huyệt] */}
-                                <div className="flex flex-wrap items-center gap-2">
-                                  <h4 className="text-sm sm:text-base font-black font-dongy-serif text-parchment-950">
+                                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                                  <h4 className="text-xs sm:text-[15px] font-black font-dongy-serif text-parchment-950">
                                     {pt.role === pt.element || pt.role === 'Lạc' || pt.role === 'Khích' ? (
                                       <>
                                         {pt.organOrMeridian} – {pt.role} – <span className="text-cinnabar-900 underline decoration-cinnabar-300 underline-offset-2">{pt.pointName}</span>
@@ -874,17 +1383,17 @@ export default function NguDuHuyet() {
                                     )}
                                   </h4>
 
-                                  <span className="text-xs font-extrabold px-2 py-0.5 rounded-md bg-cinnabar-100 text-cinnabar-950 border border-cinnabar-300 font-mono">
+                                  <span className="text-[11px] sm:text-xs font-extrabold px-2 py-0.5 rounded-md bg-cinnabar-100 text-cinnabar-950 border border-cinnabar-300 font-mono">
                                     {pt.pointCode}
                                   </span>
 
-                                  <span className={`text-[11px] font-bold px-2 py-0.5 rounded-md border ${getElementBg(pt.element)}`}>
+                                  <span className={`text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-md border ${getElementBg(pt.element)}`}>
                                     {pt.role === 'Lạc' ? 'Lạc huyệt' : pt.role === 'Khích' ? 'Khích huyệt' : `${pt.role} (${pt.element})`}
                                   </span>
                                 </div>
 
                                 {/* Anatomy Location (Vị trí) */}
-                                <div className="bg-white/90 p-2.5 rounded-lg border border-parchment-300 text-xs sm:text-[12.5px] text-parchment-900 font-dongy-body leading-relaxed">
+                                <div className="bg-white/90 p-2 sm:p-2.5 rounded-lg border border-parchment-300 text-[11.5px] sm:text-[12.5px] text-parchment-900 font-dongy-body leading-relaxed">
                                   <strong className="text-parchment-950">📍 Vị trí giải phẫu: </strong>
                                   {pt.location}
                                 </div>
@@ -980,7 +1489,7 @@ export default function NguDuHuyet() {
                   </div>
 
                   {/* Main Point */}
-                  <div className="bg-amber-50/70 p-2.5 rounded-xl border border-amber-200 space-y-1">
+                  <div className="bg-amber-50/70 p-2.5 rounded-xl border border-amber-200 space-y-1.5">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-black text-amber-950 font-dongy-serif">
                         {item.pointName} ({item.pointCode})
@@ -992,11 +1501,51 @@ export default function NguDuHuyet() {
                     <p className="text-[11.5px] text-amber-900 font-dongy-body">
                       {item.meridian} → <strong>{item.extraordinaryVessel}</strong>
                     </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedPointModal({
+                          pointName: item.pointName,
+                          pointCode: item.pointCode,
+                          role: 'Huyệt Chủ Bát Mạch',
+                          element: item.bagua,
+                          hexagramName: item.bagua,
+                          hexagramLines: [],
+                          organOrMeridian: item.meridian,
+                          location: `Thuộc ${item.meridian}, chủ trị vùng ${item.meetingArea}`
+                        });
+                      }}
+                      className="w-full mt-1 py-1 px-2 bg-[#FAF5DF] hover:bg-amber-100 text-amber-950 rounded-lg border border-amber-300 text-[11px] font-bold font-dongy-serif flex items-center justify-center gap-1.5 transition-colors"
+                    >
+                      <Camera className="w-3.5 h-3.5 text-amber-800" />
+                      <span>{pointCustomImages[item.pointCode] ? '📷 Xem/Đổi ảnh đã lưu' : '📷 Xem & Tải ảnh huyệt'}</span>
+                    </button>
                   </div>
 
                   {/* Coupled Point */}
-                  <div className="bg-stone-50 p-2 rounded-lg border border-stone-200 text-[11px] text-parchment-800 font-dongy-body">
-                    <strong>Huyệt Phối:</strong> {item.coupledPoint.pointName} ({item.coupledPoint.pointCode}) — {item.coupledPoint.vessel}
+                  <div className="bg-stone-50 p-2 rounded-lg border border-stone-200 text-[11px] text-parchment-800 font-dongy-body flex items-center justify-between gap-2">
+                    <div>
+                      <strong>Huyệt Phối:</strong> {item.coupledPoint.pointName} ({item.coupledPoint.pointCode}) — {item.coupledPoint.vessel}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedPointModal({
+                          pointName: item.coupledPoint.pointName,
+                          pointCode: item.coupledPoint.pointCode,
+                          role: 'Huyệt Phối Bát Mạch',
+                          element: '',
+                          hexagramName: '',
+                          hexagramLines: [],
+                          organOrMeridian: item.coupledPoint.vessel,
+                          location: `Giao hội phối với huyệt ${item.pointName} (${item.extraordinaryVessel})`
+                        });
+                      }}
+                      className="shrink-0 p-1 hover:bg-stone-200 text-stone-700 rounded transition-colors"
+                      title="Xem/Tải ảnh huyệt phối"
+                    >
+                      <Camera className="w-3.5 h-3.5" />
+                    </button>
                   </div>
 
                   {/* Meeting Area & Indications */}
@@ -1069,6 +1618,111 @@ export default function NguDuHuyet() {
                 Khi một tạng hoặc kinh mạch bị hư suy, dùng huyệt mang hành là Mẹ của hành đó để bồi bổ (ví dụ: Phế Kim hư thì bổ Thổ huyệt Thái Uyên - Thổ sinh Kim). 
                 Khi tạng hoặc kinh mạch bị thực nhiệt tà khí, dùng huyệt mang hành là Con của hành đó để trục tả tà khí (ví dụ: Can Mộc thực thì tả Hỏa huyệt Hành Gian - Mộc sinh Hỏa).
               </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Acupoint Image Magnify Modal */}
+      {selectedPointModal && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4"
+          onClick={() => setSelectedPointModal(null)}
+        >
+          <div 
+            className="bg-[#FCFAF2] border-2 border-cinnabar-800 rounded-2xl max-w-md w-full overflow-hidden shadow-2xl space-y-3 p-4 sm:p-5 animate-in fade-in zoom-in-95 duration-150"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-2 border-b border-parchment-300">
+              <div>
+                <h3 className="text-base sm:text-lg font-black font-dongy-serif text-parchment-950 flex items-center gap-2 flex-wrap">
+                  <span>{selectedPointModal.organOrMeridian} – {selectedPointModal.pointName}</span>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded bg-cinnabar-100 text-cinnabar-900 border border-cinnabar-300">
+                    {selectedPointModal.pointCode}
+                  </span>
+                </h3>
+                <p className="text-xs text-parchment-700 font-dongy-body mt-0.5">
+                  {selectedPointModal.hexagramName ? (
+                    <>Quẻ dịch: <strong>{selectedPointModal.hexagramName}</strong> • </>
+                  ) : null}
+                  {selectedPointModal.role} {selectedPointModal.element ? `(${selectedPointModal.element})` : ''}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedPointModal(null)}
+                className="p-1.5 rounded-xl bg-parchment-200 text-parchment-700 hover:bg-cinnabar-100 hover:text-cinnabar-900 transition-colors shrink-0"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Interactive Zoomable Image Box */}
+            <ZoomablePointViewer 
+              pointCode={selectedPointModal.pointCode} 
+              pointName={selectedPointModal.pointName} 
+              imageUrl={pointCustomImages[selectedPointModal.pointCode] || selectedPointModal.imageUrl} 
+            />
+
+            {/* Custom Image Upload & Actions */}
+            <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 bg-[#FAF5DF] rounded-xl border border-parchment-300">
+              <div className={`relative overflow-hidden inline-flex items-center gap-1.5 px-3.5 py-2 bg-cinnabar-800 hover:bg-cinnabar-900 active:bg-cinnabar-950 text-white rounded-xl text-xs font-bold font-dongy-serif cursor-pointer transition-all shadow-md ${isUploadingImage ? 'opacity-70 pointer-events-none' : ''}`}>
+                {isUploadingImage ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin text-amber-300" />
+                    <span>Đang nén & lưu ảnh...</span>
+                  </>
+                ) : (
+                  <>
+                    <Camera className="w-4 h-4 text-amber-200" />
+                    <span>{pointCustomImages[selectedPointModal.pointCode] ? 'Thay ảnh khác' : 'Tải ảnh thực tế từ máy'}</span>
+                  </>
+                )}
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
+                  disabled={isUploadingImage}
+                  onClick={(e) => {
+                    (e.target as HTMLInputElement).value = '';
+                  }}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file && selectedPointModal) {
+                      handleUploadImageForPoint(selectedPointModal.pointCode, file);
+                    }
+                  }}
+                />
+              </div>
+
+              {pointCustomImages[selectedPointModal.pointCode] && !isUploadingImage && (
+                <button
+                  type="button"
+                  onClick={() => handleRemoveCustomImage(selectedPointModal.pointCode)}
+                  className="flex items-center gap-1.5 px-3 py-2 bg-stone-200 hover:bg-stone-300 active:bg-stone-400 text-stone-800 rounded-xl text-xs font-bold font-dongy-serif transition-colors"
+                  title="Xóa ảnh tùy chỉnh và khôi phục hình mẫu"
+                >
+                  <Trash2 className="w-3.5 h-3.5 text-stone-600" />
+                  <span>Dùng hình mẫu</span>
+                </button>
+              )}
+            </div>
+
+            <div className="bg-[#FAF5DF] p-3 rounded-xl border border-parchment-300 text-xs text-parchment-900 font-dongy-body leading-relaxed space-y-1">
+              <div className="font-bold text-cinnabar-950 flex items-center gap-1.5">
+                <span>📍 Vị trí giải phẫu:</span>
+              </div>
+              <p>{selectedPointModal.location}</p>
+            </div>
+
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={() => setSelectedPointModal(null)}
+                className="px-4 py-2 rounded-xl bg-parchment-800 hover:bg-parchment-900 text-white text-xs font-bold font-dongy-serif transition-colors shadow-xs"
+              >
+                Đóng
+              </button>
             </div>
           </div>
         </div>
