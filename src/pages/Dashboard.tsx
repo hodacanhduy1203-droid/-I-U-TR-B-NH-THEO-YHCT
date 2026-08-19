@@ -1,13 +1,17 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Stethoscope, Activity, Layers, Search } from 'lucide-react';
+import { Stethoscope, Activity, Layers, Search, Sparkles, ChevronRight } from 'lucide-react';
 import { diseases } from '../data';
+import { TANG_PHU_DATA } from '../data/tangPhuData';
+import { NGU_DU_HUYET_DATA } from '../data/nguDuHuyetData';
 
 export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const stats = [
     { name: 'Chứng trạng & Bệnh danh', stat: diseases.length.toString(), icon: Stethoscope, color: 'text-cinnabar-600 border border-cinnabar-100', bg: 'bg-cinnabar-50/60' },
-    { name: 'Phác đồ Biện Chứng luận trị', stat: diseases.reduce((acc, curr) => acc + curr.variants.length, 0).toString(), icon: Layers, color: 'text-ochre-600 border border-ochre-100', bg: 'bg-ochre-50/60' },
+    { name: 'Phác đồ Biện Chứng', stat: diseases.reduce((acc, curr) => acc + curr.variants.length, 0).toString(), icon: Layers, color: 'text-ochre-600 border border-ochre-100', bg: 'bg-ochre-50/60' },
+    { name: 'Tạng & Phủ', stat: TANG_PHU_DATA.length.toString(), icon: Layers, color: 'text-herbal-700 border border-herbal-100', bg: 'bg-herbal-50/60', link: '/tang-phu' },
+    { name: 'Ngũ Du Huyệt (12 Kinh)', stat: (NGU_DU_HUYET_DATA.length * 5).toString(), icon: Sparkles, color: 'text-amber-700 border border-amber-100', bg: 'bg-amber-50/60', link: '/ngu-du-huyet' },
   ];
 
   const sortedDiseases = [...diseases]
@@ -36,18 +40,72 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {stats.map((item) => (
-          <div key={item.name} className="kraft-paper-card p-3 rounded-xl flex gap-3.5 items-center transition-all hover:shadow-xs duration-200">
-            <div className={`rounded-xl p-2 md:p-2.5 ${item.bg} flex-shrink-0 flex items-center justify-center shadow-xs`}>
-              <item.icon className={`h-4.5 w-4.5 ${item.color}`} aria-hidden="true" />
+      {/* Quick Theory Navigation Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+        {stats.map((item) => {
+          const Content = (
+            <div className="kraft-paper-card p-3 rounded-xl flex gap-3 items-center transition-all hover:shadow-xs duration-200 h-full">
+              <div className={`rounded-xl p-2 ${item.bg} flex-shrink-0 flex items-center justify-center shadow-xs`}>
+                <item.icon className={`h-4.5 w-4.5 ${item.color}`} aria-hidden="true" />
+              </div>
+              <div className="flex-1 flex items-center justify-between gap-2">
+                <p className="text-[10.5px] uppercase text-parchment-700 font-extrabold tracking-wide">{item.name}</p>
+                <p className="text-base sm:text-lg font-black text-parchment-900 font-sans tracking-tight shrink-0">{item.stat}</p>
+              </div>
             </div>
-            <div className="flex-1 flex items-center justify-between gap-2.5">
-              <p className="text-[10px] sm:text-[11px] uppercase text-parchment-700 font-extrabold tracking-wide">{item.name}</p>
-              <p className="text-lg sm:text-xl font-black text-parchment-900 font-sans tracking-tight shrink-0 pr-1">{item.stat}</p>
+          );
+
+          return item.link ? (
+            <Link key={item.name} to={item.link} className="block group">
+              {Content}
+            </Link>
+          ) : (
+            <div key={item.name}>{Content}</div>
+          );
+        })}
+      </div>
+
+      {/* Two Highlighted Feature Banners for Tạng Phủ & Ngũ Du Huyệt */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <Link
+          to="/tang-phu"
+          className="bg-[#FAF5DF] border-2 border-herbal-700 p-3.5 sm:p-4 rounded-xl shadow-[4px_4px_0px_0px_#2E4732] hover:translate-x-[1px] hover:translate-y-[1px] transition-all group flex items-center justify-between"
+        >
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-herbal-100 text-herbal-800 rounded-lg border border-herbal-300">
+              <Layers className="w-5 h-5 text-herbal-700" />
+            </div>
+            <div>
+              <h3 className="text-[13.5px] font-extrabold font-dongy-serif text-herbal-900 uppercase tracking-wide group-hover:text-herbal-700">
+                Học Thuyết Tạng & Phủ
+              </h3>
+              <p className="text-[11.5px] text-parchment-600 font-dongy-body">
+                Ngũ Tạng, Lục Phủ & Phủ Kỳ Hằng
+              </p>
             </div>
           </div>
-        ))}
+          <ChevronRight className="w-4 h-4 text-herbal-700 group-hover:translate-x-1 transition-transform" />
+        </Link>
+
+        <Link
+          to="/ngu-du-huyet"
+          className="bg-[#FAF5DF] border-2 border-ochre-600 p-3.5 sm:p-4 rounded-xl shadow-[4px_4px_0px_0px_#4E431E] hover:translate-x-[1px] hover:translate-y-[1px] transition-all group flex items-center justify-between"
+        >
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-ochre-100 text-ochre-800 rounded-lg border border-ochre-300">
+              <Sparkles className="w-5 h-5 text-ochre-700" />
+            </div>
+            <div>
+              <h3 className="text-[13.5px] font-extrabold font-dongy-serif text-ochre-900 uppercase tracking-wide group-hover:text-ochre-700">
+                60 Ngũ Du Huyệt 12 Kinh
+              </h3>
+              <p className="text-[11.5px] text-parchment-600 font-dongy-body">
+                Tỉnh, Huỳnh, Du, Kinh, Hợp & Quy luật Bổ Tả
+              </p>
+            </div>
+          </div>
+          <ChevronRight className="w-4 h-4 text-ochre-700 group-hover:translate-x-1 transition-transform" />
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 gap-4">

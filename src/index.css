@@ -52,19 +52,22 @@ html, body, #root {
   overflow-x: hidden;
   height: 100%;
   width: 100%;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 body {
-  position: fixed;
-  overflow: hidden;
-  overscroll-behavior: none;
+  margin: 0;
+  padding: 0;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  width: 100vw;
-  height: 100vh;
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
   /* Prevent accidental text selection for a locked app feel, 
      but allow selection in specific content areas if needed */
   user-select: none;
@@ -74,9 +77,10 @@ body {
 }
 
 #root {
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
   height: 100%;
+  width: 100%;
 }
 
 /* Re-enable selection for actual content lines */
@@ -126,6 +130,14 @@ body {
 }
 
 /* Elegant scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

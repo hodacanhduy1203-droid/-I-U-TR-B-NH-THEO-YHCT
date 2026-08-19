@@ -1,6 +1,6 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { cn } from '../utils';
-import { Home, Stethoscope, Leaf, Menu, Smartphone, Download, X } from 'lucide-react';
+import { Home, Stethoscope, Leaf, Menu, Smartphone, Download, X, Layers, Sparkles, Activity } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 
 export default function Layout() {
@@ -39,32 +39,106 @@ export default function Layout() {
     }
   };
 
+  const prevPathRef = useRef<string>(location.pathname);
+
+  // Save current route to localStorage for persistence across reloads / backgrounding
   useEffect(() => {
-    const saved = localStorage.getItem('app_scroll_' + location.pathname);
-    if (saved && mainRef.current) {
-      setTimeout(() => {
-        if (mainRef.current) {
-          mainRef.current.scrollTop = parseInt(saved, 10);
-        }
-      }, 10);
-    } else if (mainRef.current) {
-      mainRef.current.scrollTop = 0;
+    const fullPath = location.pathname + location.search + location.hash;
+    if (location.pathname && location.pathname !== '/') {
+      try {
+        localStorage.setItem('mediconnect_last_route', fullPath);
+      } catch (e) {
+        // ignore storage errors
+      }
     }
+  }, [location.pathname, location.search, location.hash]);
+
+  // Handle scroll position restoration & persistence
+  useEffect(() => {
+    const currentPath = location.pathname;
+    const isNewRoute = prevPathRef.current !== currentPath;
+    prevPathRef.current = currentPath;
+
+    const mainEl = mainRef.current;
+    if (!mainEl) return;
+
+    if (isNewRoute) {
+      // If user navigated to a different page, check if we have a saved position or scroll to top
+      const savedPos = sessionStorage.getItem(`mediconnect_scroll_${currentPath}`);
+      if (savedPos !== null) {
+        mainEl.scrollTop = parseInt(savedPos, 10) || 0;
+      } else {
+        mainEl.scrollTop = 0;
+      }
+    } else {
+      // Returning/re-rendering same page: restore saved position
+      const savedPos = sessionStorage.getItem(`mediconnect_scroll_${currentPath}`);
+      if (savedPos !== null && mainEl.scrollTop === 0) {
+        mainEl.scrollTop = parseInt(savedPos, 10) || 0;
+      }
+    }
+  }, [location.pathname, location.search]);
+
+  // Save scroll position on scroll & when app is backgrounded / hidden
+  useEffect(() => {
+    const mainEl = mainRef.current;
+    if (!mainEl) return;
+
+    const saveScroll = () => {
+      if (mainEl && location.pathname) {
+        try {
+          sessionStorage.setItem(`mediconnect_scroll_${location.pathname}`, mainEl.scrollTop.toString());
+        } catch (e) {
+          // ignore
+        }
+      }
+    };
+
+    let timeoutId: any = null;
+    const handleScroll = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(saveScroll, 100);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        saveScroll();
+      } else if (document.visibilityState === 'visible' && mainEl) {
+        const savedPos = sessionStorage.getItem(`mediconnect_scroll_${location.pathname}`);
+        if (savedPos !== null) {
+          const targetY = parseInt(savedPos, 10) || 0;
+          if (mainEl.scrollTop === 0 && targetY > 0) {
+            mainEl.scrollTop = targetY;
+          }
+        }
+      }
+    };
+
+    mainEl.addEventListener('scroll', handleScroll, { passive: true });
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('pagehide', saveScroll);
+    window.addEventListener('beforeunload', saveScroll);
+
+    return () => {
+      clearTimeout(timeoutId);
+      saveScroll();
+      mainEl.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('pagehide', saveScroll);
+      window.removeEventListener('beforeunload', saveScroll);
+    };
   }, [location.pathname]);
 
-  const handleScroll = () => {
-    if (mainRef.current) {
-      localStorage.setItem('app_scroll_' + location.pathname, mainRef.current.scrollTop.toString());
-    }
-  };
-
   const navigation = [
-    { name: 'Tổng quan', href: '/', icon: Home },
+    { name: 'Tạng & Phủ', href: '/tang-phu', icon: Layers },
     { name: 'Danh mục bệnh', href: '/diseases', icon: Stethoscope },
+    { name: 'Ngũ du huyệt', href: '/ngu-du-huyet', icon: Sparkles },
+    { name: '28 mạch', href: '/28-mach', icon: Activity },
+    { name: 'Hệ thống vị thuốc', href: '/vi-thuoc', icon: Leaf },
   ];
 
   return (
-    <div className="flex h-screen bg-parchment-50 overflow-hidden font-sans text-parchment-900">
+    <div className="fixed inset-0 flex w-full bg-parchment-50 overflow-hidden font-sans text-parchment-900">
       {/* Mobile overlay */}
       <div 
         className={cn("fixed inset-0 z-20 bg-parchment-950/40 transition-opacity lg:hidden", sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none")} 
@@ -127,8 +201,7 @@ export default function Layout() {
 
         <main 
           ref={mainRef}
-          onScroll={handleScroll}
-          className="flex-1 relative overflow-y-auto focus:outline-none px-3 lg:px-5 py-4 bg-parchment-50"
+          className="flex-1 relative overflow-y-auto overscroll-contain focus:outline-none px-3 lg:px-5 py-4 bg-parchment-50"
         >
           <div className="mx-auto w-full max-w-7xl min-h-full">
             <Outlet />
