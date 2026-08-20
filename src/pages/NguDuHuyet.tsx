@@ -42,7 +42,8 @@ import {
   QueDichMeridian 
 } from '../data/nguDuQueDichData';
 import {
-  loadAllPointImagesFromStorage
+  loadAllPointImagesFromStorage,
+  exportAllImagesAsJson
 } from '../utils/imageStorage';
 
 function HexagramVisual({ lines }: { lines: number[] }) {
@@ -648,6 +649,32 @@ export default function NguDuHuyet() {
           <span>Lý Luận & Cổ Thi</span>
         </button>
       </div>
+
+      {/* Helper Bar: Xuất tệp dữ liệu ảnh để đẩy vào mã nguồn GitHub */}
+      {Object.keys(pointCustomImages).length > 0 && (
+        <div className="bg-[#FAF5DF] border border-parchment-300 p-2.5 rounded-xl shadow-2xs flex flex-wrap items-center justify-between gap-2 text-xs font-dongy-body">
+          <div className="flex items-center gap-1.5 text-parchment-900">
+            <ImageIcon className="w-4 h-4 text-emerald-800 shrink-0" />
+            <span>Có <strong>{Object.keys(pointCustomImages).length} ảnh huyệt</strong> trên máy bạn</span>
+          </div>
+          <button
+            type="button"
+            onClick={async () => {
+              try {
+                await exportAllImagesAsJson();
+                showToast('Đã tải tệp sao lưu ảnh (.JSON) về máy thành công!');
+              } catch (err) {
+                console.error(err);
+              }
+            }}
+            className="flex items-center gap-1 px-3 py-1 bg-cinnabar-800 hover:bg-cinnabar-900 text-white rounded-lg text-xs font-bold font-dongy-serif shadow-xs transition-colors"
+            title="Tải tệp JSON chứa toàn bộ ảnh đã gắn để gửi vào chat AI lưu vĩnh viễn lên GitHub"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span>Xuất tệp ảnh (.JSON) gửi cho AI để lưu lên GitHub</span>
+          </button>
+        </div>
+      )}
 
       {/* Toast Notification */}
       {notification && (
