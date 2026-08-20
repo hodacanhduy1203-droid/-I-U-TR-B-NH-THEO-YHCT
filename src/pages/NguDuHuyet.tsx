@@ -38,6 +38,7 @@ import {
 import {
   loadAllPointImagesFromStorage
 } from '../utils/imageStorage';
+import { AnatomicalPointDiagram } from '../components/AnatomicalPointDiagram';
 
 function HexagramVisual({ lines }: { lines: number[] }) {
   return (
@@ -79,68 +80,11 @@ function PointLocationVisual({ pointCode, pointName, imageUrl }: { pointCode: st
     );
   }
 
-  if (pointCode === 'HT.9') {
-    return (
-      <svg viewBox="0 0 200 200" className="w-full h-full select-none bg-[#FDFBF7]" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="skinGradReal" x1="20%" y1="0%" x2="80%" y2="100%">
-            <stop offset="0%" stopColor="#E9B792" />
-            <stop offset="50%" stopColor="#DC9E75" />
-            <stop offset="100%" stopColor="#BE7B50" />
-          </linearGradient>
-          <linearGradient id="nailGloss" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#F5ECE9" />
-            <stop offset="50%" stopColor="#EAD8D4" />
-            <stop offset="100%" stopColor="#D9BFBB" />
-          </linearGradient>
-          <filter id="glowHT9" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="1" stdDeviation="2" floodColor="#E11D48" floodOpacity="0.7"/>
-          </filter>
-        </defs>
-
-        {/* White silk fabric background */}
-        <rect width="200" height="200" fill="#F8F6F0" />
-        <path d="M0,40 Q60,80 120,30 Q170,10 200,50 L200,200 L0,200 Z" fill="#EFECE3" opacity="0.6" />
-
-        {/* Dorsum of hand / skin folds */}
-        <path d="M10,0 Q60,25 115,20 Q160,5 190,0 L200,60 Q170,95 130,110 L105,75 Z" fill="#D2966B" opacity="0.45" />
-
-        {/* Ring Finger */}
-        <path d="M95,45 Q125,75 155,108 Q175,130 182,148 Q180,165 168,170 Q152,172 135,152 Q112,122 82,78 Z" fill="url(#skinGradReal)" stroke="#9F6236" strokeWidth="1.2" />
-        <path d="M152,145 Q164,156 160,165 Q150,168 140,158 Q144,148 152,145 Z" fill="url(#nailGloss)" stroke="#B38A82" strokeWidth="1" />
-
-        {/* Little Finger (Ngón út - tâm điểm HT.9 Thiếu xung) */}
-        <path d="M38,15 Q50,55 58,95 Q62,125 62,148 Q62,178 76,183 Q92,180 94,156 Q96,122 90,85 Q82,50 68,15 Z" fill="url(#skinGradReal)" stroke="#9F6236" strokeWidth="1.5" />
-
-        {/* Skin wrinkles on joints */}
-        <path d="M62,100 Q76,104 90,98" stroke="#8A4E25" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
-        <path d="M63,105 Q76,109 89,103" stroke="#8A4E25" strokeWidth="1.2" strokeLinecap="round" opacity="0.5" />
-
-        {/* Little finger nail with natural curve */}
-        <path d="M67,152 Q67,175 78,177 Q89,175 90,154 Q89,148 78,148 Q68,148 67,152 Z" fill="url(#nailGloss)" stroke="#B38A82" strokeWidth="1.2" />
-        <path d="M70,150 Q78,149 86,151" stroke="#FFF" strokeWidth="1.5" strokeLinecap="round" opacity="0.8" />
-
-        {/* 0.1 Cun Dotted Guidelines */}
-        <line x1="52" y1="150" x2="105" y2="150" stroke="#333" strokeWidth="1.2" strokeDasharray="3,2" />
-        <line x1="90" y1="142" x2="90" y2="172" stroke="#333" strokeWidth="1.2" strokeDasharray="3,2" />
-
-        {/* HT.9 Red Acupoint Dot */}
-        <circle cx="90" cy="150" r="4.5" fill="#E11D48" stroke="#FFF" strokeWidth="1.8" filter="url(#glowHT9)" />
-        <circle cx="90" cy="150" r="7.5" fill="none" stroke="#E11D48" strokeWidth="1" opacity="0.7" />
-
-        {/* Text Labels */}
-        <text x="98" y="148" fontSize="10.5" fontWeight="900" fill="#1E293B" fontFamily="sans-serif">Hệ 9</text>
-        <text x="98" y="165" fontSize="11" fontWeight="900" fill="#D946EF" fontFamily="sans-serif">Thiếu xung</text>
-      </svg>
-    );
-  }
-
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center p-3 text-center bg-[#FAF5DF] border border-dashed border-parchment-300 rounded-lg select-none">
-      <Hand className="w-8 h-8 text-parchment-500 mb-1" />
-      <span className="text-xs font-bold text-parchment-800 font-dongy-serif">Huyệt {pointName} ({pointCode})</span>
-      <span className="text-[10px] text-parchment-600 mt-0.5">Sơ đồ vị trí giải phẫu huyệt</span>
-    </div>
+    <AnatomicalPointDiagram
+      pointCode={pointCode}
+      pointName={pointName}
+    />
   );
 }
 
