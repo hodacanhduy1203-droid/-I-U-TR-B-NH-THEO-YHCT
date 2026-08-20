@@ -27,15 +27,9 @@ import {
   ZoomOut,
   RotateCcw,
   Move,
-  Upload,
-  Camera,
-  Trash2,
   ImageIcon,
-  Loader2,
   Download,
-  UploadCloud,
-  CheckCircle,
-  Database
+  CheckCircle
 } from 'lucide-react';
 import { NGU_DU_HUYET_DATA, NGU_DU_THEORY } from '../data/nguDuHuyetData';
 import { 
@@ -48,12 +42,7 @@ import {
   QueDichMeridian 
 } from '../data/nguDuQueDichData';
 import {
-  compressImage,
-  savePointImageToStorage,
-  loadAllPointImagesFromStorage,
-  deletePointImageFromStorage,
-  exportAllImagesAsJson,
-  importImagesFromJsonFile
+  loadAllPointImagesFromStorage
 } from '../utils/imageStorage';
 
 function HexagramVisual({ lines }: { lines: number[] }) {
@@ -156,7 +145,7 @@ function PointLocationVisual({ pointCode, pointName, imageUrl }: { pointCode: st
     <div className="w-full h-full flex flex-col items-center justify-center p-3 text-center bg-[#FAF5DF] border border-dashed border-parchment-300 rounded-lg select-none">
       <Hand className="w-8 h-8 text-parchment-500 mb-1" />
       <span className="text-xs font-bold text-parchment-800 font-dongy-serif">Huyệt {pointName} ({pointCode})</span>
-      <span className="text-[10px] text-parchment-600 mt-0.5">Nhấn "Tải ảnh" để tải ảnh giải phẫu huyệt</span>
+      <span className="text-[10px] text-parchment-600 mt-0.5">Sơ đồ vị trí giải phẫu huyệt</span>
     </div>
   );
 }
@@ -412,15 +401,14 @@ export default function NguDuHuyet() {
   });
 
   const [selectedPointModal, setSelectedPointModal] = useState<DichChamHuyetItem | null>(null);
-  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
-  // Lưu trữ ảnh huyệt thực tế do người dùng tải lên từ thiết bị (IndexedDB + nén ảnh thông minh)
+  // Lưu trữ ảnh huyệt (IndexedDB)
   const [pointCustomImages, setPointCustomImages] = useState<Record<string, string>>({});
 
   // Tải toàn bộ ảnh huyệt đã lưu khi mở trang
   useEffect(() => {
     let isMounted = true;
-    loadAllPointImagesFromStorage().then((images) => {
+    loadAllPointImagesFromStorage().then(async (images) => {
       if (isMounted) {
         setPointCustomImages(images);
       }
@@ -430,45 +418,6 @@ export default function NguDuHuyet() {
     };
   }, []);
 
-  const handleUploadImageForPoint = async (pointCode: string, file: File) => {
-    if (!file) return;
-    setIsUploadingImage(true);
-    try {
-      // Nén ảnh bằng HTML5 Canvas để giảm dung lượng mà vẫn giữ nguyên độ nét
-      const compressedDataUrl = await compressImage(file, 800, 800, 0.85);
-      
-      // Lưu vào IndexedDB (dung lượng bền vững không giới hạn)
-      await savePointImageToStorage(pointCode, compressedDataUrl);
-
-      // Cập nhật giao diện
-      setPointCustomImages(prev => ({
-        ...prev,
-        [pointCode]: compressedDataUrl
-      }));
-      showToast(`Đã lưu ảnh thực tế cho huyệt ${pointCode} thành công!`);
-    } catch (err) {
-      console.error('Lỗi khi nén và lưu ảnh:', err);
-      const message = err instanceof Error ? err.message : 'Không thể lưu ảnh';
-      showToast(`Lỗi: ${message}`);
-    } finally {
-      setIsUploadingImage(false);
-    }
-  };
-
-  const handleRemoveCustomImage = async (pointCode: string) => {
-    try {
-      await deletePointImageFromStorage(pointCode);
-      setPointCustomImages(prev => {
-        const updated = { ...prev };
-        delete updated[pointCode];
-        return updated;
-      });
-      showToast(`Đã xóa ảnh tùy chỉnh của huyệt ${pointCode}`);
-    } catch (err) {
-      console.error('Lỗi khi xóa ảnh tùy chỉnh:', err);
-    }
-  };
-
   const [notification, setNotification] = useState<string | null>(null);
 
   const showToast = (msg: string) => {
@@ -477,28 +426,6 @@ export default function NguDuHuyet() {
       setNotification(null);
     }, 4000);
   };
-
-  const handleExportBackup = async () => {
-    try {
-      await exportAllImagesAsJson();
-      showToast('Đã xuất tệp sao lưu ảnh huyệt (.JSON) thành công!');
-    } catch (err) {
-      console.error('Lỗi xuất tệp sao lưu:', err);
-    }
-  };
-
-  const handleImportBackup = async (file: File) => {
-    if (!file) return;
-    try {
-      const { count, images } = await importImagesFromJsonFile(file);
-      setPointCustomImages(images);
-      showToast(`Đã phục hồi thành công ${count} ảnh huyệt từ tệp sao lưu!`);
-    } catch (err) {
-      alert('Không thể nhập tệp sao lưu. Vui lòng kiểm tra lại định dạng tệp JSON.');
-    }
-  };
-
-  const savedImageCount = Object.keys(pointCustomImages).length;
 
   useEffect(() => {
     sessionStorage.setItem('mediconnect_ngu_du_tab', mainTab);
@@ -722,47 +649,6 @@ export default function NguDuHuyet() {
         </button>
       </div>
 
-      {/* Persistent Storage & Backup/Restore Status Bar */}
-      <div className="bg-[#FAF5DF] border-2 border-parchment-300 px-3.5 py-2.5 rounded-xl shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs font-dongy-body">
-        <div className="flex items-center gap-2 text-parchment-900">
-          <Database className="w-4 h-4 text-herbal-700 shrink-0" />
-          <span>
-            Lưu trữ ảnh huyệt: <strong className="text-herbal-800 font-bold">{savedImageCount} ảnh</strong> đã lưu trong bộ nhớ vĩnh viễn (IndexedDB)
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2 flex-wrap">
-          <button
-            type="button"
-            onClick={handleExportBackup}
-            className="flex items-center gap-1 px-2.5 py-1 bg-[#FCFAF2] hover:bg-parchment-200 text-parchment-900 rounded-lg border border-parchment-300 text-xs font-bold font-dongy-serif transition-colors shadow-2xs"
-            title="Tải về tệp JSON chứa toàn bộ ảnh huyệt đã lưu để lưu trữ an toàn"
-          >
-            <Download className="w-3.5 h-3.5 text-herbal-700" />
-            <span>Xuất sao lưu ảnh</span>
-          </button>
-
-          <label
-            className="flex items-center gap-1 px-2.5 py-1 bg-[#FCFAF2] hover:bg-parchment-200 text-parchment-900 rounded-lg border border-parchment-300 text-xs font-bold font-dongy-serif cursor-pointer transition-colors shadow-2xs"
-            title="Nhập tệp sao lưu JSON để phục hồi ảnh trên thiết bị khác"
-          >
-            <UploadCloud className="w-3.5 h-3.5 text-cinnabar-800" />
-            <span>Nhập sao lưu</span>
-            <input
-              type="file"
-              accept=".json"
-              className="hidden"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  handleImportBackup(file);
-                }
-              }}
-            />
-          </label>
-        </div>
-      </div>
-
       {/* Toast Notification */}
       {notification && (
         <div className="bg-emerald-800 text-white px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 text-xs font-dongy-serif animate-fadeIn">
@@ -938,7 +824,7 @@ export default function NguDuHuyet() {
                                   </span>
                                   {hasCustomImg && (
                                     <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 flex items-center gap-1">
-                                      <Camera className="w-3 h-3" /> Đã có ảnh
+                                      <ImageIcon className="w-3 h-3" /> Có ảnh
                                     </span>
                                   )}
                                 </div>
@@ -1517,8 +1403,8 @@ export default function NguDuHuyet() {
                       }}
                       className="w-full mt-1 py-1 px-2 bg-[#FAF5DF] hover:bg-amber-100 text-amber-950 rounded-lg border border-amber-300 text-[11px] font-bold font-dongy-serif flex items-center justify-center gap-1.5 transition-colors"
                     >
-                      <Camera className="w-3.5 h-3.5 text-amber-800" />
-                      <span>{pointCustomImages[item.pointCode] ? '📷 Xem/Đổi ảnh đã lưu' : '📷 Xem & Tải ảnh huyệt'}</span>
+                      <ImageIcon className="w-3.5 h-3.5 text-amber-800" />
+                      <span>Xem ảnh vị trí huyệt</span>
                     </button>
                   </div>
 
@@ -1542,9 +1428,9 @@ export default function NguDuHuyet() {
                         });
                       }}
                       className="shrink-0 p-1 hover:bg-stone-200 text-stone-700 rounded transition-colors"
-                      title="Xem/Tải ảnh huyệt phối"
+                      title="Xem ảnh vị trí huyệt phối"
                     >
-                      <Camera className="w-3.5 h-3.5" />
+                      <ImageIcon className="w-3.5 h-3.5" />
                     </button>
                   </div>
 
@@ -1663,50 +1549,6 @@ export default function NguDuHuyet() {
               pointName={selectedPointModal.pointName} 
               imageUrl={pointCustomImages[selectedPointModal.pointCode] || selectedPointModal.imageUrl} 
             />
-
-            {/* Custom Image Upload & Actions */}
-            <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 bg-[#FAF5DF] rounded-xl border border-parchment-300">
-              <div className={`relative overflow-hidden inline-flex items-center gap-1.5 px-3.5 py-2 bg-cinnabar-800 hover:bg-cinnabar-900 active:bg-cinnabar-950 text-white rounded-xl text-xs font-bold font-dongy-serif cursor-pointer transition-all shadow-md ${isUploadingImage ? 'opacity-70 pointer-events-none' : ''}`}>
-                {isUploadingImage ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin text-amber-300" />
-                    <span>Đang nén & lưu ảnh...</span>
-                  </>
-                ) : (
-                  <>
-                    <Camera className="w-4 h-4 text-amber-200" />
-                    <span>{pointCustomImages[selectedPointModal.pointCode] ? 'Thay ảnh khác' : 'Tải ảnh thực tế từ máy'}</span>
-                  </>
-                )}
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
-                  disabled={isUploadingImage}
-                  onClick={(e) => {
-                    (e.target as HTMLInputElement).value = '';
-                  }}
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file && selectedPointModal) {
-                      handleUploadImageForPoint(selectedPointModal.pointCode, file);
-                    }
-                  }}
-                />
-              </div>
-
-              {pointCustomImages[selectedPointModal.pointCode] && !isUploadingImage && (
-                <button
-                  type="button"
-                  onClick={() => handleRemoveCustomImage(selectedPointModal.pointCode)}
-                  className="flex items-center gap-1.5 px-3 py-2 bg-stone-200 hover:bg-stone-300 active:bg-stone-400 text-stone-800 rounded-xl text-xs font-bold font-dongy-serif transition-colors"
-                  title="Xóa ảnh tùy chỉnh và khôi phục hình mẫu"
-                >
-                  <Trash2 className="w-3.5 h-3.5 text-stone-600" />
-                  <span>Dùng hình mẫu</span>
-                </button>
-              )}
-            </div>
 
             <div className="bg-[#FAF5DF] p-3 rounded-xl border border-parchment-300 text-xs text-parchment-900 font-dongy-body leading-relaxed space-y-1">
               <div className="font-bold text-cinnabar-950 flex items-center gap-1.5">

@@ -47,12 +47,12 @@ function readFileAsDataUrl(file: File): Promise<string> {
   });
 }
 
-// Compress and resize image file to prevent memory and storage bloat
+// Compress and resize image file to prevent memory bloat while preserving sharp anatomical details (~750px HD)
 export async function compressImage(
   file: File,
-  maxWidth = 900,
-  maxHeight = 900,
-  quality = 0.85
+  maxWidth = 750,
+  maxHeight = 750,
+  quality = 0.82
 ): Promise<string> {
   if (!file) {
     throw new Error('Không có tệp ảnh nào được chọn');
@@ -170,6 +170,91 @@ export async function compressImage(
 
   // 3. Resilient universal fallback: read raw DataURL directly
   return await readFileAsDataUrl(file);
+}
+
+// Compress an existing Base64 DataURL to standard HD resolution & quality (~750px)
+export async function compressDataUrl(
+  dataUrl: string,
+  maxWidth = 750,
+  maxHeight = 750,
+  quality = 0.82
+): Promise<string> {
+  if (!dataUrl || !dataUrl.startsWith('data:image')) {
+    return dataUrl;
+  }
+
+  return new Promise<string>((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      try {
+        let width = img.naturalWidth || img.width;
+        let height = img.naturalHeight || img.height;
+
+        if (width <= 0 || height <= 0) {
+          resolve(dataUrl);
+          return;
+        }
+
+        // If already smaller than target bounds and is relatively small, keep as is or re-encode
+        if (width > height) {
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, width);
+        canvas.height = Math.max(1, height);
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve(dataUrl);
+          return;
+        }
+
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, 0, 0, width, height);
+        const result = canvas.toDataURL('image/jpeg', quality);
+        resolve(result.length < dataUrl.length ? result : dataUrl);
+      } catch {
+        resolve(dataUrl);
+      }
+    };
+    img.onerror = () => resolve(dataUrl);
+    img.src = dataUrl;
+  });
+}
+
+// Automatically optimize oversized stored images in background to save memory while keeping high sharpness
+export async function optimizeAllStoredImages(): Promise<{ optimizedCount: number; newImages: Record<string, string> }> {
+  const currentImages = await loadAllPointImagesFromStorage();
+  const newImages: Record<string, string> = {};
+  let count = 0;
+
+  for (const [code, rawData] of Object.entries(currentImages)) {
+    if (typeof rawData === 'string' && rawData.startsWith('data:image')) {
+      // If dataUrl is excessively large (> 250KB in base64 string length) or uncompressed raw camera uploads
+      if (rawData.length > 250000) {
+        const compressed = await compressDataUrl(rawData, 750, 750, 0.82);
+        if (compressed.length < rawData.length) {
+          await savePointImageToStorage(code, compressed);
+          newImages[code] = compressed;
+          count++;
+          continue;
+        }
+      }
+      newImages[code] = rawData;
+    }
+  }
+
+  return { optimizedCount: count, newImages };
 }
 
 // Save image to IndexedDB and fallback to localStorage
