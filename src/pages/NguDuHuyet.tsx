@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef, type MouseEvent, type TouchEvent } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { 
   Search, 
@@ -21,23 +21,9 @@ import {
   CheckCircle2,
   Zap,
   Hand,
-  Maximize2,
   X,
-  ZoomIn,
-  ZoomOut,
-  RotateCcw,
-  Move,
   ImageIcon,
-  Download,
-  CheckCircle,
-  Copy,
-  FileCode,
-  ExternalLink,
-  Camera,
-  Upload,
-  Trash2,
-  Loader2,
-  UploadCloud
+  CheckCircle
 } from 'lucide-react';
 import { NGU_DU_HUYET_DATA, NGU_DU_THEORY } from '../data/nguDuHuyetData';
 import { 
@@ -50,12 +36,7 @@ import {
   QueDichMeridian 
 } from '../data/nguDuQueDichData';
 import {
-  compressImage,
-  savePointImageToStorage,
-  loadAllPointImagesFromStorage,
-  deletePointImageFromStorage,
-  exportAllImagesAsJson,
-  importImagesFromJsonFile
+  loadAllPointImagesFromStorage
 } from '../utils/imageStorage';
 
 function HexagramVisual({ lines }: { lines: number[] }) {
@@ -91,7 +72,7 @@ function PointLocationVisual({ pointCode, pointName, imageUrl }: { pointCode: st
       <img
         src={imageUrl}
         alt={`Vị trí huyệt ${pointName} (${pointCode})`}
-        className="w-full h-full object-cover select-none pointer-events-none"
+        className="w-full h-full object-cover select-none pointer-events-none rounded-lg"
         referrerPolicy="no-referrer"
         onError={() => setHasError(true)}
       />
@@ -124,7 +105,7 @@ function PointLocationVisual({ pointCode, pointName, imageUrl }: { pointCode: st
         {/* Dorsum of hand / skin folds */}
         <path d="M10,0 Q60,25 115,20 Q160,5 190,0 L200,60 Q170,95 130,110 L105,75 Z" fill="#D2966B" opacity="0.45" />
 
-        {/* Ring Finger (Ngón nhẫn mở rộng góc) */}
+        {/* Ring Finger */}
         <path d="M95,45 Q125,75 155,108 Q175,130 182,148 Q180,165 168,170 Q152,172 135,152 Q112,122 82,78 Z" fill="url(#skinGradReal)" stroke="#9F6236" strokeWidth="1.2" />
         <path d="M152,145 Q164,156 160,165 Q150,168 140,158 Q144,148 152,145 Z" fill="url(#nailGloss)" stroke="#B38A82" strokeWidth="1" />
 
@@ -139,7 +120,7 @@ function PointLocationVisual({ pointCode, pointName, imageUrl }: { pointCode: st
         <path d="M67,152 Q67,175 78,177 Q89,175 90,154 Q89,148 78,148 Q68,148 67,152 Z" fill="url(#nailGloss)" stroke="#B38A82" strokeWidth="1.2" />
         <path d="M70,150 Q78,149 86,151" stroke="#FFF" strokeWidth="1.5" strokeLinecap="round" opacity="0.8" />
 
-        {/* 0.1 Cun Dotted Guidelines (Đường gióng xác định huyệt) */}
+        {/* 0.1 Cun Dotted Guidelines */}
         <line x1="52" y1="150" x2="105" y2="150" stroke="#333" strokeWidth="1.2" strokeDasharray="3,2" />
         <line x1="90" y1="142" x2="90" y2="172" stroke="#333" strokeWidth="1.2" strokeDasharray="3,2" />
 
@@ -147,7 +128,7 @@ function PointLocationVisual({ pointCode, pointName, imageUrl }: { pointCode: st
         <circle cx="90" cy="150" r="4.5" fill="#E11D48" stroke="#FFF" strokeWidth="1.8" filter="url(#glowHT9)" />
         <circle cx="90" cy="150" r="7.5" fill="none" stroke="#E11D48" strokeWidth="1" opacity="0.7" />
 
-        {/* Text Labels matching user image style */}
+        {/* Text Labels */}
         <text x="98" y="148" fontSize="10.5" fontWeight="900" fill="#1E293B" fontFamily="sans-serif">Hệ 9</text>
         <text x="98" y="165" fontSize="11" fontWeight="900" fill="#D946EF" fontFamily="sans-serif">Thiếu xung</text>
       </svg>
@@ -163,8 +144,8 @@ function PointLocationVisual({ pointCode, pointName, imageUrl }: { pointCode: st
   );
 }
 
-// Interactive Zoomable & Pannable Viewer for Acupoint Images
-function ZoomablePointViewer({
+// Static Standard Viewer for Acupoint Images (No Zoom / Pan / Controls)
+function StaticPointViewer({
   pointCode,
   pointName,
   imageUrl
@@ -173,193 +154,15 @@ function ZoomablePointViewer({
   pointName: string;
   imageUrl?: string;
 }) {
-  const [scale, setScale] = useState(1);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  const dragStartRef = useRef({ x: 0, y: 0 });
-  const initialTouchDistanceRef = useRef<number | null>(null);
-  const initialTouchScaleRef = useRef<number>(1);
-
-  // Reset zoom & pan when image or acupoint changes
-  useEffect(() => {
-    setScale(1);
-    setPosition({ x: 0, y: 0 });
-  }, [pointCode, imageUrl]);
-
-  const handleZoomIn = () => {
-    setScale((prev) => Math.min(4, Number((prev + 0.4).toFixed(2))));
-  };
-
-  const handleZoomOut = () => {
-    setScale((prev) => {
-      const next = Math.max(1, Number((prev - 0.4).toFixed(2)));
-      if (next === 1) setPosition({ x: 0, y: 0 });
-      return next;
-    });
-  };
-
-  const handleReset = () => {
-    setScale(1);
-    setPosition({ x: 0, y: 0 });
-  };
-
-  const handleDoubleClick = () => {
-    if (scale > 1.2) {
-      handleReset();
-    } else {
-      setScale(2.2);
-    }
-  };
-
-  // Mouse pan handlers
-  const handleMouseDown = (e: MouseEvent) => {
-    if (scale <= 1) return;
-    setIsDragging(true);
-    dragStartRef.current = { x: e.clientX - position.x, y: e.clientY - position.y };
-  };
-
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!isDragging || scale <= 1) return;
-    setPosition({
-      x: e.clientX - dragStartRef.current.x,
-      y: e.clientY - dragStartRef.current.y
-    });
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  // Touch handlers for mobile (pinch-to-zoom and pan)
-  const handleTouchStart = (e: TouchEvent) => {
-    if (e.touches.length === 2) {
-      const dist = Math.hypot(
-        e.touches[0].clientX - e.touches[1].clientX,
-        e.touches[0].clientY - e.touches[1].clientY
-      );
-      initialTouchDistanceRef.current = dist;
-      initialTouchScaleRef.current = scale;
-    } else if (e.touches.length === 1 && scale > 1) {
-      setIsDragging(true);
-      dragStartRef.current = {
-        x: e.touches[0].clientX - position.x,
-        y: e.touches[0].clientY - position.y
-      };
-    }
-  };
-
-  const handleTouchMove = (e: TouchEvent) => {
-    if (e.touches.length === 2 && initialTouchDistanceRef.current !== null) {
-      const dist = Math.hypot(
-        e.touches[0].clientX - e.touches[1].clientX,
-        e.touches[0].clientY - e.touches[1].clientY
-      );
-      const factor = dist / initialTouchDistanceRef.current;
-      const newScale = Math.min(4, Math.max(1, Number((initialTouchScaleRef.current * factor).toFixed(2))));
-      setScale(newScale);
-      if (newScale === 1) {
-        setPosition({ x: 0, y: 0 });
-      }
-    } else if (e.touches.length === 1 && isDragging && scale > 1) {
-      setPosition({
-        x: e.touches[0].clientX - dragStartRef.current.x,
-        y: e.touches[0].clientY - dragStartRef.current.y
-      });
-    }
-  };
-
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-    initialTouchDistanceRef.current = null;
-  };
-
   return (
-    <div className="relative w-full aspect-square rounded-2xl overflow-hidden border-2 border-parchment-300 bg-[#FAF6EE] shadow-inner select-none">
-      {/* Zoom / Pan Interactive Canvas */}
-      <div
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        onDoubleClick={handleDoubleClick}
-        className={`w-full h-full flex items-center justify-center overflow-hidden ${
-          scale > 1 ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-zoom-in'
-        }`}
-        style={{ touchAction: scale > 1 ? 'none' : 'auto' }}
-      >
-        <div
-          className="w-full h-full max-w-[340px] max-h-[340px] flex items-center justify-center origin-center transition-transform duration-75"
-          style={{
-            transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
-            willChange: 'transform'
-          }}
-        >
-          <PointLocationVisual 
-            pointCode={pointCode} 
-            pointName={pointName} 
-            imageUrl={imageUrl} 
-          />
-        </div>
+    <div className="relative w-full aspect-square rounded-2xl overflow-hidden border-2 border-parchment-300 bg-[#FAF6EE] shadow-inner select-none flex items-center justify-center p-1.5">
+      <div className="w-full h-full max-w-[360px] max-h-[360px] flex items-center justify-center">
+        <PointLocationVisual 
+          pointCode={pointCode} 
+          pointName={pointName} 
+          imageUrl={imageUrl} 
+        />
       </div>
-
-      {/* Floating Zoom Controls Bar */}
-      <div className="absolute top-2.5 right-2.5 flex items-center gap-1 bg-parchment-900/85 backdrop-blur-xs p-1 rounded-xl shadow-lg border border-parchment-700/50 z-20">
-        <button
-          type="button"
-          onClick={handleZoomOut}
-          disabled={scale <= 1}
-          className="p-1.5 rounded-lg text-white hover:bg-white/20 active:bg-white/30 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
-          title="Thu nhỏ (-)"
-        >
-          <ZoomOut className="w-4 h-4" />
-        </button>
-
-        <button
-          type="button"
-          onClick={handleReset}
-          className="px-2 py-0.5 text-[11px] font-bold text-amber-200 hover:text-white transition-colors"
-          title="Đặt lại cỡ 100%"
-        >
-          {Math.round(scale * 100)}%
-        </button>
-
-        <button
-          type="button"
-          onClick={handleZoomIn}
-          disabled={scale >= 4}
-          className="p-1.5 rounded-lg text-white hover:bg-white/20 active:bg-white/30 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
-          title="Phóng to (+)"
-        >
-          <ZoomIn className="w-4 h-4" />
-        </button>
-
-        {scale > 1 && (
-          <button
-            type="button"
-            onClick={handleReset}
-            className="p-1.5 rounded-lg text-amber-300 hover:bg-white/20 active:bg-white/30 transition-colors ml-0.5 border-l border-white/20"
-            title="Khôi phục vị trí & cỡ 100%"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-          </button>
-        )}
-      </div>
-
-      {/* Quick Helper Badge at Bottom */}
-      {scale > 1 ? (
-        <div className="absolute bottom-2 left-2 bg-black/70 text-amber-200 text-[10px] px-2.5 py-1 rounded-lg backdrop-blur-xs flex items-center gap-1.5 pointer-events-none z-10 border border-white/15 shadow-md">
-          <Move className="w-3 h-3 text-amber-300 shrink-0" />
-          <span>Kéo để di chuyển • Nhấp đúp về 100%</span>
-        </div>
-      ) : (
-        <div className="absolute bottom-2 left-2 bg-black/50 text-white/95 text-[10px] px-2 py-0.5 rounded-lg backdrop-blur-xs flex items-center gap-1 pointer-events-none z-10">
-          <ZoomIn className="w-3 h-3 text-amber-300 shrink-0" />
-          <span>Nhấp đúp hoặc chụm 2 ngón tay để phóng to</span>
-        </div>
-      )}
     </div>
   );
 }
@@ -414,11 +217,8 @@ export default function NguDuHuyet() {
   });
 
   const [selectedPointModal, setSelectedPointModal] = useState<DichChamHuyetItem | null>(null);
-  const [showJsonExportModal, setShowJsonExportModal] = useState(false);
-  const [jsonContentString, setJsonContentString] = useState<string>('');
-  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
-  // Lưu trữ ảnh huyệt (IndexedDB)
+  // Lưu trữ ảnh huyệt
   const [pointCustomImages, setPointCustomImages] = useState<Record<string, string>>({});
 
   // Tải toàn bộ ảnh huyệt đã lưu khi mở trang
@@ -433,51 +233,6 @@ export default function NguDuHuyet() {
       isMounted = false;
     };
   }, []);
-
-  const handleUploadImageForPoint = async (pointCode: string, file: File) => {
-    if (!file) return;
-    setIsUploadingImage(true);
-    try {
-      const compressedDataUrl = await compressImage(file, 750, 750, 0.82);
-      await savePointImageToStorage(pointCode, compressedDataUrl);
-      setPointCustomImages(prev => ({
-        ...prev,
-        [pointCode]: compressedDataUrl
-      }));
-      showToast(`✅ Đã lưu ảnh thành công cho huyệt ${pointCode}!`);
-    } catch (err) {
-      console.error('Lỗi khi lưu ảnh:', err);
-      const message = err instanceof Error ? err.message : 'Không thể lưu ảnh';
-      showToast(`Lỗi: ${message}`);
-    } finally {
-      setIsUploadingImage(false);
-    }
-  };
-
-  const handleRemoveCustomImage = async (pointCode: string) => {
-    try {
-      await deletePointImageFromStorage(pointCode);
-      setPointCustomImages(prev => {
-        const updated = { ...prev };
-        delete updated[pointCode];
-        return updated;
-      });
-      showToast(`Đã xóa ảnh tùy chỉnh của huyệt ${pointCode}`);
-    } catch (err) {
-      console.error('Lỗi khi xóa ảnh:', err);
-    }
-  };
-
-  const handleImportBackup = async (file: File) => {
-    if (!file) return;
-    try {
-      const { count, images } = await importImagesFromJsonFile(file);
-      setPointCustomImages(images);
-      showToast(`✅ Phục hồi thành công ${count} ảnh huyệt từ tệp backup!`);
-    } catch (err) {
-      alert('Không thể nhập tệp sao lưu. Vui lòng kiểm tra lại tệp JSON.');
-    }
-  };
 
   const [notification, setNotification] = useState<string | null>(null);
 
@@ -710,91 +465,6 @@ export default function NguDuHuyet() {
         </button>
       </div>
 
-      {/* Helper Bar: Xuất tệp dữ liệu ảnh để đẩy vào mã nguồn GitHub */}
-      <div className="bg-[#FAF5DF] border-2 border-emerald-600/80 p-3.5 rounded-2xl shadow-sm flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-xs font-dongy-body">
-        <div className="flex items-center gap-2.5 text-parchment-900">
-          <div className="p-2 bg-emerald-100 rounded-xl text-emerald-800 shrink-0">
-            <ImageIcon className="w-5 h-5" />
-          </div>
-          <div>
-            <span className="font-bold text-emerald-950 text-sm">
-              {Object.keys(pointCustomImages).length > 0 
-                ? `Đã lưu ${Object.keys(pointCustomImages).length} ảnh huyệt trên máy này`
-                : 'Chưa có ảnh tùy chỉnh'}
-            </span>
-            <p className="text-[11px] text-parchment-700">Xuất file .JSON chứa ảnh huyệt để đưa lên kho lưu trữ GitHub vĩnh viễn</p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-          <label
-            className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2.5 bg-[#FCFAF2] hover:bg-parchment-200 text-parchment-900 border border-parchment-300 rounded-xl text-xs font-bold font-dongy-serif shadow-2xs cursor-pointer transition-all active:scale-95"
-            title="Nhập tệp sao lưu .JSON để nạp ảnh vào máy"
-          >
-            <UploadCloud className="w-4 h-4 text-cinnabar-800 shrink-0" />
-            <span>Nhập File .JSON</span>
-            <input
-              type="file"
-              accept=".json"
-              className="hidden"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  handleImportBackup(file);
-                }
-              }}
-            />
-          </label>
-
-          <button
-            type="button"
-            onClick={async () => {
-              try {
-                await exportAllImagesAsJson();
-                showToast('✅ Đã khởi tạo lệnh tải tệp (.JSON) về thư mục Download!');
-              } catch (err) {
-                console.error(err);
-                // Fallback to modal if download fails
-                const data = {
-                  appName: 'MediConnect Y Học Cổ Truyền',
-                  version: '1.0',
-                  exportDate: new Date().toISOString(),
-                  totalImages: Object.keys(pointCustomImages).length,
-                  images: pointCustomImages
-                };
-                setJsonContentString(JSON.stringify(data, null, 2));
-                setShowJsonExportModal(true);
-              }
-            }}
-            className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2.5 bg-cinnabar-800 hover:bg-cinnabar-900 active:bg-cinnabar-950 text-white rounded-xl text-xs font-bold font-dongy-serif shadow-md transition-all active:scale-95"
-            title="Tải tệp .JSON về thiết bị"
-          >
-            <Download className="w-4 h-4 text-amber-200 shrink-0" />
-            <span>TẢI FILE .JSON</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              const data = {
-                appName: 'MediConnect Y Học Cổ Truyền',
-                version: '1.0',
-                exportDate: new Date().toISOString(),
-                totalImages: Object.keys(pointCustomImages).length,
-                images: pointCustomImages
-              };
-              setJsonContentString(JSON.stringify(data, null, 2));
-              setShowJsonExportModal(true);
-            }}
-            className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold font-dongy-serif shadow-sm transition-all active:scale-95"
-            title="Xem hoặc Sao chép dữ liệu JSON"
-          >
-            <FileCode className="w-4 h-4 text-emerald-200 shrink-0" />
-            <span>Sao Chép Mã JSON</span>
-          </button>
-        </div>
-      </div>
-
       {/* Toast Notification */}
       {notification && (
         <div className="bg-emerald-800 text-white px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 text-xs font-dongy-serif animate-fadeIn">
@@ -941,7 +611,7 @@ export default function NguDuHuyet() {
                                   });
                                 }}
                                 className="shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border border-parchment-300 bg-[#FAF5DF] hover:border-cinnabar-700 cursor-pointer relative group flex items-center justify-center shadow-2xs self-center sm:self-start"
-                                title="Nhấn để xem & tải ảnh vị trí huyệt"
+                                title="Nhấn để xem vị trí huyệt"
                               >
                                 <PointLocationVisual
                                   pointCode={pt.code}
@@ -949,11 +619,11 @@ export default function NguDuHuyet() {
                                   imageUrl={pointCustomImages[pt.code] || pt.imageUrl}
                                 />
                                 <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white text-[9px] font-bold text-center p-1">
-                                  <ZoomIn className="w-4 h-4 mb-0.5" />
-                                  <span>{hasCustomImg ? 'Ảnh riêng' : 'Xem ảnh'}</span>
+                                  <ImageIcon className="w-4 h-4 mb-0.5" />
+                                  <span>Xem ảnh</span>
                                 </div>
                                 {hasCustomImg && (
-                                  <div className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-emerald-500 border border-white" title="Đã có ảnh thực tế" />
+                                  <div className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-emerald-500 border border-white" title="Đã có ảnh" />
                                 )}
                               </div>
 
@@ -1381,7 +1051,7 @@ export default function NguDuHuyet() {
                                 <div 
                                   onClick={() => setSelectedPointModal(pt)}
                                   className="w-full bg-[#FAF5DF] p-1 sm:p-1.5 rounded-xl border border-parchment-300 hover:border-cinnabar-700 shadow-2xs cursor-pointer transition-all group relative"
-                                  title="Nhấn để phóng to ảnh vị trí huyệt"
+                                  title="Xem ảnh vị trí huyệt"
                                 >
                                   <div className="w-full aspect-square rounded-lg overflow-hidden bg-white flex items-center justify-center relative border border-parchment-200">
                                     <PointLocationVisual 
@@ -1390,7 +1060,7 @@ export default function NguDuHuyet() {
                                       imageUrl={pointCustomImages[pt.pointCode] || pt.imageUrl} 
                                     />
                                     <div className="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
-                                      <ZoomIn className="w-4 h-4 drop-shadow" />
+                                      <ImageIcon className="w-4 h-4 drop-shadow" />
                                     </div>
                                   </div>
                                   <div className="text-[9.5px] sm:text-[10px] font-bold text-center text-parchment-800 font-dongy-serif mt-1 truncate">
@@ -1655,14 +1325,14 @@ export default function NguDuHuyet() {
         </div>
       )}
 
-      {/* Acupoint Image Magnify Modal */}
+      {/* Acupoint Image Modal */}
       {selectedPointModal && (
         <div 
           className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4"
           onClick={() => setSelectedPointModal(null)}
         >
           <div 
-            className="bg-[#FCFAF2] border-2 border-cinnabar-800 rounded-2xl max-w-md w-full overflow-hidden shadow-2xl space-y-3 p-4 sm:p-5 animate-in fade-in zoom-in-95 duration-150"
+            className="bg-[#FCFAF2] border-2 border-cinnabar-800 rounded-2xl max-w-md w-full overflow-hidden shadow-2xl space-y-3 p-4 sm:p-5 animate-in fade-in duration-150"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between pb-2 border-b border-parchment-300">
@@ -1689,53 +1359,12 @@ export default function NguDuHuyet() {
               </button>
             </div>
 
-            {/* Interactive Zoomable Image Box */}
-            <ZoomablePointViewer 
+            {/* Static Image Box */}
+            <StaticPointViewer 
               pointCode={selectedPointModal.pointCode} 
               pointName={selectedPointModal.pointName} 
               imageUrl={pointCustomImages[selectedPointModal.pointCode] || selectedPointModal.imageUrl} 
             />
-
-            {/* Upload & Change image buttons */}
-            <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 bg-[#FAF5DF] rounded-xl border border-parchment-300">
-              <label className={`relative overflow-hidden inline-flex items-center gap-1.5 px-3 py-2 bg-cinnabar-800 hover:bg-cinnabar-900 active:bg-cinnabar-950 text-white rounded-xl text-xs font-bold font-dongy-serif cursor-pointer transition-all shadow-xs ${isUploadingImage ? 'opacity-70 pointer-events-none' : ''}`}>
-                {isUploadingImage ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin text-amber-200" />
-                    <span>Đang nén & lưu ảnh...</span>
-                  </>
-                ) : (
-                  <>
-                    <Camera className="w-4 h-4 text-amber-200" />
-                    <span>{pointCustomImages[selectedPointModal.pointCode] ? 'Thay ảnh khác' : 'Tải ảnh huyệt từ máy'}</span>
-                  </>
-                )}
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  className="hidden"
-                  disabled={isUploadingImage}
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file && selectedPointModal) {
-                      handleUploadImageForPoint(selectedPointModal.pointCode, file);
-                    }
-                  }}
-                />
-              </label>
-
-              {pointCustomImages[selectedPointModal.pointCode] && !isUploadingImage && (
-                <button
-                  type="button"
-                  onClick={() => handleRemoveCustomImage(selectedPointModal.pointCode)}
-                  className="flex items-center gap-1.5 px-3 py-2 bg-stone-200 hover:bg-stone-300 text-stone-800 rounded-xl text-xs font-bold font-dongy-serif transition-colors"
-                  title="Xóa ảnh tùy chỉnh của huyệt này"
-                >
-                  <Trash2 className="w-3.5 h-3.5 text-stone-600" />
-                  <span>Xóa ảnh</span>
-                </button>
-              )}
-            </div>
 
             <div className="bg-[#FAF5DF] p-3 rounded-xl border border-parchment-300 text-xs text-parchment-900 font-dongy-body leading-relaxed space-y-1">
               <div className="font-bold text-cinnabar-950 flex items-center gap-1.5">
@@ -1749,94 +1378,6 @@ export default function NguDuHuyet() {
                 type="button"
                 onClick={() => setSelectedPointModal(null)}
                 className="px-4 py-2 rounded-xl bg-parchment-800 hover:bg-parchment-900 text-white text-xs font-bold font-dongy-serif transition-colors shadow-xs"
-              >
-                Đóng
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* JSON Viewer & Copy Modal for in-app browser workaround */}
-      {showJsonExportModal && (
-        <div 
-          className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200"
-          onClick={() => setShowJsonExportModal(false)}
-        >
-          <div 
-            className="bg-[#FCFAF2] border-2 border-emerald-800 rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl space-y-3 p-4 sm:p-5 flex flex-col max-h-[90vh]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between pb-2 border-b border-parchment-300">
-              <div className="flex items-center gap-2">
-                <FileCode className="w-5 h-5 text-emerald-800" />
-                <h3 className="text-base sm:text-lg font-black font-dongy-serif text-parchment-950">
-                  Dữ Liệu {Object.keys(pointCustomImages).length} Ảnh Huyệt
-                </h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowJsonExportModal(false)}
-                className="p-1.5 rounded-xl bg-parchment-200 text-parchment-700 hover:bg-cinnabar-100 hover:text-cinnabar-900 transition-colors shrink-0"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="bg-amber-50 border border-amber-200 p-2.5 rounded-xl text-xs text-amber-950 font-dongy-body leading-relaxed space-y-1">
-              <p className="font-bold flex items-center gap-1">
-                <Info className="w-4 h-4 text-amber-700 shrink-0" />
-                <span>Hướng dẫn gửi cho AI để lưu lên GitHub:</span>
-              </p>
-              <p>
-                Trình duyệt trong ứng dụng (Messenger / Zalo / Facebook) thường chặn tải file về máy. Bạn có thể nhấn nút <strong>"Sao chép toàn bộ mã ảnh"</strong> bên dưới rồi dán vào khung chat AI, hoặc mở bằng Chrome/Safari để tải file.
-              </p>
-            </div>
-
-            <div className="flex-1 min-h-[160px] max-h-[300px] bg-stone-900 text-stone-100 p-3 rounded-xl overflow-auto text-[11px] font-mono select-all">
-              <pre className="whitespace-pre-wrap break-all">{jsonContentString.slice(0, 1500)}... (và các ảnh khác)</pre>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-parchment-300">
-              <button
-                type="button"
-                onClick={() => {
-                  if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(jsonContentString);
-                    showToast('✅ Đã sao chép toàn bộ dữ liệu ảnh! Hãy dán vào khung chat AI.');
-                  } else {
-                    // Fallback
-                    const textarea = document.createElement('textarea');
-                    textarea.value = jsonContentString;
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textarea);
-                    showToast('✅ Đã sao chép toàn bộ dữ liệu ảnh! Hãy dán vào khung chat AI.');
-                  }
-                }}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold font-dongy-serif shadow-md transition-colors"
-              >
-                <Copy className="w-4 h-4" />
-                <span>Sao chép toàn bộ mã ảnh</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={async () => {
-                  await exportAllImagesAsJson();
-                  showToast('Đã gửi lệnh tải file JSON về máy!');
-                }}
-                className="flex items-center justify-center gap-1 px-3 py-2.5 bg-[#FCFAF2] hover:bg-parchment-200 text-parchment-900 border border-parchment-300 rounded-xl text-xs font-bold font-dongy-serif transition-colors"
-              >
-                <Download className="w-3.5 h-3.5 text-cinnabar-800" />
-                <span>Tải file</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setShowJsonExportModal(false)}
-                className="px-3 py-2.5 rounded-xl bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-bold font-dongy-serif transition-colors"
               >
                 Đóng
               </button>

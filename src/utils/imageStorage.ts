@@ -327,22 +327,24 @@ export async function loadAllPointImagesFromStorage(): Promise<Record<string, st
     // Ignore parse error
   }
 
-  // Also check if public/points_data.json or static bundled images exist (for GitHub deployments)
-  try {
-    const res = await fetch('/points_data.json');
-    if (res.ok) {
-      const data = await res.json();
-      const bundledImages = data.images || data;
-      if (typeof bundledImages === 'object' && bundledImages !== null) {
-        for (const [k, v] of Object.entries(bundledImages)) {
-          if (!result[k] && typeof v === 'string') {
-            result[k] = v;
+  // Also check if public/points_data.json, public/ngu_du_huyet_images.json or static bundled images exist (for GitHub deployments)
+  for (const staticPath of ['/points_data.json', '/ngu_du_huyet_images.json', '/default_acupoint_images.json']) {
+    try {
+      const res = await fetch(staticPath);
+      if (res.ok) {
+        const data = await res.json();
+        const bundledImages = data.images || data;
+        if (typeof bundledImages === 'object' && bundledImages !== null) {
+          for (const [k, v] of Object.entries(bundledImages)) {
+            if (!result[k] && typeof v === 'string') {
+              result[k] = v;
+            }
           }
         }
       }
+    } catch {
+      // Static file not present, ignore
     }
-  } catch {
-    // Static file not present, ignore
   }
 
   return result;
