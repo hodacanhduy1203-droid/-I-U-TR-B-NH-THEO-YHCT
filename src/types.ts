@@ -32,6 +32,7 @@ export interface Disease {
   traditionalDiagnosis: string;
   prevention: string;
   variants: ClinicalVariant[];
+  tap?: number; // 0, 1, 2, 3
 }
 
 export interface Herb {

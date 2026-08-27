@@ -1,3 +1,4 @@
+import { TAP3_DISEASES } from './data/tap3';
 import { Disease, Herb, ClinicalVariant, PharmaTreatment, NonPharmaTreatment } from './types';
 
 function createVariant(
@@ -7,7 +8,7 @@ function createVariant(
   return { id, name, symptoms, batCuong, kinhLac, nguyenNhan, treatmentPrincipe, pharmaTreatments, nonPharmaTreatments };
 }
 
-export const diseases: Disease[] = [
+const baseDiseases: Disease[] = [
   {
     id: "dau-cot-song-that-lung",
     name: "Đau cột sống thắt lưng",
@@ -6563,933 +6564,59 @@ Chú ý: Tổng số liệu trình điều trị có thể thay đổi tùy theo
           },
           {
             type: 'Nghiệm phương',
-            name: 'Nghiệm phương Bài 3',
-            ingredients: "- Nhân trần: 30g\n- Vỏ cây đại (sao vàng): 10g\n- Chi tử: 12g",
-            instructions: "Thêm 600ml nước, sắc còn 200ml (sắc 2 nước). Uống chia 2 lần."
-          },
-          {
-            type: 'Nghiệm phương',
-            name: 'Nghiệm phương Bài 4',
-            ingredients: "- Nhân trần: 40g\n- Khương hoàng: 30g\n- Cam thảo đất: 20g",
-            instructions: "Thêm 500ml nước, sắc còn 200ml. Uống chia 2 lần."
-          }
-        ],
-        [
-          {
-            type: 'Châm cứu',
-            description: "• Châm tả: Chi tử, Can du, Đởm du, Dương lăng tuyền, Nội đình.\n• Nhĩ châm: Can, Đởm, Tùy vị."
-          }
-        ]
-      ),
-      createVariant(
-        "vg-th-am-hu-noi-nhiet", 
-        "Thể Âm hư nội nhiệt", 
-        "• Triệu chứng: Đau tức vùng hạ sườn phải, ăn kém, nước tiểu vàng. Mỗi khi lao động mệt mỏi những triệu chứng này lại tăng lên. Miệng khô, họng khô, đắng miệng, đại tiện táo.\n• Lưỡi: Chất lưỡi đỏ, rêu lưỡi hơi vàng.\n• Mạch: Mạch huyền tế.", 
-        "Lý, hư, nhiệt", 
-        "Can", 
-        "Bất nội ngoại nhân", 
-        "Tư âm dưỡng can.", 
-        [
-          {
-            type: 'Cổ phương',
-            name: 'Nhất quán tiễn',
-            ingredients: "- Sa sâm: 16g\n- Kỷ tử: 12g\n- Sinh địa: 12g\n- Đương quy: 12g\n- Mạch môn: 12g\n- Xuyên luyện tử: 12g",
-            instructions: "Sắc uống ngày 1 thang, chia 2 lần."
-          },
-          {
-            type: 'Nghiệm phương',
-            name: 'Nghiệm phương Bài 1',
-            ingredients: "- Rau má: 12g\n- Uất kim: 08g\n- Mướp đắng: 12g\n- Hậu phác: 08g\n- Thanh bì: 08g\n- Ý dĩ: 16g\n- Chỉ thực: 08g\n- Hoài sơn: 16g\n- Bạch biển đậu: 12g\n- Đinh lăng: 16g",
-            instructions: "Sắc uống ngày 1 thang, chia 2 lần."
-          },
-          {
-            type: 'Nghiệm phương',
-            name: 'Siro nhân trần',
-            ingredients: "- Nhân trần: 24g\n- Chi tử: 12g",
-            instructions: "Thêm 600ml nước, sắc còn 100ml thêm đường vào cho đủ thành siro. Chia 3 lần uống trong ngày."
-          },
-          {
-            type: 'Nghiệm phương',
-            name: 'Nghiệm phương Bài 3',
-            ingredients: "- Nhân trần: 30g\n- Vỏ cây đại (sao vàng): 10g\n- Chi tử: 12g",
-            instructions: "Thêm 600ml nước, sắc còn 200ml (sắc 2 nước). Uống chia 2 lần."
-          },
-          {
-            type: 'Nghiệm phương',
-            name: 'Nghiệm phương Bài 4',
-            ingredients: "- Nhân trần: 40g\n- Khương hoàng: 30g\n- Cam thảo đất: 20g",
-            instructions: "Thêm 500ml nước, sắc còn 200ml. Uống chia 2 lần."
-          }
-        ],
-        [
-          {
-            type: 'Châm cứu',
-            description: "• Châm bổ: Thận du, Can du, Thái khê, Phục lưu, Tam âm giao.\n• Cứu nhẹ hoặc ôn châm."
-          }
-        ]
-      )
-    ]
-  },
-  {
-    id: "may-day",
-    name: "Mề đay",
-    traditionalName: "Ẩn chẩn",
-    description: "Tình trạng dị ứng xuất tiết ngoài da nổi các ban sẩn phù, đỏ, rất ngứa, thay đổi kích thước khu vực nhanh chóng.",
-    modernDiagnosis: "Ban sần đỏ ngứa dầy biến tấu nhanh lúc hiện lúc tịt, dermographism (+), dị nguyên thời tiết hoặc ăn hải sản.",
-    traditionalDiagnosis: "Tấu lý cơ nhục không kiên kẽ, do thấp nhiệt uất dưới da, hoặc do tà (Phong hàn/phong nhiệt) kích dồn huyết mạch sinh phong xông rát.",
-    prevention: "Trời chuyển mùa cần mặc ấm, không gãi gắt cào rách da vì tiết histamin bùng lan. Ăn sạch tránh dị nguyên.",
-    variants: [
-      createVariant(
-        "md-th1", 
-        "Thể phong nhiệt", 
-        "• Sẩn phù màu đỏ tươi, ngứa ngáy dữ dội, có thể kèm theo người nóng, phát sốt, sợ nóng, hầu họng sưng đau, gặp nóng bệnh nặng thêm.\n• Lưỡi: Rêu lưỡi vàng mỏng.\n• Mạch: Mạch phù sác.", 
-        "Biểu thực nhiệt.", 
-        "Kinh lạc, Dinh vệ.", 
-        "Ngoại nhân (phong nhiệt).", 
-        "Sơ phong thanh nhiệt.", 
-        [
-          {
-            type: 'Cổ phương',
-            name: 'Ngân kiều tán (Ôn bệnh điều biện)',
-            ingredients: "- Kim ngân hoa: 16g\n- Liên kiều: 16g\n- Kinh giới: 12g\n- Cát cánh: 12g\n- Ngưu bàng tử: 12g\n- Bạc hà: 08g\n- Đạm đậu xị: 12g\n- Đạm trúc diệp: 12g\n- Cam thảo: 06g",
-            instructions: "Sắc uống ngày 1 thang, chia 2 lần."
-          },
-          {
-            type: 'Đối pháp lập phương',
-            name: 'Đối pháp lập phương',
-            ingredients: "Lựa chọn các vị thuốc thuộc các nhóm thuốc theo pháp điều trị.",
-            instructions: "Lựa chọn phối ngũ dược liệu dựa theo pháp điều trị."
-          },
-          {
-            type: 'Nhiệm phương',
-            name: 'Tập đơn thuốc nam châm cứu',
-            ingredients: "- Sài đất: 12g\n- Cỏ mần trầu: 12g\n- Thổ phục linh: 12g\n- Ké đầu ngựa: 12g\n- Kim ngân hoa: 12g",
-            instructions: "Sắc uống ngày 1 thang, chia 2 lần."
-          },
-          {
-            type: 'Thuốc dùng ngoài',
-            name: 'Thuốc dùng ngoài',
-            ingredients: "Giống như thể phong hàn.",
-            instructions: "Sử dụng lá dương sắc tắm rửa hoặc dùng lá khế, lá kinh giới giã nát đắp lên nơi tổn thương, đun nước uống hoặc tắm."
-          }
-        ],
-        [
-          {
-            type: 'Châm cứu',
-            description: "📍 Châm tả các huyệt:\n- Phong trì (GB.20)\n- Phong môn (BL.12) [Văn bản gốc ghi KI.12]\n- Hợp cốc (LI.4)\n- Cách du (BL.17)\n- Tam âm giao (SP.6)\n- Khúc trì (LI.11)\n- Đại chùy (DU.14) [Văn bản gốc ghi CV.14]\n- Huyết hải (SP.10)\n- Can du (BL.18)\n\n⚙️ Kỹ thuật: Châm tả, sử dụng kỹ thuật hào châm hoặc điện châm.\n⏱️ Liệu trình: Châm 30 phút/lần/ngày (cho tới khi hết triệu chứng)."
-          },
-          {
-            type: 'Cấy chỉ & Khác',
-            description: "📍 Các phương pháp không dùng thuốc khác:\n- Cấy chỉ: Theo công thức huyệt trên, mỗi lần cấy chỉ có tác dụng từ 7 đến 14 ngày, sau thời gian tự tiêu của chỉ đến khám lại để có chỉ định thực hiện liệu trình tiếp theo.\n\n⚠️ Chú ý: Tổng số liệu trình điều trị có thể thay đổi tùy theo tình trạng bệnh lý của mỗi người bệnh."
-          }
-        ]
-      ),
-      createVariant(
-        "md-th2", 
-        "Thể phong hàn", 
-        "• Sẩn phù màu trắng, gặp gió lạnh thì nặng lên, chườm ấm thấy đỡ, không khát.\n• Lưỡi: Lưỡi nhợt, rêu trắng mỏng.\n• Mạch: Mạch phù khẩn.", 
-        "Biểu thực hàn.", 
-        "Dinh vệ, Kinh lạc.", 
-        "Ngoại nhân (phong hàn).", 
-        "Sơ phong tán hàn, điều hòa dinh vệ.", 
-        [
-          {
-            type: 'Cổ phương',
-            name: 'Quế chi thang (Thương hàn luận)',
-            ingredients: "- Quế chi: 8g\n- Bạch thược: 12g\n- Sinh khương: 12g\n- Chích cam thảo: 6g\n- Đại táo: 12g",
-            instructions: "Sắc uống ngày 1 thang, chia 2 lần."
-          },
-          {
-            type: 'Đối pháp lập phương',
-            name: 'Đối pháp lập phương',
-            ingredients: "Lựa chọn các vị thuốc thuộc các nhóm thuốc theo pháp điều trị.",
-            instructions: "Lựa chọn phối ngũ dược liệu dựa theo pháp điều trị."
-          },
-          {
-            type: 'Nhiệm phương',
-            name: 'Tập đơn thuốc nam châm cứu',
-            ingredients: "- Quế chi: 08g\n- Phòng phong: 12g\n- Kinh giới: 12g\n- Tử tô: 12g\n- Phù bình: 12g\n- Bạch cương tàm: 08g\n- Sinh khương: 08g\n- Cam thảo: 06g",
-            instructions: "Sắc uống ngày 1 thang, chia 2 lần."
-          },
-          {
-            type: 'Thuốc dùng ngoài',
-            name: 'Thuốc dùng ngoài',
-            ingredients: "- Lá khế, lá kinh giới (giã nát hoặc nấu nước)\n- Lá dương\n- Các bài thuốc xông chườm ngoài khác",
-            instructions: "- Lá dương sắc lấy nước rửa nơi có mày đay hoặc dùng lá khế, lá kinh giới giã nát đắp lên tổn thương, đun nước uống hoặc tắm hàng ngày.\n- Hoặc có thể sử dụng các bài thuốc xông, bài thuốc dùng ngoài của các cơ sở khám chữa bệnh đã được các cấp có thẩm quyền phê duyệt."
-          }
-        ],
-        [
-          {
-            type: 'Châm cứu',
-            description: "📍 Châm tả các huyệt:\n- Phong trì (GB.20)\n- Khúc trì (LI.11)\n- Phong môn (BL.12)\n- Ôn lưu (LI.7)\n- Hợp cốc (LI.4)\n- Huyết hải (SP.10)\n- Cách du (BL.17)\n- Can du (BL.18)\n- Phi dương (BL.58)\n- Tam âm giao (SP.6)\n\n⚙️ Kỹ thuật: Châm tả, sử dụng kỹ thuật hào châm hoặc điện châm.\n⏱️ Liệu trình: Châm 30 phút/lần/ngày (cho tới khi hết triệu chứng)."
-          },
-          {
-            type: 'Cứu ngải',
-            description: "📍 Ôn châm cứu ấm:\n- Sử dụng điếu ngải cứu 15 – 30 phút/lần/ngày tại các huyệt trong công thức trên để hỗ trợ ôn kinh tán hàn."
-          },
-          {
-            type: 'Cấy chỉ & Khác',
-            description: "📍 Các phương pháp không dùng thuốc khác:\n- Cấy chỉ: Theo công thức huyệt trên, mỗi lần cấy chỉ có tác dụng cải thiện từ 7 đến 14 ngày, sau thời gian tự tiêu của chỉ đến khám lại để thực hiện liệu trình tiếp theo.\n\n⚠️ Chú ý: Tổng số liệu trình điều trị có thể thay đổi tùy theo tình trạng bệnh lý của mỗi người bệnh."
-          }
-        ]
-      ),
-      createVariant(
-        "md-th3", 
-        "Thể huyết hư phong táo", 
-        "• Bệnh tái đi tái lại, tổn thương có màu trắng, sau trưa hoặc về đêm thì nặng lên, kèm theo mệt mỏi, sắc mặt không tươi nhuận.\n• Lưỡi: Lưỡi hồng nhạt, rêu trắng mỏng.\n• Mạch: Mạch tế nhược.", 
-        "Biểu lý tương kiêm, hư.", 
-        "Kinh lạc, Dinh vệ.", 
-        "Bất nội ngoại nhân (nội thương).", 
-        "Tư âm nhuận huyết, giải độc.", 
-        [
-          {
-            type: 'Cổ phương',
-            name: 'Tiêu phong tán (Y tông kim giám)',
-            ingredients: "- Kinh giới: 12g\n- Phòng phong: 12g\n- Đương quy: 12g\n- Sinh địa: 12g\n- Khổ sâm cho lá: 12g\n- Thương truật: 08g\n- Thuyền thoái: 04g\n- Ngưu bàng tử: 12g\n- Thạch cao: 12g\n- Tri mẫu: 10g\n- Cam thảo: 06g",
-            instructions: "Sắc uống ngày 1 thang, chia 2 lần."
-          },
-          {
-            type: 'Đối pháp lập phương',
-            name: 'Đối pháp lập phương',
-            ingredients: "Lựa chọn các vị thuốc thuộc các nhóm thuốc theo pháp điều trị.",
-            instructions: "Lựa chọn phối ngũ dược liệu dựa theo pháp điều trị."
-          },
-          {
-            type: 'Nhiệm phương',
-            name: 'Tập đơn thuốc nam châm cứu',
-            ingredients: "- Sinh địa: 12g\n- Huyết dụ (lá): 12g\n- Bạch thược: 12g\n- Cam thảo: 6g\n- Hà thủ ô: 12g\n- Kinh giới: 12g\n- Ké đầu ngựa: 12g",
-            instructions: "Sắc uống ngày 1 thang, chia 2 lần."
-          },
-          {
-            type: 'Thuốc dùng ngoài',
-            name: 'Thuốc dùng ngoài',
-            ingredients: "Giống như thể phong hàn.",
-            instructions: "Sử dụng lá dương sắc tắm rửa hoặc dùng lá khế, lá kinh giới giã nát đắp lên nơi tổn thương, đun nước uống hoặc tắm."
-          }
-        ],
-        [
-          {
-            type: 'Châm cứu',
-            description: "📍 Châm cứu điều trị:\n\n• Châm tả các huyệt:\n  - Phong trì (GB.20)\n  - Phong môn (BL.12)\n  - Khúc trì (LI.11)\n  - Ôn lưu (LI.7)\n  - Hợp cốc (LI.4)\n  - Phi dương (BL.58)\n\n• Châm bổ các huyệt:\n  - Huyết hải (SP.10)\n  - Cách du (BL.17)\n  - Can du (BL.18)\n  - Tam âm giao (SP.6)\n\n⚙️ Kỹ thuật: Hào châm hoặc điện châm các huyệt.\n⏱️ Liệu trình: Châm 30 phút/lần/ngày."
-          },
-          {
-            type: 'Cấy chỉ & Khác',
-            description: "📍 Các phương pháp không dùng thuốc khác:\n- Cấy chỉ: Theo công thức huyệt trên, mỗi lần cấy chỉ có tác dụng từ 7 đến 14 ngày, sau thời gian tự tiêu của chỉ đến khám lại để có chỉ định thực hiện liệu trình tiếp theo.\n\n⚠️ Chú ý: Tổng số liệu trình điều trị có thể thay đổi tùy theo tình trạng bệnh lý của mỗi người bệnh."
-          }
-        ]
-      )
-    ]
-  },
-  {
-    id: "bi-dai",
-    name: "Bí tiểu cấp tính / Bí đái cơ năng",
-    traditionalName: "Long bế (Cấp)",
-    description: "Tình trạng bàng quang ứ trệ do cơ niệu đạo bàng quang co thắt, bàng quang căng đầy, tiểu không ra được.",
-    modernDiagnosis: "Người bệnh có cảm giác buồn tiểu nhiều nhưng không thể đi được. Cầu bàng quang căng to. Bí tiểu cơ năng thường gặp sau phẫu thuật, đẻ hoặc do phì đại tuyến tiền liệt.",
-    traditionalDiagnosis: "Tàng phủ Bàng quang bị cản do thấp nhiệt dồn rịt làm mất khí hóa cơ tròn, hoặc Thận khí, Tỳ khí gãy suy sập không bài xuất được.",
-    prevention: "Xử lý thông đái khi khẩn. Tập mở cơ trơn, phản xạ bóp mở vùng chậu.",
-    variants: [
-      createVariant(
-        "bd-th1", 
-        "Thể bàng quang thấp nhiệt", 
-        "Tiểu lượng ít, nhỏ giọt, nước tiểu vàng, tiểu nóng rát, hoặc không tiểu tiện được, bụng dưới đầy, miệng đắng và khô, không muốn uống nước, đại tiện khó, rêu lưỡi vàng và nhớt, chất lưỡi đỏ. Mạch sác.", 
-        "Lý thực nhiệt", 
-        "Bàng quang thấp nhiệt", 
-        "Thấp nhiệt", 
-        "Thanh nhiệt trừ thấp lợi thủy.", 
-        [
-          {
-            type: 'Cổ phương',
-            name: 'Bát chính tán',
-            ingredients: "- Mộc thông: 12g\n- Xa tiền tử: 08g\n- Cù mạch: 12g\n- Biển súc: 10g\n- Hoạt thạch: 16g\n- Chi tử: 08g\n- Đại hoàng: 06g\n- Cam thảo: 06g",
-            instructions: "Sắc uống ngày 1 thang, chia 2 lần.\n\nGia giảm:\n- Nếu tâm phiền, miệng lưỡi mọc mụn, đầu lưỡi đỏ đau gia: Hoàng liên 4g, Đạm trúc diệp 12g để thanh tâm giáng hỏa.\n- Nếu miệng đắng dính, rêu lưỡi vàng nhớt gia: Thương truật 8g, Hoàng bá 10g, Ý dĩ 12g để hóa thấp thanh nhiệt."
-          }
-        ,
-          {
-            type: 'Đối pháp lập phương',
-            name: 'Đối pháp lập phương',
-            description: "Lựa chọn các vị thuốc thuộc các nhóm thuốc theo pháp điều trị."
-          }
-        ,
-          {
-            type: 'Nghiệm phương',
-            name: 'Nam Y nghiệm phương',
-            ingredients: "- Mã đề: 30g\n- Râu ngô: 30g\n- Rễ cỏ tranh: 30g\n(Nếu dùng tươi liều gấp 3)",
-            instructions: "Sắc 2 - 3 lít nước uống trong ngày.\nCông dụng: thanh nhiệt, lợi thấp, thông tiểu."
-          }
-        ,
-          {
-            type: 'Thuốc dùng ngoài',
-            name: 'Bài thuốc đắp ngoài',
-            description: "* Giã nát lá hẹ tươi đắp trực tiếp lên vùng rốn (Thần khuyết), cố định bằng gạc ấm để kích hoạt khí hóa bàng quang.\n* Hoặc dùng ngải cứu sao nóng chườm vùng hạ vị."
-          }
-        ],
-        [
-          {
-            type: 'Châm cứu',
-            description: "Châm tả các huyệt:\n- Công thức huyệt: Khúc cốt (CV.2), Trung cực (CV.3), Quy lai (ST.29), Tam âm giao (SP.6), Huyết hải (SP.10), Dương lăng tuyền (GB.34).\n- Cách dùng: Lưu kim 20 - 30 phút/lần/ngày, từ 15 đến 20 ngày/liệu trình."
-          }
-        ,
-          {
-            type: 'Điện nhĩ châm',
-            description: "Châm tả các điểm:\n- Công thức các điểm: Thần môn, Tuyến nội tiết, Giao cảm, Niệu đạo.\n- Cách dùng: Lưu kim 20 - 30 phút/lần/ngày, từ 15 đến 20 ngày/liệu trình."
-          }
-        ,
-          {
-            type: 'Điện mãng châm',
-            description: "Thực hiện các kỹ thuật mãng châm xuyên huyệt:\n- Công thức xuyên huyệt:\n  + Trung cực xuyên Khúc cốt\n  + Quy lai xuyên Khúc cốt\n  + Trật biên (BL.54)\n- Cách dùng: Lưu kim 20 - 30 phút/lần/ngày, từ 15 đến 20 ngày/liệu trình."
-          }
-        ,
-          {
-            type: 'Xoa bóp bấm huyệt (Tả pháp)',
-            description: "- Thực hiện xoa chườm và động tác cơ bản: xoa, xát, miết, day, bóp vùng bụng.\n- Bấm các huyệt tả pháp: Trung cực (CV.3), Khúc cốt (CV.2), Thiên khu (ST.25), Quy lai (ST.29), Quan nguyên (CV.4), Khí hải (CV.6).\n- Day các huyệt: Đản trung (CV.17), Túc tam lý (ST36), Tam âm giao (SP.6), Thái khê (KI.3), Dương lăng tuyền (GB.34).\n- Cách dùng: Xoa bóp 30 phút/lần/ngày. Một liệu trình điều trị từ 15 - 20 ngày.\n\n* Chú ý đặc biệt: Tổng số liệu trình điều trị có thể thay đổi tùy theo tình trạng bệnh lý của mỗi người bệnh."
-          }
-        ]
-      )
-    ,
-      createVariant(
-        "bd-th2", 
-        "Thể phế nhiệt", 
-        "Tiểu tiện nhỏ giọt, không dễ dàng, tia nhỏ không thông, hoặc không tiểu tiện được. Họng khô, phiền khát, thích uống nước. Thở ngắn gấp, rêu lưỡi vàng mỏng. Mạch sác.", 
-        "Lý thực nhiệt", 
-        "Phế nhiệt", 
-        "Bất nội ngoại nhân (nội thương)", 
-        "Thanh phế, lợi thủy.", 
-        [
-          {
-            type: 'Cổ phương',
-            name: 'Thanh phế ẩm',
-            ingredients: "- Sa sâm: 16g\n- Tang bạch bì: 12g\n- Bạch mao căn: 12g\n- Chi tử: 08g\n- Phục linh: 12g\n- Hoàng cầm: 12g\n- Mạch môn: 12g\n- Lô căn: 12g\n- Mộc thông: 12g\n- Xa tiền tử: 08g",
-            instructions: "Sắc uống ngày 1 thang, chia 2 lần.\n\nGia giảm:\n- Nếu người bệnh tâm phiền, đầu lưỡi đỏ gia: Hoàng liên 4g, Đạm trúc diệp 12g.\n- Nếu đại tiện khô kết không thông gia: Đại hoàng 4g để tả hạ thông tiện."
-          }
-        ,
-          {
-            type: 'Đối pháp lập phương',
-            name: 'Đối pháp lập phương',
-            description: "Lựa chọn các vị thuốc thuộc các nhóm thuốc theo pháp điều trị."
-          }
-        ,
-          {
-            type: 'Nghiệm phương',
-            name: 'Nam Y nghiệm phương',
-            ingredients: "- Râu mèo: 30g\n- Kim tiền thảo: 30g\n- Vỏ rễ cây dâu: 30g\n- Rau má: 30g\n- Lá tre: 30g\n- Vỏ bưởi: 30g\n(Nếu dùng tươi liều gấp 3)",
-            instructions: "Sắc 2 - 3 lít nước uống.\nCông dụng: thanh phế, thông tiểu."
-          }
-        ],
-        [
-          {
-            type: 'Châm cứu',
-            description: "Châm tả các huyệt:\n- Công thức huyệt: Khúc cốt (CV.2), Trung cực (CV.3), Quy lai (ST.29), Hợp cốc (LI.4), Khúc trì (LI.11), Phế du (BL.13).\n- Cách dùng: Lưu kim 20 - 30 phút/lần/ngày, từ 15 đến 20 ngày/liệu trình."
-          }
-        ,
-          {
-            type: 'Điện nhĩ châm',
-            description: "Châm tả các điểm:\n- Công thức các điểm: Thần môn, Tuyến nội tiết, Giao cảm, Niệu đạo.\n- Cách dùng: Lưu kim 20 - 30 phút/lần/ngày, từ 15 đến 20 ngày/liệu trình."
-          }
-        ,
-          {
-            type: 'Điện mãng châm',
-            description: "Thực hiện các kỹ thuật mãng châm xuyên huyệt:\n- Công thức xuyên huyệt:\n  + Trung cực xuyên Khúc cốt\n  + Quy lai xuyên Khúc cốt\n  + Trật biên (BL.54)\n- Cách dùng: Lưu kim 20 - 30 phút/lần/ngày, từ 15 đến 20 ngày/liệu trình."
-          }
-        ,
-          {
-            type: 'Xoa bóp bấm huyệt',
-            description: "- Thực hiện xoa chườm và động tác cơ bản: xoa, xát, miết, day, bóp vùng bụng.\n- Bấm các huyệt: Trung cực (CV.3), Khúc cốt (CV.2), Phế du (BL.13), Quy lai (ST.29), Quan nguyên (CV.4), Khí hải (CV.6).\n- Day các huyệt: Đản trung (CV.17), Túc tam lý (ST.36), Phế du (BL.13), Tam âm giao (SP.6), Dương lăng tuyền (GB.34).\n- Cách dùng: Xoa bóp 30 phút/lần/ngày. Một liệu trình điều trị từ 15 đến 20 ngày.\n\n* Chú ý đặc biệt: Tổng số liệu trình điều trị có thể thay đổi tùy theo tình trạng bệnh lý của mỗi người bệnh."
-          }
-        ]
-      )
-    ,
-      createVariant(
-        "bd-th3", 
-        "Thể khí trệ huyết ứ", 
-        "Sau khi tình chí uất hận hoặc sau phẫu thuật, giang môn bị đau quá dẫn đến tiểu tiện đột ngột không thông hoặc thông mà không dễ dàng, bụng đầy trướng hoặc đau, dễ bị xúc động, buồn phiền, dễ cáu giận, rêu lưỡi vàng, chất lưỡi đỏ. Mạch huyền.", 
-        "Lý thực", 
-        "Can, Bàng quang", 
-        "Nội nhân (cáu giận), Bất nội ngoại nhân (sau phẫu thuật)", 
-        "Sơ can lý khí (hoặc hành khí hoạt huyết), thông lợi tiểu tiện.", 
-        [
-          {
-            type: 'Cổ phương',
-            name: 'Bài “Sài hồ sơ can thang” hợp “Trầm hương giải khí tán” (giảm vị Trầm hương)',
-            ingredients: "- Sài hồ: 12g\n- Thanh bì: 08g\n- Hương phụ: 12g\n- Ô dược: 10g\n- Hoạt thạch: 10g\n- Vương bất lưu hành: 10g\n- Đương quy: 08g",
-            instructions: "Sắc uống ngày 01 thang, chia 2 lần."
-          }
-        ,
-          {
-            type: 'Đối pháp lập phương',
-            name: 'Đối pháp lập phương',
-            description: "Lựa chọn các vị thuốc thuộc các nhóm thuốc theo pháp điều trị."
-          }
-        ,
-          {
-            type: 'Nghiệm phương',
-            name: 'Nam Y nghiệm phương',
-            ingredients: "- Râu mèo: 30g\n- Kim tiền thảo: 30g\n- Rau đắng đất: 30g\n- Rau dừa nước: 30g\n- Vỏ cam: 30g\n(Nếu dùng tươi liều gấp 3)",
-            instructions: "Sắc 2 - 3 lít nước uống.\nCông dụng: khai uất, lý khí, thông tiểu."
-          }
-        ],
-        [
-          {
-            type: 'Châm cứu',
-            description: "Châm tả các huyệt:\n- Công thức huyệt: Khúc cốt (CV.2), Trung cực (CV.3), Lan môn (Kỳ huyệt), Trật biên (BL.54), Bàng quang du (BL.28), Côn lôn (BL.60).\n- Cách dùng: Lưu kim 20 - 30 phút/lần/ngày, từ 15 đến 20 ngày/liệu trình."
-          }
-        ,
-          {
-            type: 'Điện nhĩ châm',
-            description: "Châm tả các điểm:\n- Công thức các điểm: Thần môn, Tuyến nội tiết, Giao cảm, Niệu đạo.\n- Cách dùng: Lưu kim 20 - 30 phút/lần/ngày, từ 15 đến 20 ngày/liệu trình."
-          }
-        ,
-          {
-            type: 'Điện mãng châm',
-            description: "Thực hiện các kỹ thuật mãng châm xuyên huyệt:\n- Công thức xuyên huyệt:\n  + Trung cực xuyên Khúc cốt\n  + Quy lai xuyên Khúc cốt\n  + Trật biên (BL.54)\n- Cách dùng: Lưu kim 20 - 30 phút/lần/ngày, từ 15 đến 20 ngày/liệu trình."
-          }
-        ,
-          {
-            type: 'Xoa bóp bấm huyệt',
-            description: "- Thực hiện xoa chườm và động tác cơ bản: xoa, xát, miết, day, bóp vùng bụng.\n- Bấm các huyệt: Trung quản (CV.12), Thiên khu (ST.25), Quy lai (ST.29), Hạ quản (CV.10), Quan nguyên (CV.4), Đại hoành (SP.15), Khí hải (CV.6).\n- Day các huyệt: Đản trung (CV.17), Túc tam lý (ST.36), Tam âm giao (SP.6), Thái khê (KI.3), Dương lăng tuyền (GB.34).\n- Cách dùng: Xoa bóp 30 phút/lần/ngày. Một liệu trình điều trị từ 15 đến 20 ngày.\n\n* Chú ý đặc biệt: Tổng số liệu trình điều trị có thể thay đổi tùy theo tình trạng bệnh lý của mỗi người bệnh."
-          }
-        ]
-      )
-    ,
-      createVariant(
-        "bd-th4", 
-        "Thể thận khí hư", 
-        "Thường gặp ở người cao tuổi, người bệnh tiểu ít, tiểu khó, kèm đau lưng mỏi gối, chân không ấm, chất lưỡi bệu, rêu lưỡi trắng. Mạch trầm nhược.", 
-        "Lý hư hàn", 
-        "Thận, Bàng quang", 
-        "Bất nội ngoại nhân (nội thương)", 
-        "Bổ thận khí lợi thủy.", 
-        [
-          {
-            type: 'Cổ phương',
-            name: 'Bài “Tế sinh thận khí hoàn”',
-            ingredients: "- Thục địa: 32g\n- Đơn bì: 12g\n- Sơn thù: 16g\n- Phụ tử chế: 06g\n- Bạch linh: 12g\n- Quế chi: 14g\n- Hoài sơn: 16g\n- Ngưu tất: 12g\n- Trạch tả: 12g\n- Xa tiền tử: 12g",
-            instructions: "Sắc uống ngày 1 thang, chia 2 lần."
-          }
-        ,
-          {
-            type: 'Đối pháp lập phương',
-            name: 'Đối pháp lập phương',
-            description: "Lựa chọn các vị thuốc thuộc các nhóm thuốc theo pháp điều trị."
-          }
-        ,
-          {
-            type: 'Nghiệm phương',
-            name: 'Nam Y nghiệm phương',
-            ingredients: "- Thông bạch: 30g\n- Gừng: 12g\n*(Nếu đau lưng gia ngũ gia bì, đỗ trọng 20g)*",
-            instructions: "Sắc từ 2 đến 3 lít nước uống.\nCông dụng: thông dương, ích khí, tán kết, lợi niệu... trị chứng bí tiểu, tiểu đục, tiểu dắt, dương khí hư chân tay lạnh."
-          }
-        ],
-        [
-          {
-            type: 'Châm cứu',
-            description: "Châm bổ các huyệt:\n- Công thức huyệt: Khúc cốt (CV.2), Trung cực (CV.3), Quan nguyên (CV.4), Dương lăng tuyền (GB.34), Khí hải (CV.6), Quy lai (ST.29), Túc tam lý (ST.36), Tam âm giao (SP.6).\n- Cách dùng: Lưu kim 20 - 30 phút/lần/ngày, từ 15 đến 20 ngày/liệu trình."
-          }
-        ,
-          {
-            type: 'Điện nhĩ châm',
-            description: "Châm tả các điểm:\n- Công thức các điểm: Thần môn, Tuyến nội tiết, Giao cảm, Niệu đạo.\n- Cách dùng: Lưu kim 20 - 30 phút/lần/ngày, từ 15 đến 20 ngày/liệu trình."
-          }
-        ,
-          {
-            type: 'Điện mãng châm',
-            description: "Thực hiện các kỹ thuật mãng châm xuyên huyệt:\n- Công thức xuyên huyệt:\n  + Trung cực xuyên Khúc cốt\n  + Quy lai xuyên Khúc cốt\n  + Trật biên (BL.54)\n- Cách dùng: Lưu kim 20 - 30 phút/lần/ngày, từ 15 đến 20 ngày/liệu trình."
-          }
-        ,
-          {
-            type: 'Xoa bóp bấm huyệt',
-            description: "- Thực hiện xoa chườm và động tác cơ bản: xoa, xát, miết, day, bóp vùng bụng.\n- Bấm các huyệt: Quan nguyên (CV.4), Khí hải (CV.6), Thận du (BL.23), Tam âm giao (SP.6), Trung cực (CV.3), Khúc cốt (CV.2), Quy lai (ST.29), Huyết hải (SP.10), Túc tam lý (ST.36).\n- Day các huyệt: Đản trung (CV.17), Túc tam lý (ST.36), Tam âm giao (SP.6), Thái khê (KI.3), Dương lăng tuyền (GB.34).\n- Cách dùng: Xoa bóp 30 phút/lần/ngày. Một liệu trình điều trị từ 15 đến 20 ngày.\n\n* Chú ý đặc biệt: Tổng số liệu trình điều trị có thể thay đổi tùy theo tình trạng bệnh lý của mỗi người bệnh."
-          }
-        ]
-      )
-    ]
-  },
-  {
-    id: "benh-tri",
-    name: "Bệnh trĩ",
-    traditionalName: "Hạ trĩ / Trĩ sang",
-    description: "Tình trạng phình hoặc sa giãn đám rối tĩnh mạch trĩ dưới niêm mạc trực tràng ống hậu môn, lồi thành búi.",
-    modernDiagnosis: "Đi cầu máu tươi rỏ giọt thành tia sau phân. Lòi búi trĩ mềm độ 1 đến 4 hậu môn, lúc ấn rát cộm. Khám thấy búi nhũn tụ máu.",
-    traditionalDiagnosis: "Do thói quen rặn phân lâu, ngồi nhiều, đứng lâu, táo bón làm tổn thương cơ nhục, tỳ khí hư hãm không co nhiếp được, hoặc do ăn nhiều đồ cay nóng sinh thấp nhiệt dồn xuống đại trường gây xuất huyết, sưng đau.",
-    prevention: "Chống lại táo bón, nằm võng đệm êm tránh xết trực tràng. Ăn nhuận tràng diếp cá mồng tơi.",
-    variants: [
-      createVariant(
-        "tri-th1", 
-        "Thể nhiệt độc (tương ứng với trĩ nội độ 1, 2)", 
-        "Đại tiện có kèm theo máu tươi với nhiều mức độ chảy máu: thấm giấy vệ sinh, nhỏ giọt hoặc thành tia. Người nóng, hậu môn nóng, khối trĩ sa ra ít hoặc không sa, không chảy dịch, không chảy mủ. Tiểu vàng lượng ít, đại tiện táo kết, lưỡi đỏ rêu vàng. Mạch sác.", 
-        "Lý thực nhiệt", 
-        "Phủ Đại trường, giang môn", 
-        "Bất nội ngoại nhân (nội thương)", 
-        "Thanh nhiệt giải độc, thanh nhiệt lương huyết, chỉ huyết.", 
-        [
-          {
-            type: 'Cổ phương',
-            name: 'Hòe hoa tán (Bản sự phương)',
-            ingredients: "- Hòe hoa sao vàng: 12g\n- Trắc bá diệp sao cháy: 12g\n- Kinh giới tuệ sao đen: 12g\n- Chỉ xác sao: 12g",
-            instructions: "Tán bột mịn, trộn đều. Mỗi lần uống 8-10g với nước sôi để nguội hoặc nước cơm."
-          }
-        ,
-          {
-            type: 'Đối pháp lập phương',
-            name: 'Đối pháp lập phương',
-            description: "Lựa chọn các vị thuốc thuộc các nhóm thuốc theo pháp điều trị."
-          }
-        ,
-          {
-            type: 'Nghiệm phương',
-            name: 'Nghiệm phương (Thuốc Nam châm cứu)',
-            ingredients: "- Sài đất: 20g\n- Bồ công anh: 20g\n- Hoàng bá: 20g\n- Hòe hoa: 20g\n- Râu ngô: 20g\n- Rễ cỏ tranh: 20g",
-            instructions: "Sắc 2 - 3 lít nước uống trong ngày (Nếu dùng tươi liều lượng gấp 3 lần).\nCông dụng: thanh nhiệt giải độc, thanh nhiệt lương huyết, chỉ huyết."
-          }
-        ,
-          {
-            type: 'Thuốc dùng ngoài',
-            name: 'Bột ngâm trĩ & các bài thuốc dùng ngoài khác',
-            description: "* Bột ngâm trĩ thảo dược: Lá móng, Binh lang, Hoàng bá, Phèn phi (lượng bằng nhau). Tán bột ngâm hậu môn ngày 20 - 30g.\n* Bột ngâm Kha tử phèn phi: Kha tử, Phèn phi (lượng bằng nhau). Tán bột, ngâm hậu môn ngày 30g.\n* Bài xông dùng ngoài khác: Hoặc dùng các bài thuốc xông, các bài thuốc dùng ngoài của các cơ sở khám chữa bệnh đã được các cấp có thẩm quyền phê duyệt."
-          }
-        ],
-        [
-          {
-            type: 'Điện châm & Điện mãng châm',
-            description: "Điện châm tả các huyệt trị liệu:\n- Công thức huyệt điện châm: Trường cường (GV.1), Đại trường du (BL.25), Thứ liêu (BL.32), Bạch hoàn du (BL.30), Tiểu trường du (BL.27), Túc tam lý (ST36), Tam âm giao (SP6), Thừa sơn (BL.57), Chi câu (TE.6), Hợp cốc (LI.4), Bách hội (GV.20).\n- Cách dùng: Lưu kim từ 20 - 30 phút/lần/ngày, từ 15 đến 20 ngày một liệu trình.\n\nĐiện mãng châm các huyệt theo cặp:\n- Công thức xuyên huyệt:\n* Bách hội xuyên Thượng đình\n* Đại trường du xuyên Tiểu trường du\n* Trật biên xuyên Bạch hoàn du\n* Thứ liêu xuyên Bạch hoàn du\n* Tam âm giao xuyên Thừa sơn\n- Cách dùng: Lưu kim từ 20 - 30 phút/lần/ngày, từ 15 đến 20 ngày một liệu trình."
-          }
-        ,
-          {
-            type: 'Thủy châm trị liệu bổ trợ',
-            description: "Thủy châm các huyệt (thuốc theo y lệnh, có chỉ định tiêm bắp):\n- Công thức huyệt thủy châm: Trật biên (BL.54), Túc tam lý (ST.36), Tam âm giao (SP.6), Đại trường du (BL.25).\n- Liệu trình thực hiện: Thủy châm ngày 01 lần, mỗi lần thủy châm vào 2 - 3 huyệt, thực hiện từ 10 - 15 lần một liệu trình.\n\n* Chú ý đặc biệt: Tổng số liệu trình điều trị có thể thay đổi tùy theo tình trạng bệnh lý của mỗi người bệnh."
-          }
-        ]
-      ),
-      createVariant(
-        "tri-th2", 
-        "Thể huyết ứ (tương ứng với trĩ tắc mạch)", 
-        "Búi trĩ sưng, chắc, đau nhức, tím sẫm màu, ấn đau, không chảy dịch, không chảy mủ. Đại tiện có máu tươi. Lưỡi tím, có điểm ứ huyết, rêu lưỡi mỏng trắng hoặc trắng nhớt. Mạch hoạt.", 
-        "Lý thực", 
-        "Bệnh tại giang môn", 
-        "Bất nội ngoại nhân", 
-        "Hoạt huyết khứ ứ, hành khí chỉ huyết.", 
-        [
-          {
-            type: 'Cổ phương',
-            name: 'Hoạt huyết địa hoàng thang',
-            ingredients: "- Sinh địa: 20g\n- Hòe hoa: 12g\n- Kinh giới: 12g\n- Địa du: 12g\n- Hoàng cầm: 12g\n- Xích thược: 12g\n- Đương quy: 12g",
-            instructions: "Sắc uống ngày 1 thang chia 2 lần.\n* Gia giảm: táo bón gia Ma nhân: 12g, Đại hoàng: 04g"
-          }
-        ,
-          {
-            type: 'Đối pháp lập phương',
-            name: 'Đối pháp lập phương',
-            description: "Lựa chọn các vị thuốc thuộc các nhóm thuốc theo pháp điều trị."
-          }
-        ,
-          {
-            type: 'Nghiệm phương',
-            name: 'Nghiệm phương (Thuốc Nam châm cứu)',
-            ingredients: "- Kê huyết đằng\n- Huyết giác\n- Trần bì\n- Ngưu tất\n- Bạch thược\n- Hoài sơn\n- Hòe hoa\n- Chỉ xác\n- Cỏ ngọt",
-            instructions: "Sắc 2 - 3 lít nước uống trong ngày.\nCông dụng: hoạt huyết, hành khí, hóa ứ, lương huyết, chỉ huyết, ích khí thăng đề."
-          }
-        ,
-          {
-            type: 'Thuốc dùng ngoài',
-            name: 'Bột ngâm trĩ & các bài thuốc dùng ngoài khác',
-            description: "* Bột ngâm trĩ thảo dược: Lá móng, Binh lang, Hoàng bá, Phèn phi (lượng bằng nhau). Tán bột ngâm hậu môn ngày 20 - 30g.\n* Bột ngâm Kha tử phèn phi: Kha tử, Phèn phi (lượng bằng nhau). Tán bột, ngâm hậu môn ngày 30g.\n* Bài xông dùng ngoài khác: Hoặc dùng các bài thuốc xông, các bài thuốc dùng ngoài của các cơ sở khám chữa bệnh đã được các cấp có thẩm quyền phê duyệt."
-          }
-        ],
-        [
-          {
-            type: 'Điện châm & Điện mãng châm',
-            description: "Điện châm tả các huyệt trị liệu:\n- Công thức huyệt điện châm: Trường cường (GV.1), Đại trường du (BL.25), Thứ liêu (BL.32), Bạch hoàn du (BL30), Tiểu trường du (BL.27), Túc tam lý (ST.36), Tam âm giao (SP.6), Thừa sơn (BL.57), Chi câu (TE.6), Hợp cốc (LI.4), Huyết hải (SP.10), Cách du (BL.17), Bách hội (GV.20).\n- Cách dùng: Lưu kim 20 - 30 phút/lần/ngày, từ 15 đến 20 ngày/liệu trình.\n\nĐiện mãng châm các huyệt theo cặp:\n- Công thức xuyên huyệt: Thực hiện xuyên các huyệt tương tự như Thể nhiệt độc (Bách hội xuyên Thượng đình, Đại trường du xuyên Tiểu trường du, Trật biên xuyên Bạch hoàn du, Thứ liêu xuyên Bạch hoàn du, Tam âm giao xuyên Thừa sơn).\n- Cách dùng: Lưu kim từ 20 - 30 phút/lần/ngày, từ 15 đến 20 ngày/liệu trình."
-          }
-        ,
-          {
-            type: 'Thủy châm trị liệu bổ trợ',
-            description: "Thủy châm các huyệt (thuốc theo y lệnh, có chỉ định tiêm bắp):\n- Công thức huyệt thủy châm: Đại trường du (BL.25), Trật biên (BL.54).\n- Liệu trình thực hiện: Thủy châm ngày 01 lần, mỗi lần thủy châm vào 2 - 3 huyệt, 10 - 15 lần/liệu trình.\n\n* Chú ý đặc biệt: Tổng số liệu trình điều trị có thể thay đổi tùy theo tình trạng bệnh lý của mỗi người bệnh."
-          }
-        ]
-      ),
-      createVariant(
-        "tri-th3", 
-        "Thể thấp nhiệt (tương ứng với trĩ viêm, loét)", 
-        "Vùng hậu môn đau, tiết nhiều dịch, trĩ sa ra ngoài khó đẩy vào, có thể có điểm hoại tử bề mặt búi trĩ, hoặc có điểm loét chảy dịch vàng hôi, đại tiện táo, lưỡi bệu nhớt, rêu vàng. Mạch hoạt sác.", 
-        "Lý thực nhiệt", 
-        "Đại trường, giang môn", 
-        "Nội nhân + Bất nội ngoại nhân", 
-        "Thanh nhiệt lợi thấp, hoạt huyết chỉ thống.", 
-        [
-          {
-            type: 'Cổ phương',
-            name: 'Hòe hoa tán',
-            ingredients: "- Hòe hoa sao vàng: 12g\n- Trắc bá diệp sao cháy: 12g\n- Kinh giới sao đen: 16g\n- Chỉ xác sao: 10g",
-            instructions: "Tán bột mịn, trộn đều, mỗi lần uống 8g với nước sôi để nguội hoặc nước cơm, ngày 2 lần. Có thể dùng làm thang, sắc uống ngày 1 thang chia 2 lần."
-          }
-        ,
-          {
-            type: 'Đối pháp lập phương',
-            name: 'Đối pháp lập phương',
-            description: "Lựa chọn các vị thuốc thuộc các nhóm thuốc theo pháp điều trị."
-          }
-        ,
-          {
-            type: 'Nghiệm phương',
-            name: 'Nghiệm phương (Thuốc Nam châm cứu)',
-            ingredients: "- Hoàng bá\n- Bồ công anh\n- Sinh địa\n- Hòe hoa\n- Râu ngô\n- Thương truật\n- Cỏ ngọt",
-            instructions: "Sắc 2 - 3 lít nước uống trong ngày.\nCông dụng: thanh nhiệt táo thấp, thanh nhiệt giải độc, lương huyết chỉ huyết, ích khí thăng đề."
-          }
-        ,
-          {
-            type: 'Thuốc dùng ngoài',
-            name: 'Bột ngâm trĩ & các bài thuốc dùng ngoài khác',
-            description: "* Bột ngâm trĩ thảo dược: Lá móng, Binh lang, Hoàng bá, Phèn phi (lượng bằng nhau). Tán bột ngâm hậu môn ngày 20 - 30g.\n* Bột ngâm Kha tử phèn phi: Kha tử, Phèn phi (lượng bằng nhau). Tán bột, ngâm hậu môn ngày 30g.\n* Bài xông dùng ngoài khác: Hoặc dùng các bài thuốc xông, các bài thuốc dùng ngoài của các cơ sở khám chữa bệnh đã được các cấp có thẩm quyền phê duyệt."
-          }
-        ],
-        [
-          {
-            type: 'Điện châm & Điện mãng châm',
-            description: "Điện châm tả các huyệt trị liệu:\n- Công thức huyệt điện châm: Trường cường (GV.1), Đại trường du (BL.25), Thứ liêu (BL.32), Bạch hoàn du (BL.30), Tiểu trường du (BL.27), Túc tam lý (ST.36), Tam âm giao (SP.6), Thừa sơn (BL.57), Chi câu (TE.6), Hợp cốc (LI.4), Huyết hải (SP.10), Phong long (ST.40), Bách hội (GV.20).\n- Cách dùng: Lưu kim 20 - 30 phút/lần/ngày, từ 15 đến 20 ngày/liệu trình.\n\nĐiện mãng châm các huyệt theo cặp:\n- Công thức xuyên huyệt: Thực hiện xuyên các huyệt tương tự như Thể nhiệt độc (Bách hội xuyên Thượng đình, Đại trường du xuyên Tiểu trường du, Trật biên xuyên Bạch hoàn du, Thứ liêu xuyên Bạch hoàn du, Tam âm giao xuyên Thừa sơn).\n- Cách dùng: Lưu kim từ 20 - 30 phút/lần/ngày, từ 15 đến 20 ngày/liệu trình."
-          }
-        ,
-          {
-            type: 'Thủy châm trị liệu bổ trợ',
-            description: "Thủy châm các huyệt (thuốc theo y lệnh, có chỉ định tiêm bắp):\n- Công thức huyệt thủy châm: Đại trường du (BL.25), Trật biên (BL.54).\n- Liệu trình thực hiện: Thủy châm ngày 01 lần, mỗi lần thủy châm vào 2 - 3 huyệt, 10 - 15 lần/liệu trình.\n\n* Chú ý đặc biệt: Tổng số liệu trình điều trị có thể thay đổi tùy theo tình trạng bệnh lý của mỗi người bệnh."
-          }
-        ]
-      ),
-      createVariant(
-        "tri-th4", 
-        "Thể khí huyết lưỡng hư (tương ứng trĩ hỗn hợp độ IV, trĩ lâu ngày gây thiếu máu)", 
-        "Đại tiện ra máu lâu ngày, hoa mắt chóng mặt, ù tai, mặt trắng nhợt, người mệt mỏi, đoản hơi. Rêu lưỡi trắng mỏng. Mạch trầm tế.", 
-        "Lý hư hàn", 
-        "Tỳ, Vị, Can, Thận, Đại trường, giang môn", 
-        "Bất nội ngoại nhân", 
-        "Bổ khí huyết chỉ huyết, ích khí thăng đề.", 
-        [
-          {
-            type: 'Cổ phương',
-            name: 'Bổ trung ích khí thang',
-            ingredients: "- Đảng sâm: 16g\n- Hoàng kỳ: 12g\n- Bạch truật: 12g\n- Cam thảo: 04g\n- Trần bì: 06g\n- Đương quy: 10g\n- Thăng ma: 08g\n- Sài hồ: 12g",
-            instructions: "Sắc uống ngày 1 thang chia 2 lần."
-          }
-        ,
-          {
-            type: 'Đối pháp lập phương',
-            name: 'Đối pháp lập phương',
-            description: "Lựa chọn các vị thuốc thuộc các nhóm thuốc theo pháp điều trị."
-          }
-        ,
-          {
-            type: 'Nghiệm phương',
-            name: 'Nghiệm phương (Thuốc Nam châm cứu)',
-            ingredients: "- Đảng sâm: 12g\n- Hoài sơn: 12g\n- Bạch thược: 12g\n- Trần bì: 12g\n- Hòe hoa: 12g\n- Sinh địa: 12g\n- Thục địa: 12g\n- Đương quy: 12g",
-            instructions: "Sắc uống trong ngày.\nCông dụng: thanh nhiệt giải độc, thanh nhiệt lương huyết, chỉ huyết."
-          }
-        ,
-          {
-            type: 'Thuốc dùng ngoài',
-            name: 'Bột ngâm trĩ & các bài thuốc dùng ngoài khác',
-            description: "* Bột ngâm trĩ thảo dược: Lá móng, Binh lang, Hoàng bá, Phèn phi (lượng bằng nhau). Tán bột ngâm hậu môn ngày 20 - 30g.\n* Bột ngâm Kha tử phèn phi: Kha tử, Phèn phi (lượng bằng nhau). Tán bột, ngâm hậu môn ngày 30g.\n* Bài xông dùng ngoài khác: Hoặc dùng các bài thuốc xông, các bài thuốc dùng ngoài của các cơ sở khám chữa bệnh đã được các cấp có thẩm quyền phê duyệt."
-          }
-        ],
-        [
-          {
-            type: 'Điện châm & Điện mãng châm',
-            description: "Điện châm bổ các huyệt trị liệu:\n- Công thức huyệt điện châm: Bách hội (GV.20), Đại trường du (BL.25), Thận du (BL.23), Tam âm giao (SP.6), Túc tam lý (ST.36), Thừa sơn (BL.57), Huyết hải (SP.10), Đản trung (CV.17), Dương lăng tuyền (GB.34).\n- Cách dùng: Lưu kim 20 - 30 phút/lần/ngày, từ 15 đến 20 ngày/liệu trình.\n\nĐiện mãng châm các huyệt theo cặp:\n- Công thức xuyên huyệt: Thực hiện xuyên các huyệt tương tự như Thể nhiệt độc (Bách hội xuyên Thượng đình, Đại trường du xuyên Tiểu trường du, Trật biên xuyên Bạch hoàn du, Thứ liêu xuyên Bạch hoàn du, Tam âm giao xuyên Thừa sơn).\n- Cách dùng: Lưu kim từ 20 - 30 phút/lần/ngày, từ 15 đến 20 ngày/liệu trình."
-          }
-        ,
-          {
-            type: 'Thủy châm trị liệu bổ trợ',
-            description: "Thủy châm các huyệt (thuốc theo y lệnh, có chỉ định tiêm bắp):\n- Công thức huyệt thủy châm: Thận du (BL.23), Trật biên (BL.54).\n- Liệu trình thực hiện: Thủy châm ngày 01 lần, mỗi lần thủy châm vào 2 - 3 huyệt, 10 - 15 lần/liệu trình.\n\n* Chú ý đặc biệt: Tổng số liệu trình điều trị có thể thay đổi tùy theo tình trạng bệnh lý của mỗi người bệnh."
-          }
-        ,
-          {
-            type: 'Cứu ngải huyệt bổ trợ',
-            description: "Cứu các huyệt phát huy tác dụng thăng đề, kiện tỳ vị:\n- Công thức huyệt cứu: Bách hội (GV.20), Tỳ du (BL.20), Vị du (BL.21), Quan nguyên (CV.4), Khí hải (CV.6), Cao hoang du (BL.43), Cách du (BL.17).\n- Liệu trình thực hiện: Cứu 10 phút/lần, ngày 02 lần. Thực hiện từ 15 - 30 lần/liệu trình."
-          }
-        ]
-      )
-    ]
-  },
-  {
-    id: "nhoi-mau-nao",
-    name: "Nhồi máu não",
-    traditionalName: "Trúng phong thiên khô",
-    description: "Tình trạng thiếu máu não cục bộ do tắc mạch cấp tính gây hoại tử một vùng nhu mô não.",
-    modernDiagnosis: "Đột ngột yếu liệt nửa người, méo miệng, nói khó, thất ngôn. Chụp CT/MRI não sọ thấy ổ giảm tỷ trọng nhu mô não do nhồi máu.",
-    traditionalDiagnosis: "Khí hư huyết ứ, hoặc Tỳ hư sinh đàm trọc, Can dương vượng sinh nội phong xông lên bít lấp thanh khiếu, làm kinh mạch bế tắc thất dưỡng.",
-    prevention: "Điều trị dự phòng tăng huyết áp, mỡ máu, rung nhĩ. Tránh thay đổi thời tiết lạnh ngột.",
-    variants: [
-      createVariant(
-        "nmn-th1", 
-        "Thể can thận âm hư", 
-        "• Thường gặp ở người có thể trạng gầy, người cao tuổi, tăng huyết áp và có xơ vữa mạch.\n• Triệu chứng: Bán thân bất toại (yếu, liệt nửa người), chân tay cứng đờ, co quắp, nói ngọng, miệng méo, đau đầu, hoa mắt chóng mặt, ù tai.\n• Lưỡi: Lưỡi đỏ, không rêu hoặc rêu vàng khô.\n• Mạch: Mạch huyền sác.", 
-        "Lý hư nhiệt.", 
-        "Can thận âm hư.", 
-        "Bất nội ngoại nhân (nội thương).", 
-        "Tư âm tiềm dương, trấn hỏa tức phong.", 
-        [
-          {
-            type: 'Cổ phương',
-            name: 'Lục vị địa hoàng hoàn (Tiểu nhi dược chứng trực quyết)',
-            ingredients: "- Thục địa: 12g\n- Hoài sơn: 12g\n- Sơn thù: 12g\n- Đan bì: 08g\n- Trạch tả: 08g\n- Phục linh: 08g\n- Mẫu lệ: 10g\n- Miết giáp: 10g",
-            instructions: "Sắc uống ngày 1 thang, chia 2 lần."
-          },
-          {
-            type: 'Cổ phương',
-            name: 'Đại dịch phong châu (Ôn bệnh điều biện)',
-            ingredients: "- Mạch môn: 10g\n- A giao: 08g\n- Sinh mẫu lệ: 10g\n- Sinh quy bản: 10g\n- Kê tử hoàng: 2 quả\n- Bạch thược: 10g\n- Ngũ vị tử: 08g\n- Sinh miết giáp: 10g\n- Can địa hoàng: 08g\n- Chích cam thảo: 06g",
-            instructions: "Sắc uống ngày 1 thang, chia 2 lần. Chú ý sau khi sắc xong cho Kê tử hoàng vào bát thuốc và uống nóng."
-          },
-          {
-            type: 'Đối pháp lập phương',
-            name: 'Đối pháp lập phương',
-            ingredients: "Lựa chọn các vị thuốc thuộc các nhóm thuốc theo pháp điều trị.",
-            instructions: "Lựa chọn phối ngũ dược liệu dựa theo pháp điều trị."
-          },
-          {
-            type: 'Nghiệm phương',
-            name: 'Nghiệm phương',
-            ingredients: "- Long cốt: 12g\n- Quy bản: 12g\n- Bạch thược: 12g\n- Thiên môn: 12g\n- Câu đằng: 12g\n- Mẫu lệ: 12g\n- Miết giáp: 12g\n- Huyền sâm: 12g\n- Ngưu tất: 12g\n- Cam thảo: 06g",
-            instructions: "Sắc uống ngày 1 thang, chia 2 lần."
-          }
-        ],
-        [
-          {
-            type: 'Châm cứu',
-            description: "📍 Phác đồ châm cứu điều trị:\n\n• Phác đồ huyệt chung:\n  - Bách hội (GV.20), Kiên tỉnh (GB.21), Kiên ngung (LI.15), Tý nhu (LI.14), Khúc trì (LI.11), Thủ tam lý (LI.10), Ngoại quan (TE.5), Dương trì (TE.4)\n  - Hợp cốc (LI.4), Phong thị (GB.31), Phục thỏ (ST.32), Lương khâu (ST.34), Túc tam lý (ST.36), Giải khê (ST.41), Huyết hải (SP.10), Âm lăng tuyền (SP.9), Thái khê (KI.3), Tam âm giao (SP.6), Can du (BL.18), Thận du (BL.23), Huyền trung (GB.39), Dương lăng tuyền (GB.34)\n  - Bát tà, Bát phong\n\n• Huyệt gia giảm đặc hiệu:\n  - Nếu liệt mặt: Địa thương (ST.4), Giáp xa (ST.6), Quyền liêu (SI.18), Thừa tương (CV.24) bên liệt.\n  - Nếu nói ngọng: Liêm tuyền (CV.23), Bàng liêm tuyền 2 bên.\n\n⏱️ Liệu trình: 10 - 15 ngày/liệu trình. Chọn 16 - 20 huyệt cho 1 lần châm, thời gian châm 30 phút/lần/ngày."
-          },
-          {
-            type: 'Điện mãng châm',
-            description: "📍 Kỹ thuật Điện mãng châm:\n\n• Thất ngôn (mất ngôn ngữ): Châm tả các huyệt:\n  - Bách hội (GV.20), Thượng liêm tuyền hướng về gốc lưỡi, Ngoại kim tân, Ngoại ngọc dịch.\n\n• Liệt mặt: Châm tả các huyệt:\n  - Quyền liêu (SI.18) xuyên Hạ quan (ST.7)\n  - Địa thương (ST.4) xuyên Giáp xa (ST.6)\n  - Thừa tương (CV.24) xuyên Ê phong (TE.17)\n\n• Liệt tay: Châm tả các huyệt:\n  - Giáp tích C4 xuyên C7\n  - Đại chùy (GV.14) xuyên Tích trung\n  - Kiên ngung (LI.15) xuyên Khúc trì (LI.11)\n  - Kiên trinh (SI.9) xuyên Cực tuyền (HT.1)\n  - Khúc trì (LI.11) xuyên Ngoại quan (TE.5)\n  - Hợp cốc (LI.4) xuyên Lao cung (PC.8)\n  - Bát tà\n\n• Liệt chân: Châm tả các huyệt:\n  - Giáp tích D12 xuyên L5\n  - Hoàn khiêu (GB.30) xuyên Thừa phù (BL.36)\n  - Thừa sơn (BL.57) xuyên Uỷ trung (BL.40)\n  - Lương khâu (ST.34) xuyên Bễ quan (ST.31)\n  - Giải khê (ST.41) xuyên Khâu khư (GB.40)\n  - Tích trung (GV.6) xuyên Yêu dương quan (GV.3)\n  - Dương lăng tuyền (GB.34) xuyên Huyền trung (GB.39)\n  - Phi dương (BL.58) xuyên Côn lôn (BL.60)\n  - Địa ngũ hội (GB.42)\n\n• Châm bổ các huyệt dưỡng âm bổ huyết Can Thận:\n  - Thận du (BL.23) xuyên Bạch hoàn du (BL.30)\n  - Tam âm giao (SP.6) xuyên Âm cốc (KI.10)\n  - Thái khê (KI.3) xuyên Trúc tân (KI.9)\n  - Huyết hải (SP.10) xuyên Âm liêm (LB.11)\n\n⏱️ Liệu trình: 10 - 15 lần/liệu trình. Thời gian châm 20 - 30 phút/lần."
-          },
-          {
-            type: 'Trị liệu khác',
-            description: "📍 Các phương pháp không dùng thuốc bổ sung:\n\n• Cấy chỉ: Có thể chọn 10 - 15 huyệt theo phác đồ huyệt chung trên để cấy chỉ nửa người bên liệt. Mỗi lần cấy chỉ có tác dụng từ 7 đến 14 ngày, sau đó đến khám lại để thực hiện liệu trình tiếp theo.\n\n• Laser châm: Sử dụng công thức huyệt điện châm. Liều điều trị: A thị huyệt 1 - 2 J/cm², các huyệt khác 1 - 3 J/cm². Thời gian 15 - 20 phút/lần, ngày 1 lần, liệu trình 10 - 15 lần.\n\n• Thủy châm: Sử dụng các thuốc có chỉ định tiêm bắp phù hợp với chẩn đoán. Mỗi lần thủy châm 2 - 3 huyệt, mỗi huyệt 1 - 2ml, ngày 1 lần, liệu trình 10 - 15 ngày.\n\n• Xoa bóp bấm huyệt: Thực hiện xoa bóp bấm huyệt và vận động nửa người bên liệt. Day, ấn, bấm các huyệt trong công thức huyệt điện châm. Thời gian 30 phút/lần, ngày 1 lần, liệu trình từ 10 - 15 ngày.\n\n⚠️ Chú ý: Tổng số liệu trình điều trị có thể thay đổi tùy thuộc vào tình trạng bệnh lý của mỗi bệnh nhân."
-          }
-        ]
-      ),
-      createVariant(
-        "nmn-th2", 
-        "Thể phong đàm", 
-        "• Thường gặp ở những người tăng huyết áp, béo phì, cholesterol máu cao.\n• Triệu chứng: Bán thân bất toại (liệt nửa người), chân tay tê dại, nặng nề, khó cử động, miệng méo, nói ngọng, nặng đầu, hoa mắt chóng mặt.\n• Lưỡi: Lưỡi bệu, dính nhớt, rêu trắng dầy.\n• Mạch: Mạch huyền hoạt hoặc phù hoạt.", 
-        "Lý hư.", 
-        "Tỳ hư.", 
-        "Bất nội ngoại nhân (nội thương, đàm thấp hoá hoả sinh phong).", 
-        "Kiện tỳ, trừ đàm thông lạc.", 
-        [
-          {
-            type: 'Cổ phương',
-            name: 'Đạo đàm thang (Tế sinh phương)',
-            ingredients: "- Bán hạ chế: 12g\n- Đảng sâm: 12g\n- Trần bì: 08g\n- Trúc nhự: 04g\n- Phục linh: 12g\n- Xương bồ: 12g\n- Cam thảo: 06g\n- Đại táo: 12g\n- Đởm nam tinh: 12g\n- Sinh khương: 3 lát",
-            instructions: "Sắc uống ngày 1 thang, chia 2 lần."
-          },
-          {
-            type: 'Cổ phương',
-            name: 'Bán hạ bạch truật thiên ma thang (Y học tâm ngộ)',
-            ingredients: "- Bán hạ chế: 12g\n- Trần bì: 06g\n- Thiên ma: 12g\n- Cam thảo: 06g\n- Bạch truật: 12g\n- Bạch linh: 12g",
-            instructions: "Sắc uống ngày 1 thang, chia 2 lần."
-          },
-          {
-            type: 'Đối pháp lập phương',
-            name: 'Đối pháp lập phương',
-            ingredients: "Lựa chọn các vị thuốc thuộc các nhóm thuốc theo pháp điều trị.",
-            instructions: "Lựa chọn phối ngũ dược liệu dựa theo pháp điều trị."
-          },
-          {
-            type: 'Nghiệm phương',
-            name: 'Nghiệm phương',
-            ingredients: "- Bán hạ chế: 12g\n- Trần bì: 06g\n- Phục linh: 12g\n- Bạch truật: 12g\n- Khương hoạt: 12g\n- Thạch xương bồ: 12g\n- Thiên ma: 12g\n- Cam thảo: 06g",
-            instructions: "Sắc uống ngày 1 thang, chia 2 lần."
-          }
-        ],
-        [
-          {
-            type: 'Châm cứu',
-            description: "📍 Phác đồ châm cứu điều trị:\n\n• Phác đồ huyệt chung:\n  - Bách hội (GV.20), Kiên tỉnh (GB.21), Kiên ngung (LI.15), Tý nhu (LI.14), Khúc trì (LI.11), Thủ tam lý (LI.10), Ngoại quan (TE.5), Dương trì (TE.4)\n  - Hợp cốc (LI.4), Bát tà\n  - Phong thị (GB.31), Phục thỏ (ST.32), Lương khâu (ST.34), Huyết hải (SP.10), Tỳ du (BL.20), Giải khê (ST.41), Âm lăng tuyền (SP.9), Bát phong\n  - Tam âm giao (SP.6), Túc tam lý (ST.36), Phong long (ST.40), Dương lăng tuyền (GB.34), Huyền trung (GB.39)\n\n• Huyệt gia giảm đặc hiệu:\n  - Nếu liệt mặt: Địa thương (ST.4), Giáp xa (ST.6), Quyền liêu (SI.18), Thừa tương (CV.24) bên liệt.\n  - Nếu nói ngọng: Liêm tuyền (CV.23), Bàng liêm tuyền 2 bên.\n\n⚙️ Phương pháp châm: Hào châm hoặc điện châm.\n⏱️ Liệu trình: Từ 10 đến 15 ngày/liệu trình. Chọn 10 – 15 huyệt cho 1 lần châm, thời gian châm 30 phút/lần/ngày."
-          },
-          {
-            type: 'Trị liệu khác',
-            description: "📍 Các phương pháp không dùng thuốc bổ sung:\n\n• Cấy chỉ: Có thể chọn 10 – 15 huyệt theo phác đồ huyệt chung trên để cấy chỉ nửa người bên liệt. Mỗi lần cấy chỉ có tác dụng từ 7 đến 14 ngày, sau thời gian tự tiêu của chỉ đến khám lại để thực hiện liệu trình tiếp theo.\n\n• Thủy châm, Điện mãng châm, Laser châm: Thực hiện giống như thể Can thận âm hư.\n\n• Xoa bóp bấm huyệt: Thực hiện các động tác xoa bóp bấm huyệt và vận động nửa người bên liệt. Day, ấn, bấm các huyệt giống như trong công thức huyệt điện châm. Liệu trình: từ 10 đến 15 ngày/liệu trình. Mỗi lần xoa bóp bấm huyệt 30 phút, ngày 1 lần.\n\n⚠️ Chú ý: Tổng số liệu trình điều trị có thể thay đổi tùy thuộc vào tình trạng bệnh lý của mỗi bệnh nhân."
-          }
-        ]
-      ),
-      createVariant(
-        "nmn-th3", 
-        "Thể khí hư huyết ứ", 
-        "• Thường gặp ở người bệnh có bệnh lý tim mạch, xơ vữa động mạch.\n• Triệu chứng: Bán thân bất toại (yếu, liệt nửa người), chân tay mình mẩy mềm vô lực, tê bì, nói ngọng, nói khó, miệng méo, sắc mặt không tươi nhuận.\n• Lưỡi: Lưỡi tím có điểm ứ huyết.\n• Mạch: Mạch tế sáp hoặc hư nhược.", 
-        "Lý hư trung hiệp thực.", 
-        "Khí hư, huyết ứ.", 
-        "Bất nội ngoại nhân (nội thương).", 
-        "Ích khí hoạt huyết thông lạc.", 
-        [
-          {
-            type: 'Cổ phương',
-            name: 'Bổ dương hoàn ngũ thang',
-            ingredients: "- Quy vĩ: 12g\n- Sinh hoàng kỳ: 20g\n- Địa long: 06g\n- Đào nhân: 08g\n- Hồng hoa: 08g\n- Xuyên khung: 10g\n- Xích thược: 12g",
-            instructions: "Sắc uống ngày 1 thang, chia 2 lần."
-          },
-          {
-            type: 'Đối pháp lập phương',
-            name: 'Đối pháp lập phương',
-            ingredients: "Lựa chọn các vị thuốc thuộc các nhóm thuốc theo pháp điều trị.",
-            instructions: "Lựa chọn phối ngũ dược liệu dựa theo pháp điều trị."
-          },
-          {
-            type: 'Nghiệm phương',
-            name: 'Nghiệm phương',
-            ingredients: "- Đảng sâm: 12g\n- Sinh hoàng kỳ: 12g\n- Đương quy: 12g\n- Bạch truật: 12g\n- Xuyên khung: 10g\n- Xích thược: 12g\n- Đan sâm: 12g\n- Ngưu tất: 12g",
-            instructions: "Sắc uống ngày 1 thang chia 2 lần."
-          }
-        ],
-        [
-          {
-            type: 'Châm cứu',
-            description: "📍 Phác đồ châm cứu điều trị:\n\n• Phác đồ huyệt chung:\n  - Châm tả các huyệt: Bách hội (GV.20), Kiên tỉnh (GB.21), Kiên ngung (LI.15), Tý nhu (LI.14), Khúc trì (LI.11), Thủ tam lý (LI.10), Ngoại quan (TE.5), Dương trì (TE.4), Hợp cốc (LI.4), Huyền trung (GB.39), Phong thị (GB.31), Phục thỏ (ST.32), Lương khâu (ST.34), Giải khê (ST.41), Âm lăng tuyền (SP.9), Dương lăng tuyền (GB.34), Bát tà, Tam âm giao (SP.6), Bát phong bên liệt, Huyết hải (SP.10) hai bên.\n  - Châm bổ các huyệt: Quan nguyên (CV.4), Khí hải (CV.6), Túc tam lý (ST.36)\n\n• Huyệt gia giảm đặc hiệu:\n  - Nếu liệt mặt: Địa thương (ST.4), Giáp xa (ST.6), Quyền liêu (SI.18), Thừa tương (CV.24) bên liệt.\n  - Nếu nói ngọng: Liêm tuyền (CV.23), Bàng liêm tuyền 2 bên.\n\n⚙️ Phương pháp châm: Hào châm hoặc điện châm.\n⏱️ Liệu trình: Từ 10 đến 15 ngày/liệu trình. Chọn 16 – 20 huyệt cho 1 lần châm, thời gian châm 30 phút/lần/ngày."
-          },
-          {
-            type: 'Trị liệu khác',
-            description: "📍 Các phương pháp không dùng thuốc bổ sung:\n\n• Cấy chỉ: Có thể chọn 10 – 15 huyệt theo phác đồ huyệt trên để cấy chỉ nửa người bên liệt. Mỗi lần cấy chỉ có tác dụng từ 7 đến 14 ngày, sau thời gian tự tiêu của chỉ đến khám lại để thực hiện liệu trình tiếp theo.\n\n• Thủy châm, Điện mãng châm, Laser châm: Thực hiện giống như thể Can thận âm hư.\n\n• Xoa bóp bấm huyệt: Thực hiện các động tác xoa bóp bấm huyệt và vận động nửa người bên liệt. Day, ấn, bấm các huyệt giống như trong công thức huyệt điện châm. Liệu trình: từ 10 đến 15 ngày/liệu trình. Mỗi lần xoa bóp bấm huyệt 30 phút, ngày 1 lần.\n\n⚠️ Chú ý: Tổng số liệu trình điều trị có thể thay đổi tùy thuộc vào tình trạng bệnh lý của mỗi bệnh nhân."
-          }
-        ]
-      )
-    ]
-  },
-  {
-    id: "xuat-huyet-nao",
-    name: "Xuất huyết não",
-    traditionalName: "Trúng phong",
-    description: "Tình trạng đứt vỡ mạch máu não do tăng huyết áp đột ngột hoặc dị dạng mạch máu làm máu tràn vào nhu mô não/não thất.",
-    modernDiagnosis: "Đột ngột hôn mê sâu, liệt nửa người trầm trọng, HA tăng rất cao, có thể ngừng thở. CT sọ não có khối tăng tỷ trọng máu tụ rực rỡ.",
-    traditionalDiagnosis: "Can thủy bất túc, can dương bạo vượng, phong hỏa tương tuấn, đàm thấp nội uẩn làm khí huyết nghịch loạn, bế tắc lạc mạch hoặc tràn ra ngoài lạc.",
-    prevention: "Kiểm soát mỡ máu và huyết áp chặt chẽ, tránh xúc động mạnh, cáu giận đột ngột.",
-    variants: [
-      createVariant(
-        "xhn-tp-kinh-lac-can-duong", 
-        "Trúng phong kinh lạc - Thể Can dương thượng cang", 
-        "• Triệu chứng: Liệt nửa người, chân tay co cứng, méo miệng, thất ngôn, chóng mặt, đầu căng tức, sắc mặt đỏ, tâm phiền, dễ cáu giận, miệng đắng, họng khô, đại tiện táo, nước tiểu vàng.\n• Lưỡi: Chất lưỡi đỏ tươi hoặc đỏ sẫm, rêu lưỡi vàng hoặc vàng khô.\n• Mạch: Mạch huyền hoặc huyền sác.", 
-        "Lý thực nhiệt", 
-        "Phủ kỳ hằng (Não), Can, kinh lạc", 
-        "Bất nội ngoại nhân", 
-        "Bình Can tiềm dương tức phong.", 
-        [
-          {
-            type: 'Cổ phương',
-            name: 'Thiên ma câu đằng ẩm',
-            ingredients: "- Thiên ma: 10g\n- Câu đằng: 12g\n- Sinh thạch quyết minh: 18g\n- Ngưu tất: 12g\n- Hoàng cầm: 08g\n- Chi tử: 10g\n- Đỗ trọng: 10g\n- Tang ký sinh: 10g\n- Phục thần: 12g\n- Dạ giao đằng: 12g\n- Ích mẫu thảo: 10g",
-            instructions: "Sắc uống ngày 01 thang, chia 2 lần."
-          },
-          {
-            type: 'Nghiệm phương',
-            name: 'Thuốc Nam',
-            ingredients: "- Hòe hoa: 12g\n- Bạc hà: 10g\n- Cúc hoa: 10g\n- Thảo quyết minh (sao): 10g",
-            instructions: "Sắc uống ngày 01 thang, chia 2 lần."
-          }
-        ],
-        [
-          {
-            type: 'Điều trị không dùng thuốc',
-            description: "• Châm tả không cứu: Tại chỗ (Hợp cốc, Ngoại quan, Khúc trì, Kiên ngưng, Kiên trinh, Hoàn khiêu, Giải khê, Địa thương, Giáp xa...), Thất ngôn (Thượng liêm tuyền, Thông lý...), Toàn thân (Dương lăng tuyền, Túc tam lý, Huyết hải, Tam âm giao).\n• Kỹ thuật: Hào châm, điện châm, nhĩ châm, cấy chỉ, thủy châm.\n• Xoa bóp bấm huyệt: Xát, xoa, miết, phân, hợp, day, bóp, lăn, chặt vùng lưng, chi trên, chi dưới, phát, ấn, bấm các huyệt... 20-30 phút/lần/ngày. Liệu trình 15-20 ngày."
-          }
-        ]
-      ),
-      createVariant(
-        "xhn-tp-kinh-lac-phong-dam", 
-        "Trúng phong kinh lạc - Thể Phong đàm trở lạc", 
-        "• Triệu chứng: Liệt nửa người, chân tay co cứng, méo miệng, thất ngôn, tê bì chân tay, hoa mắt chóng mặt. Chất lưỡi sạm, rêu trắng nhờn. Mạch huyền hoạt.", 
-        "Lý thực nhiệt", 
-        "Phủ kỳ hằng (Não), Tỳ, kinh lạc", 
-        "Bất nội ngoại nhân", 
-        "Hóa đàm tức phong thông lạc.", 
-        [
-          {
-            type: 'Cổ phương',
-            name: 'Hóa đàm thông lạc thang gia giảm',
-            ingredients: "- Bán hạ chế: 12g\n- Phục linh: 12g\n- Bạch truật: 12g\n- Đởm nam tinh: 12g\n- Thiên trúc hoàng: 08g\n- Thiên ma: 10g\n- Hương phụ: 12g\n- Đan sâm: 12g\n- Đại hoàng chế: 06g",
-            instructions: "Sắc uống ngày 01 thang, chia 2 lần."
-          },
-          {
-            type: 'Nghiệm phương',
-            name: 'Thuốc Nam',
-            ingredients: "- Bán hạ chế: 12g\n- Nam tinh chế: 12g\n- Vỏ quýt: 08g\n- Hạt mã đề chế: 12g",
-            instructions: "Sắc uống ngày 01 thang, chia 2 lần."
-          }
-        ],
-        [
-          {
-            type: 'Điều trị không dùng thuốc',
-            description: "Như thể Can dương thượng cang, thêm huyệt Phong long (châm tả)."
-          }
-        ]
-      ),
-      createVariant(
-        "xhn-tp-kinh-lac-am-hu", 
-        "Trúng phong kinh lạc - Thể Âm hư động phong", 
-        "• Triệu chứng: Liệt nửa người, chân tay co cứng, méo miệng, thất ngôn, ngũ tâm phiền nhiệt, tê bì chân tay, mất ngủ, chóng mặt, ù tai.\n• Lưỡi: Chất lưỡi đỏ hoặc sạm, rêu lưỡi ít hoặc không có rêu.\n• Mạch: Mạch huyền tế hoặc huyền tế sác.", 
-        "Lý hư trung hiệp thực nhiệt", 
-        "Phủ kỳ hằng (não), kinh lạc", 
-        "Bất nội ngoại nhân", 
-        "Tư âm tiềm dương, bình Can tức phong.", 
-        [
-          {
-            type: 'Cổ phương',
-            name: 'Trấn can tức phong thang gia giảm',
-            ingredients: "- Long cốt: 12g\n- Mẫu lệ: 12g\n- Bạch thược: 12g\n- Đại giả thạch: 10g\n- Thiên môn: 10g\n- Huyền sâm: 10g\n- Quy bản: 12g\n- Ngưu tất: 12g\n- Nhân trần: 12g\n- Mạch nha: 10g\n- Xuyên luyện tử: 10g\n- Cam thảo: 04g",
-            instructions: "Sắc Đại giả thạch trước 1 giờ, cho các vị còn lại vào sắc cùng, uống ngày 01 thang, chia 2 lần."
-          },
-          {
-            type: 'Nghiệm phương',
-            name: 'Thuốc Nam',
-            ingredients: "- Tang diệp: 12g\n- Bạc hà: 08g\n- Mạch môn: 12g\n- Quy bản: 12g\n- Xương bồ chế: 08g",
-            instructions: "Sắc uống ngày 01 thang, chia 2 lần."
-          }
-        ],
-        [
-          {
-            type: 'Điều trị không dùng thuốc',
-            description: "Như thể Can dương thượng cang, thêm huyệt Can du, Thận du (châm bổ)."
-          }
-        ]
-      ),
-      createVariant(
-        "xhn-tp-tang-phu", 
-        "Trúng phong tạng phủ", 
-        "• Đặc điểm: Người bệnh thường hôn mê, các triệu chứng lâm sàng nặng nề.\n• Thể Bế: Răng cắn chặt, hai tay nắm chặt, đại tiểu tiện bí, mặt đỏ, thở khò khè đờm dãi. Mạch huyền hoạt đại.\n• Thể Thoát: Mắt nhắm không kín, miệng há, tay chân duỗi, mồ hôi vã, đại tiểu tiện không tự chủ. Mạch vi muốn tuyệt.", 
-        "Lý thực bế / Lý hư thoát", 
-        "Tâm, Can, Thận (Mệnh môn)", 
-        "Khí trệ huyết ứ, phong đàm bế khiếu (Bế) hoặc dương khí bạo thoát (Thoát)", 
-        "Ưu tiên YHHĐ; Sau khi ổn định: Khai khiếu hoát đàm (Bế) / Hồi dương cứu nghịch (Thoát).", 
-        [
-          {
-            type: 'Nguyên tắc điều trị',
-            name: 'Ưu tiên Y học hiện đại (YHHĐ)',
-            ingredients: "Cần được ưu tiên điều trị bằng các biện pháp của YHHĐ trước.", 
-            instructions: "Sau khi tình trạng người bệnh ổn định thì tùy theo thể lâm sàng của người bệnh mà sử dụng kết hợp với các phương pháp điều trị của YHCT."
-          },
-          {
-            type: 'Cổ phương (Khi đã ổn định)',
-            name: 'Thể Bế: An cung ngưu hoàng / Thể Thoát: Sâm phụ thang',
-            ingredients: "• Nhiệt bế: An cung ngưu hoàng hoàn (chế phẩm).\n• Thể Thoát: Nhân sâm 20-30g, Phụ tử chế 15g.",
-            instructions: "Sử dụng phối hợp dưới sự giám sát chặt chẽ của bác sĩ."
-          }
-        ],
-        [
-          {
-            type: 'Xử trí phối hợp',
-            description: "• Giai đoạn cấp: Hồi sức cấp cứu YHHĐ (thở oxy, chống phù não, kiểm soát HA).\n• Đông y phối hợp: Bấm Nhân trung (Bế), Cứu Thần khuyết, Quan nguyên (Thoát) khi các chỉ số sinh tồn cho phép."
-          }
-        ]
-      )
-    ]
-  }
-];
-
-export const herbs: Herb[] = [
-  { id: "h1", name: "A giao", scientificName: "Colla Corii Asini", source: "B" },
-  { id: "h2", name: "Ba kích", scientificName: "Radix Morindae officinalis", source: "B-N" },
-  { id: "h3", name: "Bạc hà", scientificName: "Herba Menthae", source: "N" },
-  { id: "h4", name: "Bạch thược", scientificName: "Radix Paeoniae lactiflorae", source: "B" },
-  { id: "h5", name: "Cam thảo", scientificName: "Radix et Rhizoma Glycyrrhizae", source: "B" },
-  { id: "h6", name: "Can khương", scientificName: "Rhizoma Zingiberis", source: "N" },
-  { id: "h7", name: "Cát căn", scientificName: "Radix Puerariae thomsonii", source: "N" },
-  { id: "h8", name: "Đảng sâm", scientificName: "Radix Codonopsis", source: "B" },
-  { id: "h9", name: "Đương quy", scientificName: "Radix Angelicae sinensis", source: "B-N" },
-  { id: "h10", name: "Hà thủ ô", scientificName: "Radix Fallopiae multiflorae", source: "B-N" }
-];
+            name: 'Nghiệm phương Bàx��}koǹ�w���?���7�
+��IeE/)B���$X4g���{����V����,(��x�"��E�>"a8�������ﭪ�z��B����2����o��>�Bo�_��<�0��֪�Z��g��ǽ�zz'����޽x֛���>��=ܿ�U�;[���ý��+���w9���f�I.4_��p�<����o���:�$l���J=�yg&&��������*��>�{X�V���)zS�'S��X��������U�a �����FK��l�Y]H�6�f�Y������"o���?~؎k�����Y̛Ko���P�7�����7q��������v�4�w�Y�@3w���0O��?d��������"�r�����Cu�]i��K����l��Ք�Ðc���O�����s29����o��:ܿ�������%�:��c����]�;��Z|o%}��]>���h��ט�t��$k��0���.����xR��zg<n��q=\K^����J�p����)�`Q��:��尿+-|ށ.Ì�|tp"v+�w� A�f�ڸ���@i0Y!��j쭧�0.Y`/�z�vx��������:�i# �ٿUE���:v�p�!N��/Noo!1�Nh���*�R�k��~�C����H�XS�E|����%�vSg	���b#){�M���{��~G?�� ��h��Pi�>+���LH=O�ִ.���8�sҁ(��s�Y�Z�z���i�J��]�V�����������:�vL���+�xm"��3�E����+>��u�ߏ����Nt��C��(�6����l��{�j\���%�4�.q�ixX����d��|v]�n����b=���8�DmC��.�p������]vF[�Vӯ���s�z��
+6��_���?ʾZhbO��i]n�We7wLM?�눋K<�>x���R�j򾒓o�Crj渥�Iz�P���]k�o�0�1����0�m�{�i�#5�I��&�R�H@	h�O@[��kx0�̔���F)#��{��ݭ��/`R��Z��D�c�	L���w����d��_D<��
+}����j�%�ͫ�:�>W`-��TCT�X��{_bˇ{�������% .xO����p6�=MP\@r�(>�-��ۮx�07m���'��mX̨A=��l�v!~��> ��E�[�wPL}T���C&�1�@�ϨY]k�� 7�!���w/斤	��޽-<7����t�#�5ҽ�Wgь����q����f�l��v�~9����xV}���
+�J)va'.wϸ���F#�ޫ��M��
+ɐ(J������n�&���J��x�I��'�W���m�t�������S��酡܌If��G|������ԉV���1l��.G�h��+$t��I [g=�~@�@���R��l�H�� ��ZO`�N�(�AH@!��w�'ZJ,��7q�ZձˌH`B�V/B*Q�ʤ�XS�I.i�q��]%�� y}������{��܂��1�U��/�'���_��$j$b���Ƹ#A����^�r��(X`�����.�|�#���ًL4,�1!mw�@��c#�9�R,��y��,�腵 :ſa�~dY6фW���.z	��Oh���<�Qî�C�W:̠[�_c5�7��*q��>��b!@}�f��%��TQKp�j!n^-��#%T����e�h�V�1$��֢2����Hbo��!�+�A�ܪ8���Q}XCM/H`F�č���V�`�Ϣ���DK@���k1�M�����*��[~4�82^����M�a����f5�Q�^ǵ�2���UU*W��p��@��
+M���e�����0���W�"'d�$-f����hP&
+"_Lw�`w�Je�<��^�^�����2N���/i���P:�z��8����C\��! ��%��6���,6���0!k�A�E>X��:���>��q"�_���!����y|���b�ɰ�:�ִɌK3��s�����)o_�K>Jf��X���W:?W��˞�v�+�-�'�Ƽ߽���*
+np��B\�߆�`�����ޔ��.ό	�Fa��ռI�Lq�+]�X>3Ɛ��K�	|?99��3�R��-��myr��/���K�Hn,lb�<.�"ܙ������������'���$�Ƅ�ܡ)i�(�T�����,(3J���?º�����pgs������S��N�,�2!!rCel��S���A�m���~���]�b�L4f�+�*o��I���M����u������4��p?�Q��4�H��!��ظ�8L�Wޛ�� �L�0�U	:
+c ����(�	��:�{���ӫԎ.��1�7��1׌��:��L4�qaa%���{.2�I��/���zMH� i���XHR�,B@4&�4-%��g5P��?U(�#��+�c�"�c�X�c�m�V��"�7h�+�]?�1t��֐�+���!��D���r�}��{/�]N㽖�}/��ڱ�b��h,�k⨧� w����)��|�{����nxdg}�w]ɬw��5�&b�b�֥�L������������℘���J
+�M
+л[���A{.<���z�~�\D&��'��#�fe�$��̼��ry�2 ����ǥL@q(f=�(�	�g����z�Y��OQ����{2��E�o�ɢ�p��I^�c8��F��3�ae���f<z����Yqϐo?3P�?�!�M��/D�A.�0��70�e�ǩ�Uz���ŗ����ܼ�Z�����D7�!C�_c2BPI�'n S)'3��PS'>>}�
+�,@	�wj8��I �8Hp��7Q>�s頻TJN��~��{\	K���@k��+�ɧt �1����~V��Bs�X:)����d�H�,R��h���渗IJ3�4�~�RG��h�Z?�Ck�.��m��`.3��b�:�ƮD([�@�%�Q��hy���w{��~]�(��̉�p�5�#���LS� ����� T.a2~��>J����r��o�v��<K��Ks��l����n��)g;�\e���nC���a8Rih
+�{�GJy�՛)R��Lo+: ��4�g���N���H�#��J�Oe+)�I��=�G�]���.��Bz���{��O]��m���Α�xڏ��X0�6�,	P��}ky�me�md��]8�wa.|�B]\�8��Ew3Wo ��l�4���0�l�7���x���#�ϳb��ԯ��j8^B�r.}�"BX����<|�?�d��C��B7ɥ&u����� Β,�}�A����G�G���q�*Za����o?�:�Vd@B��@+���#��9fr���r�[�c��LnWW:t0��J�U�]�=�$�:��&Ͳgν�c��ǜ-jH���UG����7<7��`b~��+B�I?K��	sFWW������jɞ�H�	P���뻄����8�1���&�N���E|�B��t-���ڝ-<�h�CzN�ͯ��s�����C�ZTX���c�/B}(w
+���!R���aS��c)��T����3�'�j�'�I�Dڅ��p�h�ˍf��$�\K�q\�����S��+��'s;5�>�1�]�2����h�-hF������-N*�t;��>΅k��%V���,�i��1^e��}.�h�M�K�8ѽ^��ė�R55`�B�з��ϑ�c��/�> �!6��,+P���N��^�&
+�p�P5�� }Hꪨ�A
+���r�&Μ ����<�&e	�~�Iۛ���A�8��UQ��k����R�(�܆Q���p*��<Rgj��3�M�&Z�;|6�h��k��S�5u��܍��;]����E�%<���Z!ϜO�SLx�:	[8	��ц<h���@��w�S2�A'u$�;����Փ��?��wOh����$�7+Q<����� �l
+��4�@Q9HjF��>�gi�΃Y�����A��:i�L9��8�3M����m{�;�!;�y
+)�y�Z�lU��O����n%<&��9Ɛr�'��!ȼ�XR���ٔKRgv�ID� ���2 �	0�Wp�g���A޽��O@���;�|���q��`�VZ2�|�ix��b���ԯ�|���x� ֟��3ce�@�Gv����&pC8p���s�B�P�^�� ��+E��<0Ԭ��uϺ���E�L���O�lw8��K����M��OZ���f�7k+������F= .(`�����{�/-2��sE�E�WZԗU8H�e�L�$S�^3`\�J�M�sJ+H�t���G�RppC�����f�u��Dy��[�,��M�0��l5��3���E�~7��ug�l�ɞ��T�07:�bO�֭�����M���s���-I��� ���|�%M)�=D�����"6��z�ŷi C�@��N-#!���:K�۸&5���P�1"D8�(0,y�d����.�lv.���b�&vWU��
+�RHk���k�^F�y�`E�;Q���b��˴+� q�â������@�b�nHw��1Μ$7Z��n��*+�;���öFx�5<�s�Z�ț�`1�8ꙋe)�֮~PE�I����x'F
+� �K�-F�?M�=��[��_�|<CH�6��GEyF��{�'��	CG�M��1*R��h��|&-�ؘԤ
+�f�[����K����oW�(��,/�����ޯ8�6��2e���#�7�|#�w���y�c�<�x1ȮLЮ�/N����]��~���nM:[vIP����ΠCFf�<��$�������"^Sda'K&s�dL_�j����n��X�Z&�Y1���
+�@/�y�̑}�Yt���&R�l]_�?hi����v����A���Wo�����M�;W��4�����^�����J5�d�8�+�Y��d���w��ۡ����ҍ��<惤(�����)�QPϞ{�d�x���3���1�-1\c�`���%�{`8`�Z.h�2�B].��r.6A�.߯*���:���Q��� ΰ#��c�/�CL�L�*��
+x�W��\���A��@�z�:@|�s~�ho)��ax��{*�- [L_	MSg�9v�I��L���������}�!�E�k`3��u�/'���������/���g�g�0�|�Q@Ε�}���&����&��m
+a�@޾���c	�%|� Os���a"UB2�8�lqa��6��Z�������0��+�r��#�����S|����VP%CI~���Mب�d���:8�#b�c��w���'�NHf>��Ѻ=՞�b(��Fƛə�[ 8$6�rO��#q�;��
+�C>Q��"A��^���o���T��:#`�.���Y�9��LM����P�ИRgƠf.���(�yA`Ư�����#���:H�V�US�9)�nE��r���,T�\�ilI��玶\��n[s5=%�p���T�y����`��7,̐�g���N��6���乽�]�k��^1��n^���I+�, �u�[�L� ,�r�����+��n�zf�1şRn	̿t�%"��vu�e������Bi��tta ��DDJ��t/,�c>M>����Q��V愪�A�S����S���oB��{	Ks��Yn��/�3cw
+�0���MqIoEeJ7�S�R}q���3�R���"��8��q�r��������ޝ�*r3T�,����o1'#����e2ıg�_=݉��4�v�ʢd�XkL?�¿�� �$VGCȮ0�MAN�1���&Q�:1Tv��3�AfF�?���c~�G�����p�rw�1���Ϡ5�JF%������"�$��v8|,4�ł`h57���+��\���i�ro'���M���@X��͜d�s�j�"�)�N��;[Tx�."��]��#ZP;�ڰ��.*{˹�k�]���s���f$@<d{x��.��K}*��S����'^��m��wߪ����\KZ!}葝����LΊ�M����VTc�M��@E"�V{�s~��c� -�߬�-�am��6�&��z�k�w�Y�����/g,2���+9i?�27�L�r��Mm�� ��Wp,�$ZD��Ӹ�>(W:��X�ó�j�*��N�U�W@ ��U���p�\H#�Q���|�aI��.�y�r�0n+d��<�H�<5������	i�F��TA�s�+��i�z�5�k>S�X�0�gc=G[�!���A��x��D�J��77�^W�r��v�A�����9J�I:���1��|Ǽ��v����AgN���pK�JK)����>-�V�o�Vf��������RF#'�9��v4wa��>K�
+��V� �#���U��w���d�Y��3��5XI��G�< �̆���J�p����[����m�<��U�iR�K_WUGr��=��r�Z'���*�K+��wG���t���z���~h��y���[9J����xoX���lA�!���b1������_Xz=)�[S*f�}�R�
+�n�|>�����j�����м�WW`�u�r�h�|�w��#M�*��+�ω��l�3�����v��|Q!֖��>���ų���;�Y0�A�vŲ�H��\C�^{%us��*X#�
+�6��{��[�[�o@k�Hw)Y@�I��z�A�I澊(���+�|zw�eCY�3��x;�M���C�'�c�u�s�c���$*s�'�����:<,&�J-X�������?�	cm��p��v�a���]�G�eD��T��;�=�n#�sWr��zZ��1����6t�h���"R�~Wƶ��u:�玺A\7�ъ�a��*��=r2���8���C&��*"N�+��_KN.��;c���es鍩�J�e��GX{��_Y�=<��i�?*�.p ȧ��?��qC���kS�IѲA�1�y z7��y4����~H�T)�� �ʢ�����'4�p�c����+�=�P�/�Z�f���~We(UG:#kvw��w�cxv�?���ݢ�)4qt�A*I"0-W�1����5̏��6��9@��e5��0
+���a7avh����s3����a�=��v_[�����_��ɟ�9�0��q�����m���G���J�t�U�����8�=��`���s��f붩S�P��ʃumE�Tv����m�7)����=l�9D?�#@?�?q@���D�|�]���g&F�~��G�~��_%L��U����̢�[=�I6�O>�%i�ǿ���􆈜�2��P�ǘ���lO���{��]�1���5A�$�'��C_��i��I��	�e�7��q]'��;�4�4�� /4����c�C}�{��N�>xv����֊(wR�?�f��߼��r5;����0�]�!�{��!�ߙ�S�F�Y�'$�MH�svR�㱸����C~�p:G{S�	2z_�m��:���;���<>��#g����c��])8����?�,��]�� 캃�_�]j#�;���um��=6�ۗp��bL�%S-р4��ZĂ�.@9
+�X��a����c��I����O�+���%��Ɂ/@��D�4;;f�I�)��c���� 9�-�6'ͮ~��"������p<
+:�qдsw,�)�i�t�Y��c���Ř��I+#@�o��aj2�\J��Q�Kj���� �'Grp���N2U�+W�������3(��s�-��Mu���YBI�p�G4���Ȇ7�r��;o�p`�_S�8p�H�w��w:���]t�M|�t�:�F���/���e��Y���
+iRt
+���P�r�'�d����]E�dø�z�W�g��z��YY�L��p2=U�}9�i���Y^����o�8���:&��M�{$Aa1�*�a�b�u�y���)�d��O�GqA*N�O'��\F�?����J�qx�P�ޖ�p3�vM%��:6�k�������I�G��`މ%��[��%���1����UXe������Z0����d��=��`ǝ#a@|�\?��\�xfu<%��A�$t�9�[����^���(��]��m��|�[��3j�߭@�$����G']D*����$����x�j�%b����3��EܒH�0)
+�������vc���ź!3A���J�x֑K�u[�<�@�� �u�B��1�����"E�[�4�#ǌ��_��3�$�2��E�<!ov�4�����F�a�U�:y�A2t�)�����MHz��NԼn�[�/��c�:�7�|�j��Y�9�%�b{[�b��M^�f~�VS�7��e���!��U�6e��ʺ�X�m47�o�sW3j�Tn0������l�%�̂hd���I�7���ձ��%�̼c6ےS.V6�����3T���'�g�_������5��nWT��C�Lf��,`�֐��#%3w��EZ ������1V� Q}�7a��x
+����L�;d�C|��,�Ԁ9��{洡��!&FŞ��j.
+�K*C��OE|z�5����e]��74L����T�gǜ�b�f��(���W�r'�t�V	��>�V�*�)�W���z��I��ѡ��cA���y������XŲ�Ib�U��:�!����̀Hg��j]z[��J#J�Tg��(�KKe�qS����hz�������a���*I'���G��o�m�Ĭ�d���j�[O��{���Do�[�W���+�yS�=�3)X4�;jЬa� �^)2~�D?����b*d���^�����2�M�h��D�HE"{BK^���z�d�b�^:�O���:d?@�oʖqӶ�&G��I9�'��a��$6c��e�Qp�	I~�3���7u�q�`y�l��d��
+�@���l�NSm�n��M4os�=���j'.���7]u�ol��ëO�0܂:|q�|6��r�Y������)��i�	!��:��Ӊ������0�рiS���u^4T�N�'�C)3���9#�i5����X�;(���tZ7c� �����8������c�k�������h��/2��-�3����[Ԭ�Gr��,0�)�e
+.,�z6O�V�"<]�D���d��.�?,_u��z{�)RT�H��j'w�k
+j�� U�"�&!:�|a����4�;�߉�R�����7�1�b���;S�)���������:��&
+ڢ�l��*$@e2���J����-�F���r?� �JVqNh�%VR��h�&4\�����3��MA�8|�c�T��ɛl;Y�I�q\ف��Z�\x	�t���g�L�s%���D�VM����S��߿���GKN���Mgd��r�|����E�eC`1���0�+�bz]�o��)G�a`�.�@3ݎ�ŵ̠9([�ى+K���r߲��O�,E������
+�(�ި�jV_��y�4$su��YX+�1���L�O�d%fi���c�a?�g4�M\��X$��`��w"�,��4��6:� 5��Z;Yk5lY�͡-"�M!	�RaaJ������+�3�޶9�6�ȷ��#Ef�b�JFQ+DZy`WѠ��(�ٞ�̡ �Y�DY�h�a���A�ئ�w�I����,fn���C�����x��`B�[
+���M7NԆ�k�+�g��������Ԅ��H{i[�M_�m�����v�+�����N�ӯ�@g)fu{��aE�&z�rwW�	Q��}<��(������p�Wjޠ�"8��!|!S=2E�
+��!(��-
+pQ!>L�{*��b2})~dpx��Ή��j~(�*,��4H[LU�����
+I�smc��gic��-2mņ ��"��D޴aU�BgE@�R$�1VLx?~x�T�</s�˦�M�K�	2���b��Qz�����e�mU�����Ft6���'��$6�Z���C�	��@�z�e2ض4i�`lj��'?eՈ+ܺåw8�R�'��I�u�u��Udt�^�MpD���r����������ۮsz����V���S�w�b�r��\�W�,��)����>�c9��S��ۏ� ��r�Ya�\��q+M����\��U�P�zUc4�$j=�.��J���.��EB���^��D�!Y�;)rX��֣u��o�#[�`� v�:�sݴZ��dJ��!����IfZxE�u���+��g9ߞy���@����	�3<n���߫�B�٪v�<q�������g�� o�W�����������ԯ|�f'H�a�kIw$�{��C �#�MP�V�Y,4@w�|��ea�U���*�j(8��G���yR�x�S���*��*���h�י�Z��ޒ��h.+��_k�JH�8&V8p�#��fy�\�<̓F�qX"���'jZ��Qg�l�S,oU���د"�}[$,S�m���ySqd��R.��9���� o+M�\-���-Kѯ�;�Ί�^d�F��B���&�d���<�ߣ��Mo�hdj�8k|��ij���ެ����8ƈ�7��8L�x�C��T�Y(��gd\�Ø!�v���j�걼k��oD57%�9�o����e���*�(�CS7%!��X�A�/@U�r;��L���=�6�L�(b�/FPy����r:�y���H}Qj2-��3��1w!������V����"�nc�H�i���8-Wi����}�H�(����Ʒ"�O4�Z��95�D�y���o�tfD�(�$D"�x��r"���� @��DPJT�d�o�Tq�,�#�
+�14�[�0}
+�'��p�s�@0�oRSr��r8J@��q��T��B�V�`bSc1��r�	�Q�Ӵ��+�����M̑�:v�ꉦ��RϨ�]9yϊ�� ٕ-��<1�.���/�5"t|+z�Rt�y̞��r�,��YHXA,6rv���3j��$%���VB���dLX��f�sߖ�}J���6��o�o�{c��@v����rE���8�]�[�K��+q���4�տ!�U������>g|*�=0���ĸ���)M�WIў��M� ��P���̝����s�D���e���8�����0��~��^��t�sZ�g:��R���?YS�٦ю(�3�����p�+���!i�ce��+�R�ag�.0V�>�3��yf�ǲ�n��(7�I�O�#�[#JĊ���?��{�V���r&<&������.M;n�D���P<�8 �{Ea�86�d�������t�y�Κ�D�L��
+`v7y����1���?"��������1��tje�Z��IBB��U����pd�q��)J=#��ZR��@"f^�	Wj���T7.���4ܲ���P\��!��7�k�6�]L0?uQ2�A��b����O�J�M,�R��*����1��|5�{f�ьT`Ei���!}ܟ���e���JM��-?�#-����8�V��v���B�WF۫�[�s^���TZ|�cN�`��&S�n,g���H\@�ĭ t<��C��a���LL���u5}����uIt���%��N���Dj�:����	X��[���zj�]�x/�Ĭ�4*Ql�M����NA��!Fq���^��v��|^I7�	����G귽����o��^M��c�΅�)>�s��ܢ�o�J��cڎ���<#w!���v� {�/,|��%ɘ�f@yNw0��A��{"��"��,MFErM��D5=�i�,>!l]�̏nNkFB�
+,K_�1��'C����Đ-�&��k'��nD�0ȬI���67i�]�s�V�w6W���fq�1Ǝ�n䫈��h��	�E{e�pxJ��2���g���J����0Ǖ_}�f�ꭘs��$��=���X.G�bVd9�rw�jq�W��R�{o7s2,�ڜ�d|z�&>]�r���<]��|i&��K^(���B>����ۉe�UZ���v��~����Vg�*�χ.3K9�����6I�r�	��4%>=��[|����'dJ���L��Z��O��oY�����#-�r�"dX��p_!��n�-?�3��-ڜ|+�ːsE�'�LR(tqwcp߅��𯯽����l����' ��ׂ�,�9��w�����r��
+?�Y�����[��ǹ�/���K���UQ}��
+�,���
+t�`	ʀ-.�=~�+��?�q��o6�7�l���3�B�N��/�^��q*�q.�s�Rw��NP7�Pg\ּ��U��mU>���~ڨ^I®�q��wփ5��|�3�
+3xU���Z3�ۍ ��͖�F~NNgmdЧ����{���fx�[��V~�n��B�c��mH���^��ֲg<?=oSٰ��t�Z(����a��^���*7ݱ��oV�qs����\��2������}+��5�
+t�{-�W�E��Yp��E����Z��A������:'�P#��?   �� �6s<

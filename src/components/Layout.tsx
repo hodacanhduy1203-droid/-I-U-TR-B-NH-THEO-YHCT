@@ -131,7 +131,7 @@ export default function Layout() {
 
   const navigation = [
     { name: 'Tạng & Phủ', href: '/tang-phu', icon: Layers },
-    { name: 'Danh mục bệnh', href: '/diseases', icon: Stethoscope },
+    { name: 'YHCT& YHHĐ', href: '/diseases', icon: Stethoscope },
     { name: 'Ngũ du huyệt', href: '/ngu-du-huyet', icon: Sparkles },
     { name: '28 mạch', href: '/28-mach', icon: Activity },
     { name: 'Hệ thống vị thuốc', href: '/vi-thuoc', icon: Leaf },
