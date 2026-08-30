@@ -197,6 +197,16 @@ export default function Layout() {
               ĐÔNG Y THƯ PHÁP
             </div>
           </div>
+
+          <a 
+            href="/download.html" 
+            className="flex items-center gap-1.5 bg-herbal-700 hover:bg-herbal-600 text-white text-xs px-2.5 sm:px-3 py-1.5 rounded-lg font-bold transition-all shadow-sm shrink-0 border border-herbal-500"
+            title="Tải file data.ts sạch để tải lên GitHub"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span className="hidden xs:inline">Tải data.ts</span>
+            <span className="xs:hidden">data.ts</span>
+          </a>
         </header>
 
         <main 

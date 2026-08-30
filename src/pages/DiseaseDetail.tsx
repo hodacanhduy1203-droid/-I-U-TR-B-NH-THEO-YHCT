@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { diseases } from '../data';
-import { ArrowLeft, Stethoscope, Pill, BookOpen, Leaf, Activity, Sparkles, Award } from 'lucide-react';
+import { ArrowLeft, Stethoscope, Pill, BookOpen, Leaf, Activity, Sparkles } from 'lucide-react';
 import { cn } from '../utils';
-import { TAP1_DISEASE_ORDER, TAP2_DISEASE_ORDER, TAP3_DISEASE_ORDER } from './DiseaseList';
 
 const isAcupointList = (prefix: string, content: string): boolean => {
   const normalizedPrefix = prefix.toLowerCase();
@@ -278,16 +277,9 @@ export default function DiseaseDetail() {
   const [searchParams, setSearchParams] = useSearchParams();
   const disease = diseases.find((d) => d.id === id);
   
-  const isTap1 = id ? TAP1_DISEASE_ORDER.includes(id) : false;
-  const tap1Index = isTap1 && id ? TAP1_DISEASE_ORDER.indexOf(id) + 1 : -1;
-  const isTap2 = id ? TAP2_DISEASE_ORDER.includes(id) : false;
-  const tap2Index = isTap2 && id ? TAP2_DISEASE_ORDER.indexOf(id) + 1 : -1;
-  const isTap3 = id ? (TAP3_DISEASE_ORDER.includes(id) || disease?.tap === 3) : false;
-  const tap3Index = isTap3 && id ? (TAP3_DISEASE_ORDER.indexOf(id) !== -1 ? TAP3_DISEASE_ORDER.indexOf(id) + 1 : -1) : -1;
-
   const sortedDiseases = [...diseases].sort((a, b) => a.name.localeCompare(b.name, 'vi', { sensitivity: 'base' }));
   const diseaseIndex = id ? sortedDiseases.findIndex((d) => d.id === id) : -1;
-  const displayIndex = isTap3 ? tap3Index : isTap2 ? tap2Index : isTap1 ? tap1Index : (diseaseIndex !== -1 ? diseaseIndex + 1 : null);
+  const displayIndex = diseaseIndex !== -1 ? (diseaseIndex + 1 < 10 ? `0${diseaseIndex + 1}` : `${diseaseIndex + 1}`) : '';
   
   const activeTab = (searchParams.get('tab') as 'overview' | 'variants') || 'overview';
   const activeVariant = searchParams.get('variant') || disease?.variants?.[0]?.id || null;
@@ -327,29 +319,12 @@ export default function DiseaseDetail() {
         <div className="absolute top-0 right-0 w-32 h-32 bg-ochre-500/10 rounded-full blur-2xl pointer-events-none"></div>
         <div className="relative z-10">
           <div className="flex items-center gap-2 mb-1 flex-wrap">
-            {isTap3 && (
-              <span className="text-[11px] font-extrabold bg-indigo-200/90 text-indigo-950 px-2 py-0.5 rounded-md border border-indigo-300 shadow-3xs font-sans inline-flex items-center gap-1">
-                <Award className="w-3 h-3 text-indigo-900" />
-                Tập III - Bộ Y Tế 2026 (#{tap3Index})
-              </span>
-            )}
-            {isTap2 && (
-              <span className="text-[11px] font-extrabold bg-rose-200/90 text-rose-950 px-2 py-0.5 rounded-md border border-rose-300 shadow-3xs font-sans inline-flex items-center gap-1">
-                <Award className="w-3 h-3 text-rose-900" />
-                Tập II - Bộ Y Tế 2025 (#{tap2Index})
-              </span>
-            )}
-            {isTap1 && (
-              <span className="text-[11px] font-extrabold bg-amber-200/90 text-amber-950 px-2 py-0.5 rounded-md border border-amber-300 shadow-3xs font-sans inline-flex items-center gap-1">
-                <Award className="w-3 h-3 text-amber-900" />
-                Tập I - Bộ Y Tế (#{tap1Index})
-              </span>
-            )}
-            <span className="text-[11px] text-parchment-200 font-dongy-serif">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-herbal-800/60 text-parchment-100 border border-herbal-500/40 font-dongy-serif">
+              <BookOpen className="w-3 h-3 text-parchment-200" />
               Hướng dẫn chẩn đoán & điều trị kết hợp YHCT - YHHĐ
             </span>
           </div>
-          <h2 className="text-[17px] sm:text-[21.5px] font-black uppercase tracking-wide text-white font-sans">{displayIndex}. {disease.name}</h2>
+          <h2 className="text-[17px] sm:text-[21.5px] font-black uppercase tracking-wide text-white font-sans">{displayIndex ? `${displayIndex}. ` : ''}{disease.name}</h2>
           <p className="text-[12px] text-parchment-100 font-bold mt-1 uppercase tracking-widest flex items-center flex-wrap gap-2">
             Danh pháp YHCT: 
             <span className="text-[12px] text-white border border-herbal-500/30 bg-herbal-800/40 px-2.5 py-0.5 rounded font-sans font-extrabold shadow-3xs">
